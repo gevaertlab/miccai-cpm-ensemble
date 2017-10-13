@@ -1,0 +1,3196 @@
+Initialization......
+
+validate
+
+******* Epoch 0 Example 0: Validation accuracy 0.833251
+******* Epoch 0 Example 1: Validation accuracy 0.189380
+******* Epoch 0 Example 2: Validation accuracy 0.924616
+******* Epoch 0 Example 3: Validation accuracy 0.848075
+******* Epoch 0 Example 4: Validation accuracy 0.197760
+******* Epoch 0 Example 5: Validation accuracy 0.370255
+******* Epoch 0 Example 6: Validation accuracy 0.642361
+******* Epoch 0 Example 7: Validation accuracy 0.297317
+******* Epoch 0 Example 8: Validation accuracy 0.315420
+******* Epoch 0 Example 9: Validation accuracy 0.416595
+******* Epoch 0 Example 10: Validation accuracy 0.524280
+******* Epoch 0 Example 11: Validation accuracy 0.802720
+******* Epoch 0 Example 12: Validation accuracy 0.876273
+******* Epoch 0 Example 13: Validation accuracy 0.211652
+******* Epoch 0 Example 14: Validation accuracy 0.528920
+******* Epoch 0 Example 15: Validation accuracy 0.158826
+******* Epoch 0 Example 16: Validation accuracy 0.852795
+******* Epoch 0 Example 17: Validation accuracy 0.615425
+******* Epoch 0 Example 18: Validation accuracy 0.767335
+******* Epoch 0 Example 19: Validation accuracy 0.000000
+******* Epoch 0 Example 20: Validation accuracy 0.542668
+******* Epoch 0 Example 21: Validation accuracy 0.215730
+******* Epoch 0 Example 22: Validation accuracy 0.736156
+******* Epoch 0 Example 23: Validation accuracy 0.673661
+******* Epoch 0 Example 24: Validation accuracy 0.729413
+******* Epoch 0 Example 25: Validation accuracy 0.545905
+******* Epoch 0 Example 26: Validation accuracy 0.750185
+******* Epoch 0 Example 27: Validation accuracy 0.503545
+******* Epoch 0 Example 28: Validation accuracy 0.429531
+******* Epoch 0 Example 29: Validation accuracy 0.185592
+******* Epoch 0 Example 30: Validation accuracy 0.198455
+******* Epoch 0 Example 31: Validation accuracy 0.317260
+******* Epoch 0 Example 32: Validation accuracy 0.236180
+******* Epoch 0 Example 33: Validation accuracy 0.698777
+******* Epoch 0 Example 34: Validation accuracy 0.377640
+******* Epoch 0 Example 35: Validation accuracy 0.901668
+******* Epoch 0 Example 36: Validation accuracy 0.746383
+******* Epoch 0 Example 37: Validation accuracy 0.710386
+******* Epoch 0 Example 38: Validation accuracy 0.847837
+******* Epoch 0 Example 39: Validation accuracy 0.414135
+******* Epoch 0 Example 40: Validation accuracy 0.318366
+******* Epoch 0 Example 41: Validation accuracy 0.263638
+******* Epoch 0 Example 42: Validation accuracy 0.751138
+******* Epoch 0 Example 43: Validation accuracy 0.262548
+******* Epoch 0 Example 44: Validation accuracy 0.204146
+******* Epoch 0 Example 45: Validation accuracy 0.579694
+******************** Epoch 0: Validation dice score 0.511172
+
+test
+
+******* Epoch 0 Example 0: Test accuracy 0.747406
+******* Epoch 0 Example 1: Test accuracy 0.102803
+******* Epoch 0 Example 2: Test accuracy 0.837876
+******* Epoch 0 Example 3: Test accuracy 0.760859
+******* Epoch 0 Example 4: Test accuracy 0.058281
+******* Epoch 0 Example 5: Test accuracy 0.344402
+******* Epoch 0 Example 6: Test accuracy 0.591328
+******* Epoch 0 Example 7: Test accuracy 0.136383
+******* Epoch 0 Example 8: Test accuracy 0.324092
+******* Epoch 0 Example 9: Test accuracy 0.360251
+******* Epoch 0 Example 10: Test accuracy 0.480310
+******* Epoch 0 Example 11: Test accuracy 0.692180
+******* Epoch 0 Example 12: Test accuracy 0.526989
+******* Epoch 0 Example 13: Test accuracy 0.211150
+******* Epoch 0 Example 14: Test accuracy 0.483238
+******* Epoch 0 Example 15: Test accuracy 0.092571
+******* Epoch 0 Example 16: Test accuracy 0.748694
+******* Epoch 0 Example 17: Test accuracy 0.418108
+******* Epoch 0 Example 18: Test accuracy 0.633211
+******* Epoch 0 Example 19: Test accuracy 0.000000
+******* Epoch 0 Example 20: Test accuracy 0.206357
+******* Epoch 0 Example 21: Test accuracy 0.138171
+******* Epoch 0 Example 22: Test accuracy 0.422274
+******* Epoch 0 Example 23: Test accuracy 0.512253
+******* Epoch 0 Example 24: Test accuracy 0.595423
+******* Epoch 0 Example 25: Test accuracy 0.410695
+******* Epoch 0 Example 26: Test accuracy 0.566844
+******* Epoch 0 Example 27: Test accuracy 0.479902
+******* Epoch 0 Example 28: Test accuracy 0.354792
+******* Epoch 0 Example 29: Test accuracy 0.167187
+******* Epoch 0 Example 30: Test accuracy 0.192882
+******* Epoch 0 Example 31: Test accuracy 0.242567
+******* Epoch 0 Example 32: Test accuracy 0.243995
+******* Epoch 0 Example 33: Test accuracy 0.408147
+******* Epoch 0 Example 34: Test accuracy 0.322862
+******* Epoch 0 Example 35: Test accuracy 0.826418
+******* Epoch 0 Example 36: Test accuracy 0.593020
+******* Epoch 0 Example 37: Test accuracy 0.476280
+******* Epoch 0 Example 38: Test accuracy 0.738590
+******* Epoch 0 Example 39: Test accuracy 0.284901
+******* Epoch 0 Example 40: Test accuracy 0.278287
+******* Epoch 0 Example 41: Test accuracy 0.245330
+******* Epoch 0 Example 42: Test accuracy 0.687525
+******* Epoch 0 Example 43: Test accuracy 0.254268
+******* Epoch 0 Example 44: Test accuracy 0.173562
+******* Epoch 0 Example 45: Test accuracy 0.380388
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 0: Test dice score 0.407675
+
+epoch 1
+
+train
+
+******* Epoch 1 Example 0: Training loss 0.435416
+******* Epoch 1 Example 1: Training loss 0.423559
+******* Epoch 1 Example 2: Training loss 0.286030
+******* Epoch 1 Example 3: Training loss 0.306548
+******* Epoch 1 Example 4: Training loss 0.224489
+******* Epoch 1 Example 5: Training loss 0.666332
+******* Epoch 1 Example 6: Training loss 0.295414
+******* Epoch 1 Example 7: Training loss 0.456812
+******* Epoch 1 Example 8: Training loss 0.230504
+******* Epoch 1 Example 9: Training loss 0.336306
+******* Epoch 1 Example 10: Training loss 0.243702
+******************** Epoch 1: Training dice score 0.766149
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 2
+
+train
+
+******* Epoch 2 Example 0: Training loss 0.263991
+******* Epoch 2 Example 1: Training loss 0.378972
+******* Epoch 2 Example 2: Training loss 0.253731
+******* Epoch 2 Example 3: Training loss 0.269172
+******* Epoch 2 Example 4: Training loss 0.172338
+******* Epoch 2 Example 5: Training loss 0.648350
+******* Epoch 2 Example 6: Training loss 0.281563
+******* Epoch 2 Example 7: Training loss 0.412785
+******* Epoch 2 Example 8: Training loss 0.231739
+******* Epoch 2 Example 9: Training loss 0.326493
+******* Epoch 2 Example 10: Training loss 0.215657
+******************** Epoch 2: Training dice score 0.807461
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 3
+
+train
+
+******* Epoch 3 Example 0: Training loss 0.248643
+******* Epoch 3 Example 1: Training loss 0.344855
+******* Epoch 3 Example 2: Training loss 0.236385
+******* Epoch 3 Example 3: Training loss 0.250468
+******* Epoch 3 Example 4: Training loss 0.160159
+******* Epoch 3 Example 5: Training loss 0.632251
+******* Epoch 3 Example 6: Training loss 0.256335
+******* Epoch 3 Example 7: Training loss 0.396406
+******* Epoch 3 Example 8: Training loss 0.200127
+******* Epoch 3 Example 9: Training loss 0.316441
+******* Epoch 3 Example 10: Training loss 0.214988
+******************** Epoch 3: Training dice score 0.817523
+
+validate
+
+******* Epoch 3 Example 0: Validation accuracy 0.876198
+******* Epoch 3 Example 1: Validation accuracy 0.393175
+******* Epoch 3 Example 2: Validation accuracy 0.928186
+******* Epoch 3 Example 3: Validation accuracy 0.863857
+******* Epoch 3 Example 4: Validation accuracy 0.145643
+******* Epoch 3 Example 5: Validation accuracy 0.528529
+******* Epoch 3 Example 6: Validation accuracy 0.858166
+******* Epoch 3 Example 7: Validation accuracy 0.717968
+******* Epoch 3 Example 8: Validation accuracy 0.485145
+******* Epoch 3 Example 9: Validation accuracy 0.677163
+******* Epoch 3 Example 10: Validation accuracy 0.744154
+******* Epoch 3 Example 11: Validation accuracy 0.876909
+******* Epoch 3 Example 12: Validation accuracy 0.842989
+******* Epoch 3 Example 13: Validation accuracy 0.646490
+******* Epoch 3 Example 14: Validation accuracy 0.678559
+******* Epoch 3 Example 15: Validation accuracy 0.429699
+******* Epoch 3 Example 16: Validation accuracy 0.858417
+******* Epoch 3 Example 17: Validation accuracy 0.770197
+******* Epoch 3 Example 18: Validation accuracy 0.804178
+******* Epoch 3 Example 19: Validation accuracy 0.302553
+******* Epoch 3 Example 20: Validation accuracy 0.730061
+******* Epoch 3 Example 21: Validation accuracy 0.306681
+******* Epoch 3 Example 22: Validation accuracy 0.726095
+******* Epoch 3 Example 23: Validation accuracy 0.864541
+******* Epoch 3 Example 24: Validation accuracy 0.798076
+******* Epoch 3 Example 25: Validation accuracy 0.624724
+******* Epoch 3 Example 26: Validation accuracy 0.803721
+******* Epoch 3 Example 27: Validation accuracy 0.731094
+******* Epoch 3 Example 28: Validation accuracy 0.681259
+******* Epoch 3 Example 29: Validation accuracy 0.344168
+******* Epoch 3 Example 30: Validation accuracy 0.400795
+******* Epoch 3 Example 31: Validation accuracy 0.525645
+******* Epoch 3 Example 32: Validation accuracy 0.680054
+******* Epoch 3 Example 33: Validation accuracy 0.715945
+******* Epoch 3 Example 34: Validation accuracy 0.540057
+******* Epoch 3 Example 35: Validation accuracy 0.936841
+******* Epoch 3 Example 36: Validation accuracy 0.823220
+******* Epoch 3 Example 37: Validation accuracy 0.841528
+******* Epoch 3 Example 38: Validation accuracy 0.909806
+******* Epoch 3 Example 39: Validation accuracy 0.704363
+******* Epoch 3 Example 40: Validation accuracy 0.469660
+******* Epoch 3 Example 41: Validation accuracy 0.551127
+******* Epoch 3 Example 42: Validation accuracy 0.868988
+******* Epoch 3 Example 43: Validation accuracy 0.405624
+******* Epoch 3 Example 44: Validation accuracy 0.663943
+******* Epoch 3 Example 45: Validation accuracy 0.636194
+******************** Epoch 3: Validation dice score 0.667660
+
+test
+
+******* Epoch 3 Example 0: Test accuracy 0.749186
+******* Epoch 3 Example 1: Test accuracy 0.170605
+******* Epoch 3 Example 2: Test accuracy 0.768781
+******* Epoch 3 Example 3: Test accuracy 0.421377
+******* Epoch 3 Example 4: Test accuracy 0.049950
+******* Epoch 3 Example 5: Test accuracy 0.364452
+******* Epoch 3 Example 6: Test accuracy 0.610815
+******* Epoch 3 Example 7: Test accuracy 0.271449
+******* Epoch 3 Example 8: Test accuracy 0.429423
+******* Epoch 3 Example 9: Test accuracy 0.512534
+******* Epoch 3 Example 10: Test accuracy 0.640945
+******* Epoch 3 Example 11: Test accuracy 0.739751
+******* Epoch 3 Example 12: Test accuracy 0.489127
+******* Epoch 3 Example 13: Test accuracy 0.545953
+******* Epoch 3 Example 14: Test accuracy 0.593195
+******* Epoch 3 Example 15: Test accuracy 0.239211
+******* Epoch 3 Example 16: Test accuracy 0.600323
+******* Epoch 3 Example 17: Test accuracy 0.518677
+******* Epoch 3 Example 18: Test accuracy 0.365163
+******* Epoch 3 Example 19: Test accuracy 0.086015
+******* Epoch 3 Example 20: Test accuracy 0.239598
+******* Epoch 3 Example 21: Test accuracy 0.167343
+******* Epoch 3 Example 22: Test accuracy 0.380219
+******* Epoch 3 Example 23: Test accuracy 0.658918
+******* Epoch 3 Example 24: Test accuracy 0.497701
+******* Epoch 3 Example 25: Test accuracy 0.395637
+******* Epoch 3 Example 26: Test accuracy 0.381926
+******* Epoch 3 Example 27: Test accuracy 0.583619
+******* Epoch 3 Example 28: Test accuracy 0.529886
+******* Epoch 3 Example 29: Test accuracy 0.268104
+******* Epoch 3 Example 30: Test accuracy 0.361181
+******* Epoch 3 Example 31: Test accuracy 0.351904
+******* Epoch 3 Example 32: Test accuracy 0.526875
+******* Epoch 3 Example 33: Test accuracy 0.211885
+******* Epoch 3 Example 34: Test accuracy 0.417089
+******* Epoch 3 Example 35: Test accuracy 0.833376
+******* Epoch 3 Example 36: Test accuracy 0.630681
+******* Epoch 3 Example 37: Test accuracy 0.379918
+******* Epoch 3 Example 38: Test accuracy 0.801369
+******* Epoch 3 Example 39: Test accuracy 0.435932
+******* Epoch 3 Example 40: Test accuracy 0.405935
+******* Epoch 3 Example 41: Test accuracy 0.481554
+******* Epoch 3 Example 42: Test accuracy 0.714941
+******* Epoch 3 Example 43: Test accuracy 0.383768
+******* Epoch 3 Example 44: Test accuracy 0.492260
+******* Epoch 3 Example 45: Test accuracy 0.139439
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 3: Test dice score 0.453000
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 4
+
+train
+
+******* Epoch 4 Example 0: Training loss 0.233219
+******* Epoch 4 Example 1: Training loss 0.366113
+******* Epoch 4 Example 2: Training loss 0.235005
+******* Epoch 4 Example 3: Training loss 0.241767
+******* Epoch 4 Example 4: Training loss 0.170657
+******* Epoch 4 Example 5: Training loss 0.565285
+******* Epoch 4 Example 6: Training loss 0.249803
+******* Epoch 4 Example 7: Training loss 0.387311
+******* Epoch 4 Example 8: Training loss 0.200387
+******* Epoch 4 Example 9: Training loss 0.296862
+******* Epoch 4 Example 10: Training loss 0.195498
+******************** Epoch 4: Training dice score 0.828682
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 5
+
+train
+
+******* Epoch 5 Example 0: Training loss 0.224645
+******* Epoch 5 Example 1: Training loss 0.366823
+******* Epoch 5 Example 2: Training loss 0.229303
+******* Epoch 5 Example 3: Training loss 0.255392
+******* Epoch 5 Example 4: Training loss 0.163222
+******* Epoch 5 Example 5: Training loss 0.564986
+******* Epoch 5 Example 6: Training loss 0.225864
+******* Epoch 5 Example 7: Training loss 0.384786
+******* Epoch 5 Example 8: Training loss 0.193847
+******* Epoch 5 Example 9: Training loss 0.287240
+******* Epoch 5 Example 10: Training loss 0.179209
+******************** Epoch 5: Training dice score 0.828779
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 6
+
+train
+
+******* Epoch 6 Example 0: Training loss 0.231916
+******* Epoch 6 Example 1: Training loss 0.341792
+******* Epoch 6 Example 2: Training loss 0.223790
+******* Epoch 6 Example 3: Training loss 0.232827
+******* Epoch 6 Example 4: Training loss 0.157819
+******* Epoch 6 Example 5: Training loss 0.558161
+******* Epoch 6 Example 6: Training loss 0.228036
+******* Epoch 6 Example 7: Training loss 0.366047
+******* Epoch 6 Example 8: Training loss 0.182124
+******* Epoch 6 Example 9: Training loss 0.279904
+******* Epoch 6 Example 10: Training loss 0.174431
+******************** Epoch 6: Training dice score 0.832894
+
+validate
+
+******* Epoch 6 Example 0: Validation accuracy 0.879969
+******* Epoch 6 Example 1: Validation accuracy 0.470950
+******* Epoch 6 Example 2: Validation accuracy 0.926843
+******* Epoch 6 Example 3: Validation accuracy 0.859895
+******* Epoch 6 Example 4: Validation accuracy 0.170529
+******* Epoch 6 Example 5: Validation accuracy 0.561584
+******* Epoch 6 Example 6: Validation accuracy 0.844301
+******* Epoch 6 Example 7: Validation accuracy 0.734075
+******* Epoch 6 Example 8: Validation accuracy 0.587639
+******* Epoch 6 Example 9: Validation accuracy 0.708537
+******* Epoch 6 Example 10: Validation accuracy 0.743803
+******* Epoch 6 Example 11: Validation accuracy 0.892027
+******* Epoch 6 Example 12: Validation accuracy 0.832931
+******* Epoch 6 Example 13: Validation accuracy 0.684196
+******* Epoch 6 Example 14: Validation accuracy 0.686867
+******* Epoch 6 Example 15: Validation accuracy 0.506871
+******* Epoch 6 Example 16: Validation accuracy 0.874934
+******* Epoch 6 Example 17: Validation accuracy 0.780184
+******* Epoch 6 Example 18: Validation accuracy 0.826858
+******* Epoch 6 Example 19: Validation accuracy 0.313491
+******* Epoch 6 Example 20: Validation accuracy 0.762863
+******* Epoch 6 Example 21: Validation accuracy 0.322201
+******* Epoch 6 Example 22: Validation accuracy 0.760065
+******* Epoch 6 Example 23: Validation accuracy 0.856299
+******* Epoch 6 Example 24: Validation accuracy 0.761988
+******* Epoch 6 Example 25: Validation accuracy 0.608971
+******* Epoch 6 Example 26: Validation accuracy 0.804807
+******* Epoch 6 Example 27: Validation accuracy 0.770465
+******* Epoch 6 Example 28: Validation accuracy 0.730732
+******* Epoch 6 Example 29: Validation accuracy 0.324561
+******* Epoch 6 Example 30: Validation accuracy 0.457979
+******* Epoch 6 Example 31: Validation accuracy 0.563777
+******* Epoch 6 Example 32: Validation accuracy 0.767566
+******* Epoch 6 Example 33: Validation accuracy 0.711411
+******* Epoch 6 Example 34: Validation accuracy 0.555440
+******* Epoch 6 Example 35: Validation accuracy 0.936423
+******* Epoch 6 Example 36: Validation accuracy 0.826552
+******* Epoch 6 Example 37: Validation accuracy 0.835872
+******* Epoch 6 Example 38: Validation accuracy 0.910112
+******* Epoch 6 Example 39: Validation accuracy 0.757469
+******* Epoch 6 Example 40: Validation accuracy 0.440956
+******* Epoch 6 Example 41: Validation accuracy 0.596175
+******* Epoch 6 Example 42: Validation accuracy 0.873415
+******* Epoch 6 Example 43: Validation accuracy 0.422006
+******* Epoch 6 Example 44: Validation accuracy 0.680024
+******* Epoch 6 Example 45: Validation accuracy 0.661314
+******************** Epoch 6: Validation dice score 0.686651
+
+test
+
+******* Epoch 6 Example 0: Test accuracy 0.765372
+******* Epoch 6 Example 1: Test accuracy 0.216365
+******* Epoch 6 Example 2: Test accuracy 0.770345
+******* Epoch 6 Example 3: Test accuracy 0.430659
+******* Epoch 6 Example 4: Test accuracy 0.054830
+******* Epoch 6 Example 5: Test accuracy 0.399687
+******* Epoch 6 Example 6: Test accuracy 0.617340
+******* Epoch 6 Example 7: Test accuracy 0.311674
+******* Epoch 6 Example 8: Test accuracy 0.492051
+******* Epoch 6 Example 9: Test accuracy 0.545575
+******* Epoch 6 Example 10: Test accuracy 0.651864
+******* Epoch 6 Example 11: Test accuracy 0.762997
+******* Epoch 6 Example 12: Test accuracy 0.491234
+******* Epoch 6 Example 13: Test accuracy 0.583582
+******* Epoch 6 Example 14: Test accuracy 0.604872
+******* Epoch 6 Example 15: Test accuracy 0.286950
+******* Epoch 6 Example 16: Test accuracy 0.641012
+******* Epoch 6 Example 17: Test accuracy 0.539169
+******* Epoch 6 Example 18: Test accuracy 0.410895
+******* Epoch 6 Example 19: Test accuracy 0.105244
+******* Epoch 6 Example 20: Test accuracy 0.268437
+******* Epoch 6 Example 21: Test accuracy 0.176020
+******* Epoch 6 Example 22: Test accuracy 0.395081
+******* Epoch 6 Example 23: Test accuracy 0.672836
+******* Epoch 6 Example 24: Test accuracy 0.527257
+******* Epoch 6 Example 25: Test accuracy 0.382407
+******* Epoch 6 Example 26: Test accuracy 0.421565
+******* Epoch 6 Example 27: Test accuracy 0.609506
+******* Epoch 6 Example 28: Test accuracy 0.559993
+******* Epoch 6 Example 29: Test accuracy 0.271194
+******* Epoch 6 Example 30: Test accuracy 0.398292
+******* Epoch 6 Example 31: Test accuracy 0.383592
+******* Epoch 6 Example 32: Test accuracy 0.609367
+******* Epoch 6 Example 33: Test accuracy 0.224695
+******* Epoch 6 Example 34: Test accuracy 0.448322
+******* Epoch 6 Example 35: Test accuracy 0.848803
+******* Epoch 6 Example 36: Test accuracy 0.641365
+******* Epoch 6 Example 37: Test accuracy 0.408740
+******* Epoch 6 Example 38: Test accuracy 0.804817
+******* Epoch 6 Example 39: Test accuracy 0.475187
+******* Epoch 6 Example 40: Test accuracy 0.397418
+******* Epoch 6 Example 41: Test accuracy 0.508448
+******* Epoch 6 Example 42: Test accuracy 0.748280
+******* Epoch 6 Example 43: Test accuracy 0.414400
+******* Epoch 6 Example 44: Test accuracy 0.541419
+******* Epoch 6 Example 45: Test accuracy 0.172180
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 6: Test dice score 0.478073
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 7
+
+train
+
+******* Epoch 7 Example 0: Training loss 0.222778
+******* Epoch 7 Example 1: Training loss 0.335580
+******* Epoch 7 Example 2: Training loss 0.218587
+******* Epoch 7 Example 3: Training loss 0.245747
+******* Epoch 7 Example 4: Training loss 0.156138
+******* Epoch 7 Example 5: Training loss 0.505461
+******* Epoch 7 Example 6: Training loss 0.219586
+******* Epoch 7 Example 7: Training loss 0.356900
+******* Epoch 7 Example 8: Training loss 0.182838
+******* Epoch 7 Example 9: Training loss 0.307501
+******* Epoch 7 Example 10: Training loss 0.181827
+******************** Epoch 7: Training dice score 0.841987
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 8
+
+train
+
+******* Epoch 8 Example 0: Training loss 0.222677
+******* Epoch 8 Example 1: Training loss 0.338959
+******* Epoch 8 Example 2: Training loss 0.220787
+******* Epoch 8 Example 3: Training loss 0.226436
+******* Epoch 8 Example 4: Training loss 0.153431
+******* Epoch 8 Example 5: Training loss 0.510224
+******* Epoch 8 Example 6: Training loss 0.220693
+******* Epoch 8 Example 7: Training loss 0.345477
+******* Epoch 8 Example 8: Training loss 0.183400
+******* Epoch 8 Example 9: Training loss 0.312181
+******* Epoch 8 Example 10: Training loss 0.184292
+******************** Epoch 8: Training dice score 0.840924
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 9
+
+train
+
+******* Epoch 9 Example 0: Training loss 0.213940
+******* Epoch 9 Example 1: Training loss 0.352432
+******* Epoch 9 Example 2: Training loss 0.202757
+******* Epoch 9 Example 3: Training loss 0.250938
+******* Epoch 9 Example 4: Training loss 0.153265
+******* Epoch 9 Example 5: Training loss 0.496205
+******* Epoch 9 Example 6: Training loss 0.219194
+******* Epoch 9 Example 7: Training loss 0.337528
+******* Epoch 9 Example 8: Training loss 0.169047
+******* Epoch 9 Example 9: Training loss 0.288441
+******* Epoch 9 Example 10: Training loss 0.179160
+******************** Epoch 9: Training dice score 0.841289
+
+validate
+
+******* Epoch 9 Example 0: Validation accuracy 0.868395
+******* Epoch 9 Example 1: Validation accuracy 0.485950
+******* Epoch 9 Example 2: Validation accuracy 0.923170
+******* Epoch 9 Example 3: Validation accuracy 0.868174
+******* Epoch 9 Example 4: Validation accuracy 0.195166
+******* Epoch 9 Example 5: Validation accuracy 0.524719
+******* Epoch 9 Example 6: Validation accuracy 0.865291
+******* Epoch 9 Example 7: Validation accuracy 0.760081
+******* Epoch 9 Example 8: Validation accuracy 0.597790
+******* Epoch 9 Example 9: Validation accuracy 0.741987
+******* Epoch 9 Example 10: Validation accuracy 0.759123
+******* Epoch 9 Example 11: Validation accuracy 0.895484
+******* Epoch 9 Example 12: Validation accuracy 0.841793
+******* Epoch 9 Example 13: Validation accuracy 0.680734
+******* Epoch 9 Example 14: Validation accuracy 0.659249
+******* Epoch 9 Example 15: Validation accuracy 0.549500
+******* Epoch 9 Example 16: Validation accuracy 0.877575
+******* Epoch 9 Example 17: Validation accuracy 0.813030
+******* Epoch 9 Example 18: Validation accuracy 0.842974
+******* Epoch 9 Example 19: Validation accuracy 0.202111
+******* Epoch 9 Example 20: Validation accuracy 0.787038
+******* Epoch 9 Example 21: Validation accuracy 0.319789
+******* Epoch 9 Example 22: Validation accuracy 0.770102
+******* Epoch 9 Example 23: Validation accuracy 0.875015
+******* Epoch 9 Example 24: Validation accuracy 0.784345
+******* Epoch 9 Example 25: Validation accuracy 0.581676
+******* Epoch 9 Example 26: Validation accuracy 0.813055
+******* Epoch 9 Example 27: Validation accuracy 0.731622
+******* Epoch 9 Example 28: Validation accuracy 0.723179
+******* Epoch 9 Example 29: Validation accuracy 0.360552
+******* Epoch 9 Example 30: Validation accuracy 0.449534
+******* Epoch 9 Example 31: Validation accuracy 0.562808
+******* Epoch 9 Example 32: Validation accuracy 0.789965
+******* Epoch 9 Example 33: Validation accuracy 0.715451
+******* Epoch 9 Example 34: Validation accuracy 0.558089
+******* Epoch 9 Example 35: Validation accuracy 0.943057
+******* Epoch 9 Example 36: Validation accuracy 0.838776
+******* Epoch 9 Example 37: Validation accuracy 0.853877
+******* Epoch 9 Example 38: Validation accuracy 0.912111
+******* Epoch 9 Example 39: Validation accuracy 0.740623
+******* Epoch 9 Example 40: Validation accuracy 0.439507
+******* Epoch 9 Example 41: Validation accuracy 0.633256
+******* Epoch 9 Example 42: Validation accuracy 0.876750
+******* Epoch 9 Example 43: Validation accuracy 0.454106
+******* Epoch 9 Example 44: Validation accuracy 0.678026
+******* Epoch 9 Example 45: Validation accuracy 0.663644
+******************** Epoch 9: Validation dice score 0.691484
+
+test
+
+******* Epoch 9 Example 0: Test accuracy 0.763901
+******* Epoch 9 Example 1: Test accuracy 0.224755
+******* Epoch 9 Example 2: Test accuracy 0.765821
+******* Epoch 9 Example 3: Test accuracy 0.439298
+******* Epoch 9 Example 4: Test accuracy 0.062095
+******* Epoch 9 Example 5: Test accuracy 0.382889
+******* Epoch 9 Example 6: Test accuracy 0.624425
+******* Epoch 9 Example 7: Test accuracy 0.295966
+******* Epoch 9 Example 8: Test accuracy 0.484794
+******* Epoch 9 Example 9: Test accuracy 0.567437
+******* Epoch 9 Example 10: Test accuracy 0.665141
+******* Epoch 9 Example 11: Test accuracy 0.776042
+******* Epoch 9 Example 12: Test accuracy 0.499463
+******* Epoch 9 Example 13: Test accuracy 0.583167
+******* Epoch 9 Example 14: Test accuracy 0.604093
+******* Epoch 9 Example 15: Test accuracy 0.310706
+******* Epoch 9 Example 16: Test accuracy 0.636882
+******* Epoch 9 Example 17: Test accuracy 0.547254
+******* Epoch 9 Example 18: Test accuracy 0.414021
+******* Epoch 9 Example 19: Test accuracy 0.061408
+******* Epoch 9 Example 20: Test accuracy 0.276017
+******* Epoch 9 Example 21: Test accuracy 0.172291
+******* Epoch 9 Example 22: Test accuracy 0.399480
+******* Epoch 9 Example 23: Test accuracy 0.696762
+******* Epoch 9 Example 24: Test accuracy 0.536131
+******* Epoch 9 Example 25: Test accuracy 0.360572
+******* Epoch 9 Example 26: Test accuracy 0.428623
+******* Epoch 9 Example 27: Test accuracy 0.612267
+******* Epoch 9 Example 28: Test accuracy 0.568044
+******* Epoch 9 Example 29: Test accuracy 0.286680
+******* Epoch 9 Example 30: Test accuracy 0.398033
+******* Epoch 9 Example 31: Test accuracy 0.380081
+******* Epoch 9 Example 32: Test accuracy 0.632619
+******* Epoch 9 Example 33: Test accuracy 0.226706
+******* Epoch 9 Example 34: Test accuracy 0.443580
+******* Epoch 9 Example 35: Test accuracy 0.864454
+******* Epoch 9 Example 36: Test accuracy 0.647965
+******* Epoch 9 Example 37: Test accuracy 0.409848
+******* Epoch 9 Example 38: Test accuracy 0.821472
+******* Epoch 9 Example 39: Test accuracy 0.493140
+******* Epoch 9 Example 40: Test accuracy 0.368205
+******* Epoch 9 Example 41: Test accuracy 0.529454
+******* Epoch 9 Example 42: Test accuracy 0.741204
+******* Epoch 9 Example 43: Test accuracy 0.429881
+******* Epoch 9 Example 44: Test accuracy 0.535421
+******* Epoch 9 Example 45: Test accuracy 0.195194
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 9: Test dice score 0.481819
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 10
+
+train
+
+******* Epoch 10 Example 0: Training loss 0.222812
+******* Epoch 10 Example 1: Training loss 0.338247
+******* Epoch 10 Example 2: Training loss 0.210162
+******* Epoch 10 Example 3: Training loss 0.232010
+******* Epoch 10 Example 4: Training loss 0.154223
+******* Epoch 10 Example 5: Training loss 0.476264
+******* Epoch 10 Example 6: Training loss 0.217352
+******* Epoch 10 Example 7: Training loss 0.327139
+******* Epoch 10 Example 8: Training loss 0.166711
+******* Epoch 10 Example 9: Training loss 0.272108
+******* Epoch 10 Example 10: Training loss 0.176100
+******************** Epoch 10: Training dice score 0.840381
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 11
+
+train
+
+******* Epoch 11 Example 0: Training loss 0.208196
+******* Epoch 11 Example 1: Training loss 0.344376
+******* Epoch 11 Example 2: Training loss 0.214333
+******* Epoch 11 Example 3: Training loss 0.232769
+******* Epoch 11 Example 4: Training loss 0.152540
+******* Epoch 11 Example 5: Training loss 0.447970
+******* Epoch 11 Example 6: Training loss 0.214284
+******* Epoch 11 Example 7: Training loss 0.301522
+******* Epoch 11 Example 8: Training loss 0.158617
+******* Epoch 11 Example 9: Training loss 0.276325
+******* Epoch 11 Example 10: Training loss 0.159803
+******************** Epoch 11: Training dice score 0.848446
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 12
+
+train
+
+******* Epoch 12 Example 0: Training loss 0.217024
+******* Epoch 12 Example 1: Training loss 0.347029
+******* Epoch 12 Example 2: Training loss 0.207231
+******* Epoch 12 Example 3: Training loss 0.226368
+******* Epoch 12 Example 4: Training loss 0.141563
+******* Epoch 12 Example 5: Training loss 0.474936
+******* Epoch 12 Example 6: Training loss 0.226085
+******* Epoch 12 Example 7: Training loss 0.303391
+******* Epoch 12 Example 8: Training loss 0.159398
+******* Epoch 12 Example 9: Training loss 0.295447
+******* Epoch 12 Example 10: Training loss 0.157628
+******************** Epoch 12: Training dice score 0.845775
+
+validate
+
+******* Epoch 12 Example 0: Validation accuracy 0.871791
+******* Epoch 12 Example 1: Validation accuracy 0.461731
+******* Epoch 12 Example 2: Validation accuracy 0.922667
+******* Epoch 12 Example 3: Validation accuracy 0.874543
+******* Epoch 12 Example 4: Validation accuracy 0.154423
+******* Epoch 12 Example 5: Validation accuracy 0.495746
+******* Epoch 12 Example 6: Validation accuracy 0.852081
+******* Epoch 12 Example 7: Validation accuracy 0.734842
+******* Epoch 12 Example 8: Validation accuracy 0.564363
+******* Epoch 12 Example 9: Validation accuracy 0.724331
+******* Epoch 12 Example 10: Validation accuracy 0.742269
+******* Epoch 12 Example 11: Validation accuracy 0.887945
+******* Epoch 12 Example 12: Validation accuracy 0.846139
+******* Epoch 12 Example 13: Validation accuracy 0.662469
+******* Epoch 12 Example 14: Validation accuracy 0.649529
+******* Epoch 12 Example 15: Validation accuracy 0.529520
+******* Epoch 12 Example 16: Validation accuracy 0.865665
+******* Epoch 12 Example 17: Validation accuracy 0.792668
+******* Epoch 12 Example 18: Validation accuracy 0.871725
+******* Epoch 12 Example 19: Validation accuracy 0.135612
+******* Epoch 12 Example 20: Validation accuracy 0.782601
+******* Epoch 12 Example 21: Validation accuracy 0.260586
+******* Epoch 12 Example 22: Validation accuracy 0.765988
+******* Epoch 12 Example 23: Validation accuracy 0.873280
+******* Epoch 12 Example 24: Validation accuracy 0.774858
+******* Epoch 12 Example 25: Validation accuracy 0.596608
+******* Epoch 12 Example 26: Validation accuracy 0.827901
+******* Epoch 12 Example 27: Validation accuracy 0.753436
+******* Epoch 12 Example 28: Validation accuracy 0.712503
+******* Epoch 12 Example 29: Validation accuracy 0.362457
+******* Epoch 12 Example 30: Validation accuracy 0.408724
+******* Epoch 12 Example 31: Validation accuracy 0.534099
+******* Epoch 12 Example 32: Validation accuracy 0.781898
+******* Epoch 12 Example 33: Validation accuracy 0.711500
+******* Epoch 12 Example 34: Validation accuracy 0.520672
+******* Epoch 12 Example 35: Validation accuracy 0.948307
+******* Epoch 12 Example 36: Validation accuracy 0.816761
+******* Epoch 12 Example 37: Validation accuracy 0.856580
+******* Epoch 12 Example 38: Validation accuracy 0.919974
+******* Epoch 12 Example 39: Validation accuracy 0.708593
+******* Epoch 12 Example 40: Validation accuracy 0.396960
+******* Epoch 12 Example 41: Validation accuracy 0.625438
+******* Epoch 12 Example 42: Validation accuracy 0.875884
+******* Epoch 12 Example 43: Validation accuracy 0.452342
+******* Epoch 12 Example 44: Validation accuracy 0.661149
+******* Epoch 12 Example 45: Validation accuracy 0.682440
+******************** Epoch 12: Validation dice score 0.679383
+
+test
+
+******* Epoch 12 Example 0: Test accuracy 0.770578
+******* Epoch 12 Example 1: Test accuracy 0.222336
+******* Epoch 12 Example 2: Test accuracy 0.767891
+******* Epoch 12 Example 3: Test accuracy 0.478439
+******* Epoch 12 Example 4: Test accuracy 0.053883
+******* Epoch 12 Example 5: Test accuracy 0.386450
+******* Epoch 12 Example 6: Test accuracy 0.659286
+******* Epoch 12 Example 7: Test accuracy 0.293391
+******* Epoch 12 Example 8: Test accuracy 0.473429
+******* Epoch 12 Example 9: Test accuracy 0.580983
+******* Epoch 12 Example 10: Test accuracy 0.663287
+******* Epoch 12 Example 11: Test accuracy 0.789190
+******* Epoch 12 Example 12: Test accuracy 0.506760
+******* Epoch 12 Example 13: Test accuracy 0.572343
+******* Epoch 12 Example 14: Test accuracy 0.596041
+******* Epoch 12 Example 15: Test accuracy 0.299119
+******* Epoch 12 Example 16: Test accuracy 0.657645
+******* Epoch 12 Example 17: Test accuracy 0.550664
+******* Epoch 12 Example 18: Test accuracy 0.463236
+******* Epoch 12 Example 19: Test accuracy 0.043820
+******* Epoch 12 Example 20: Test accuracy 0.284051
+******* Epoch 12 Example 21: Test accuracy 0.154021
+******* Epoch 12 Example 22: Test accuracy 0.406904
+******* Epoch 12 Example 23: Test accuracy 0.709665
+******* Epoch 12 Example 24: Test accuracy 0.562387
+******* Epoch 12 Example 25: Test accuracy 0.358106
+******* Epoch 12 Example 26: Test accuracy 0.455800
+******* Epoch 12 Example 27: Test accuracy 0.614456
+******* Epoch 12 Example 28: Test accuracy 0.564530
+******* Epoch 12 Example 29: Test accuracy 0.287316
+******* Epoch 12 Example 30: Test accuracy 0.377957
+******* Epoch 12 Example 31: Test accuracy 0.362817
+******* Epoch 12 Example 32: Test accuracy 0.644205
+******* Epoch 12 Example 33: Test accuracy 0.247423
+******* Epoch 12 Example 34: Test accuracy 0.424569
+******* Epoch 12 Example 35: Test accuracy 0.878318
+******* Epoch 12 Example 36: Test accuracy 0.650033
+******* Epoch 12 Example 37: Test accuracy 0.416492
+******* Epoch 12 Example 38: Test accuracy 0.831702
+******* Epoch 12 Example 39: Test accuracy 0.497289
+******* Epoch 12 Example 40: Test accuracy 0.348915
+******* Epoch 12 Example 41: Test accuracy 0.537023
+******* Epoch 12 Example 42: Test accuracy 0.744516
+******* Epoch 12 Example 43: Test accuracy 0.433207
+******* Epoch 12 Example 44: Test accuracy 0.523650
+******* Epoch 12 Example 45: Test accuracy 0.207561
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 12: Test dice score 0.485906
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 13
+
+train
+
+******* Epoch 13 Example 0: Training loss 0.202365
+******* Epoch 13 Example 1: Training loss 0.323527
+******* Epoch 13 Example 2: Training loss 0.204397
+******* Epoch 13 Example 3: Training loss 0.226588
+******* Epoch 13 Example 4: Training loss 0.141565
+******* Epoch 13 Example 5: Training loss 0.465574
+******* Epoch 13 Example 6: Training loss 0.228983
+******* Epoch 13 Example 7: Training loss 0.305828
+******* Epoch 13 Example 8: Training loss 0.156341
+******* Epoch 13 Example 9: Training loss 0.296056
+******* Epoch 13 Example 10: Training loss 0.165955
+******************** Epoch 13: Training dice score 0.845516
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 14
+
+train
+
+******* Epoch 14 Example 0: Training loss 0.200564
+******* Epoch 14 Example 1: Training loss 0.324069
+******* Epoch 14 Example 2: Training loss 0.194186
+******* Epoch 14 Example 3: Training loss 0.205869
+******* Epoch 14 Example 4: Training loss 0.150493
+******* Epoch 14 Example 5: Training loss 0.438625
+******* Epoch 14 Example 6: Training loss 0.212798
+******* Epoch 14 Example 7: Training loss 0.275515
+******* Epoch 14 Example 8: Training loss 0.163909
+******* Epoch 14 Example 9: Training loss 0.284261
+******* Epoch 14 Example 10: Training loss 0.170328
+******************** Epoch 14: Training dice score 0.849776
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 15
+
+train
+
+******* Epoch 15 Example 0: Training loss 0.216358
+******* Epoch 15 Example 1: Training loss 0.343282
+******* Epoch 15 Example 2: Training loss 0.200921
+******* Epoch 15 Example 3: Training loss 0.221112
+******* Epoch 15 Example 4: Training loss 0.142512
+******* Epoch 15 Example 5: Training loss 0.433911
+******* Epoch 15 Example 6: Training loss 0.220915
+******* Epoch 15 Example 7: Training loss 0.272279
+******* Epoch 15 Example 8: Training loss 0.163230
+******* Epoch 15 Example 9: Training loss 0.267069
+******* Epoch 15 Example 10: Training loss 0.165838
+******************** Epoch 15: Training dice score 0.847858
+
+validate
+
+******* Epoch 15 Example 0: Validation accuracy 0.872827
+******* Epoch 15 Example 1: Validation accuracy 0.472755
+******* Epoch 15 Example 2: Validation accuracy 0.923413
+******* Epoch 15 Example 3: Validation accuracy 0.869007
+******* Epoch 15 Example 4: Validation accuracy 0.160249
+******* Epoch 15 Example 5: Validation accuracy 0.474191
+******* Epoch 15 Example 6: Validation accuracy 0.845704
+******* Epoch 15 Example 7: Validation accuracy 0.732804
+******* Epoch 15 Example 8: Validation accuracy 0.537599
+******* Epoch 15 Example 9: Validation accuracy 0.735251
+******* Epoch 15 Example 10: Validation accuracy 0.742621
+******* Epoch 15 Example 11: Validation accuracy 0.891981
+******* Epoch 15 Example 12: Validation accuracy 0.858925
+******* Epoch 15 Example 13: Validation accuracy 0.657628
+******* Epoch 15 Example 14: Validation accuracy 0.645847
+******* Epoch 15 Example 15: Validation accuracy 0.516713
+******* Epoch 15 Example 16: Validation accuracy 0.865747
+******* Epoch 15 Example 17: Validation accuracy 0.769319
+******* Epoch 15 Example 18: Validation accuracy 0.877618
+******* Epoch 15 Example 19: Validation accuracy 0.094088
+******* Epoch 15 Example 20: Validation accuracy 0.777407
+******* Epoch 15 Example 21: Validation accuracy 0.237028
+******* Epoch 15 Example 22: Validation accuracy 0.760937
+******* Epoch 15 Example 23: Validation accuracy 0.880289
+******* Epoch 15 Example 24: Validation accuracy 0.796957
+******* Epoch 15 Example 25: Validation accuracy 0.570337
+******* Epoch 15 Example 26: Validation accuracy 0.833600
+******* Epoch 15 Example 27: Validation accuracy 0.746244
+******* Epoch 15 Example 28: Validation accuracy 0.707120
+******* Epoch 15 Example 29: Validation accuracy 0.391525
+******* Epoch 15 Example 30: Validation accuracy 0.369831
+******* Epoch 15 Example 31: Validation accuracy 0.518779
+******* Epoch 15 Example 32: Validation accuracy 0.779890
+******* Epoch 15 Example 33: Validation accuracy 0.695304
+******* Epoch 15 Example 34: Validation accuracy 0.508769
+******* Epoch 15 Example 35: Validation accuracy 0.951124
+******* Epoch 15 Example 36: Validation accuracy 0.825677
+******* Epoch 15 Example 37: Validation accuracy 0.856090
+******* Epoch 15 Example 38: Validation accuracy 0.921497
+******* Epoch 15 Example 39: Validation accuracy 0.700594
+******* Epoch 15 Example 40: Validation accuracy 0.400510
+******* Epoch 15 Example 41: Validation accuracy 0.613430
+******* Epoch 15 Example 42: Validation accuracy 0.871300
+******* Epoch 15 Example 43: Validation accuracy 0.477184
+******* Epoch 15 Example 44: Validation accuracy 0.639648
+******* Epoch 15 Example 45: Validation accuracy 0.687638
+******************** Epoch 15: Validation dice score 0.675283
+
+test
+
+******* Epoch 15 Example 0: Test accuracy 0.771833
+******* Epoch 15 Example 1: Test accuracy 0.213310
+******* Epoch 15 Example 2: Test accuracy 0.762345
+******* Epoch 15 Example 3: Test accuracy 0.487497
+******* Epoch 15 Example 4: Test accuracy 0.054131
+******* Epoch 15 Example 5: Test accuracy 0.379979
+******* Epoch 15 Example 6: Test accuracy 0.661205
+******* Epoch 15 Example 7: Test accuracy 0.277920
+******* Epoch 15 Example 8: Test accuracy 0.453599
+******* Epoch 15 Example 9: Test accuracy 0.592529
+******* Epoch 15 Example 10: Test accuracy 0.664507
+******* Epoch 15 Example 11: Test accuracy 0.789604
+******* Epoch 15 Example 12: Test accuracy 0.513470
+******* Epoch 15 Example 13: Test accuracy 0.566737
+******* Epoch 15 Example 14: Test accuracy 0.596562
+******* Epoch 15 Example 15: Test accuracy 0.288337
+******* Epoch 15 Example 16: Test accuracy 0.661063
+******* Epoch 15 Example 17: Test accuracy 0.548035
+******* Epoch 15 Example 18: Test accuracy 0.464842
+******* Epoch 15 Example 19: Test accuracy 0.031418
+******* Epoch 15 Example 20: Test accuracy 0.284625
+******* Epoch 15 Example 21: Test accuracy 0.143322
+******* Epoch 15 Example 22: Test accuracy 0.408765
+******* Epoch 15 Example 23: Test accuracy 0.712939
+******* Epoch 15 Example 24: Test accuracy 0.574160
+******* Epoch 15 Example 25: Test accuracy 0.349148
+******* Epoch 15 Example 26: Test accuracy 0.451143
+******* Epoch 15 Example 27: Test accuracy 0.617509
+******* Epoch 15 Example 28: Test accuracy 0.567632
+******* Epoch 15 Example 29: Test accuracy 0.308881
+******* Epoch 15 Example 30: Test accuracy 0.357706
+******* Epoch 15 Example 31: Test accuracy 0.351654
+******* Epoch 15 Example 32: Test accuracy 0.640162
+******* Epoch 15 Example 33: Test accuracy 0.251638
+******* Epoch 15 Example 34: Test accuracy 0.410461
+******* Epoch 15 Example 35: Test accuracy 0.880150
+******* Epoch 15 Example 36: Test accuracy 0.650513
+******* Epoch 15 Example 37: Test accuracy 0.408057
+******* Epoch 15 Example 38: Test accuracy 0.829612
+******* Epoch 15 Example 39: Test accuracy 0.491619
+******* Epoch 15 Example 40: Test accuracy 0.338069
+******* Epoch 15 Example 41: Test accuracy 0.527941
+******* Epoch 15 Example 42: Test accuracy 0.726800
+******* Epoch 15 Example 43: Test accuracy 0.431782
+******* Epoch 15 Example 44: Test accuracy 0.511532
+******* Epoch 15 Example 45: Test accuracy 0.212002
+******************** Epoch 15: Test dice score 0.482973
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 16
+
+train
+
+******* Epoch 16 Example 0: Training loss 0.208927
+******* Epoch 16 Example 1: Training loss 0.340225
+******* Epoch 16 Example 2: Training loss 0.190757
+******* Epoch 16 Example 3: Training loss 0.216286
+******* Epoch 16 Example 4: Training loss 0.139230
+******* Epoch 16 Example 5: Training loss 0.412913
+******* Epoch 16 Example 6: Training loss 0.210361
+******* Epoch 16 Example 7: Training loss 0.271515
+******* Epoch 16 Example 8: Training loss 0.157900
+******* Epoch 16 Example 9: Training loss 0.267162
+******* Epoch 16 Example 10: Training loss 0.151832
+******************** Epoch 16: Training dice score 0.851812
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 17
+
+train
+
+******* Epoch 17 Example 0: Training loss 0.191477
+******* Epoch 17 Example 1: Training loss 0.336976
+******* Epoch 17 Example 2: Training loss 0.187581
+******* Epoch 17 Example 3: Training loss 0.224082
+******* Epoch 17 Example 4: Training loss 0.147807
+******* Epoch 17 Example 5: Training loss 0.407118
+******* Epoch 17 Example 6: Training loss 0.213506
+******* Epoch 17 Example 7: Training loss 0.259438
+******* Epoch 17 Example 8: Training loss 0.150478
+******* Epoch 17 Example 9: Training loss 0.257183
+******* Epoch 17 Example 10: Training loss 0.154212
+******************** Epoch 17: Training dice score 0.849880
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 18
+
+train
+
+******* Epoch 18 Example 0: Training loss 0.213728
+******* Epoch 18 Example 1: Training loss 0.319104
+******* Epoch 18 Example 2: Training loss 0.197236
+******* Epoch 18 Example 3: Training loss 0.227454
+******* Epoch 18 Example 4: Training loss 0.137265
+******* Epoch 18 Example 5: Training loss 0.418976
+******* Epoch 18 Example 6: Training loss 0.208657
+******* Epoch 18 Example 7: Training loss 0.262806
+******* Epoch 18 Example 8: Training loss 0.149855
+******* Epoch 18 Example 9: Training loss 0.260495
+******* Epoch 18 Example 10: Training loss 0.143989
+******************** Epoch 18: Training dice score 0.850650
+
+validate
+
+******* Epoch 18 Example 0: Validation accuracy 0.872177
+******* Epoch 18 Example 1: Validation accuracy 0.484971
+******* Epoch 18 Example 2: Validation accuracy 0.919216
+******* Epoch 18 Example 3: Validation accuracy 0.854653
+******* Epoch 18 Example 4: Validation accuracy 0.201249
+******* Epoch 18 Example 5: Validation accuracy 0.479344
+******* Epoch 18 Example 6: Validation accuracy 0.843536
+******* Epoch 18 Example 7: Validation accuracy 0.737341
+******* Epoch 18 Example 8: Validation accuracy 0.516463
+******* Epoch 18 Example 9: Validation accuracy 0.753467
+******* Epoch 18 Example 10: Validation accuracy 0.761209
+******* Epoch 18 Example 11: Validation accuracy 0.893523
+******* Epoch 18 Example 12: Validation accuracy 0.850591
+******* Epoch 18 Example 13: Validation accuracy 0.640503
+******* Epoch 18 Example 14: Validation accuracy 0.660042
+******* Epoch 18 Example 15: Validation accuracy 0.571585
+******* Epoch 18 Example 16: Validation accuracy 0.873595
+******* Epoch 18 Example 17: Validation accuracy 0.792591
+******* Epoch 18 Example 18: Validation accuracy 0.881172
+******* Epoch 18 Example 19: Validation accuracy 0.050485
+******* Epoch 18 Example 20: Validation accuracy 0.803482
+******* Epoch 18 Example 21: Validation accuracy 0.253009
+******* Epoch 18 Example 22: Validation accuracy 0.752677
+******* Epoch 18 Example 23: Validation accuracy 0.878972
+******* Epoch 18 Example 24: Validation accuracy 0.789762
+******* Epoch 18 Example 25: Validation accuracy 0.548920
+******* Epoch 18 Example 26: Validation accuracy 0.839305
+******* Epoch 18 Example 27: Validation accuracy 0.749031
+******* Epoch 18 Example 28: Validation accuracy 0.714019
+******* Epoch 18 Example 29: Validation accuracy 0.362623
+******* Epoch 18 Example 30: Validation accuracy 0.389617
+******* Epoch 18 Example 31: Validation accuracy 0.527954
+******* Epoch 18 Example 32: Validation accuracy 0.798739
+******* Epoch 18 Example 33: Validation accuracy 0.692506
+******* Epoch 18 Example 34: Validation accuracy 0.531508
+******* Epoch 18 Example 35: Validation accuracy 0.944769
+******* Epoch 18 Example 36: Validation accuracy 0.834224
+******* Epoch 18 Example 37: Validation accuracy 0.843104
+******* Epoch 18 Example 38: Validation accuracy 0.919223
+******* Epoch 18 Example 39: Validation accuracy 0.729945
+******* Epoch 18 Example 40: Validation accuracy 0.362435
+******* Epoch 18 Example 41: Validation accuracy 0.642924
+******* Epoch 18 Example 42: Validation accuracy 0.870884
+******* Epoch 18 Example 43: Validation accuracy 0.466911
+******* Epoch 18 Example 44: Validation accuracy 0.655817
+******* Epoch 18 Example 45: Validation accuracy 0.680236
+******************** Epoch 18: Validation dice score 0.678702
+
+test
+
+******* Epoch 18 Example 0: Test accuracy 0.772191
+******* Epoch 18 Example 1: Test accuracy 0.233471
+******* Epoch 18 Example 2: Test accuracy 0.759402
+******* Epoch 18 Example 3: Test accuracy 0.515844
+******* Epoch 18 Example 4: Test accuracy 0.067257
+******* Epoch 18 Example 5: Test accuracy 0.377453
+******* Epoch 18 Example 6: Test accuracy 0.686026
+******* Epoch 18 Example 7: Test accuracy 0.316507
+******* Epoch 18 Example 8: Test accuracy 0.453474
+******* Epoch 18 Example 9: Test accuracy 0.608219
+******* Epoch 18 Example 10: Test accuracy 0.674307
+******* Epoch 18 Example 11: Test accuracy 0.795959
+******* Epoch 18 Example 12: Test accuracy 0.519911
+******* Epoch 18 Example 13: Test accuracy 0.556837
+******* Epoch 18 Example 14: Test accuracy 0.604170
+******* Epoch 18 Example 15: Test accuracy 0.315910
+******* Epoch 18 Example 16: Test accuracy 0.673889
+******* Epoch 18 Example 17: Test accuracy 0.556905
+******* Epoch 18 Example 18: Test accuracy 0.502826
+******* Epoch 18 Example 19: Test accuracy 0.014942
+******* Epoch 18 Example 20: Test accuracy 0.304389
+******* Epoch 18 Example 21: Test accuracy 0.152091
+******* Epoch 18 Example 22: Test accuracy 0.422523
+******* Epoch 18 Example 23: Test accuracy 0.721434
+******* Epoch 18 Example 24: Test accuracy 0.589744
+******* Epoch 18 Example 25: Test accuracy 0.351428
+******* Epoch 18 Example 26: Test accuracy 0.483555
+******* Epoch 18 Example 27: Test accuracy 0.615888
+******* Epoch 18 Example 28: Test accuracy 0.574043
+******* Epoch 18 Example 29: Test accuracy 0.315475
+******* Epoch 18 Example 30: Test accuracy 0.360752
+******* Epoch 18 Example 31: Test accuracy 0.364223
+******* Epoch 18 Example 32: Test accuracy 0.656072
+******* Epoch 18 Example 33: Test accuracy 0.265051
+******* Epoch 18 Example 34: Test accuracy 0.411724
+******* Epoch 18 Example 35: Test accuracy 0.881764
+******* Epoch 18 Example 36: Test accuracy 0.665475
+******* Epoch 18 Example 37: Test accuracy 0.430232
+******* Epoch 18 Example 38: Test accuracy 0.843473
+******* Epoch 18 Example 39: Test accuracy 0.515251
+******* Epoch 18 Example 40: Test accuracy 0.315825
+******* Epoch 18 Example 41: Test accuracy 0.542492
+******* Epoch 18 Example 42: Test accuracy 0.733924
+******* Epoch 18 Example 43: Test accuracy 0.439253
+******* Epoch 18 Example 44: Test accuracy 0.525015
+******* Epoch 18 Example 45: Test accuracy 0.245273
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 18: Test dice score 0.494171
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 19
+
+train
+
+******* Epoch 19 Example 0: Training loss 0.205758
+******* Epoch 19 Example 1: Training loss 0.309253
+******* Epoch 19 Example 2: Training loss 0.185134
+******* Epoch 19 Example 3: Training loss 0.222897
+******* Epoch 19 Example 4: Training loss 0.138971
+******* Epoch 19 Example 5: Training loss 0.393196
+******* Epoch 19 Example 6: Training loss 0.194025
+******* Epoch 19 Example 7: Training loss 0.246224
+******* Epoch 19 Example 8: Training loss 0.147361
+******* Epoch 19 Example 9: Training loss 0.249134
+******* Epoch 19 Example 10: Training loss 0.161769
+******************** Epoch 19: Training dice score 0.853548
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 20
+
+train
+
+******* Epoch 20 Example 0: Training loss 0.215079
+******* Epoch 20 Example 1: Training loss 0.320608
+******* Epoch 20 Example 2: Training loss 0.199124
+******* Epoch 20 Example 3: Training loss 0.222914
+******* Epoch 20 Example 4: Training loss 0.130650
+******* Epoch 20 Example 5: Training loss 0.396589
+******* Epoch 20 Example 6: Training loss 0.213983
+******* Epoch 20 Example 7: Training loss 0.259558
+******* Epoch 20 Example 8: Training loss 0.148977
+******* Epoch 20 Example 9: Training loss 0.255500
+******* Epoch 20 Example 10: Training loss 0.150801
+******************** Epoch 20: Training dice score 0.852696
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 21
+
+train
+
+******* Epoch 21 Example 0: Training loss 0.213598
+******* Epoch 21 Example 1: Training loss 0.328553
+******* Epoch 21 Example 2: Training loss 0.191417
+******* Epoch 21 Example 3: Training loss 0.215803
+******* Epoch 21 Example 4: Training loss 0.125265
+******* Epoch 21 Example 5: Training loss 0.381591
+******* Epoch 21 Example 6: Training loss 0.186683
+******* Epoch 21 Example 7: Training loss 0.256652
+******* Epoch 21 Example 8: Training loss 0.140385
+******* Epoch 21 Example 9: Training loss 0.244557
+******* Epoch 21 Example 10: Training loss 0.154865
+******************** Epoch 21: Training dice score 0.853640
+
+validate
+
+******* Epoch 21 Example 0: Validation accuracy 0.872935
+******* Epoch 21 Example 1: Validation accuracy 0.544449
+******* Epoch 21 Example 2: Validation accuracy 0.913888
+******* Epoch 21 Example 3: Validation accuracy 0.853697
+******* Epoch 21 Example 4: Validation accuracy 0.228570
+******* Epoch 21 Example 5: Validation accuracy 0.498940
+******* Epoch 21 Example 6: Validation accuracy 0.844134
+******* Epoch 21 Example 7: Validation accuracy 0.751586
+******* Epoch 21 Example 8: Validation accuracy 0.567105
+******* Epoch 21 Example 9: Validation accuracy 0.764823
+******* Epoch 21 Example 10: Validation accuracy 0.737115
+******* Epoch 21 Example 11: Validation accuracy 0.893047
+******* Epoch 21 Example 12: Validation accuracy 0.853676
+******* Epoch 21 Example 13: Validation accuracy 0.642560
+******* Epoch 21 Example 14: Validation accuracy 0.689142
+******* Epoch 21 Example 15: Validation accuracy 0.649714
+******* Epoch 21 Example 16: Validation accuracy 0.856034
+******* Epoch 21 Example 17: Validation accuracy 0.812449
+******* Epoch 21 Example 18: Validation accuracy 0.891690
+******* Epoch 21 Example 19: Validation accuracy 0.047721
+******* Epoch 21 Example 20: Validation accuracy 0.808108
+******* Epoch 21 Example 21: Validation accuracy 0.277090
+******* Epoch 21 Example 22: Validation accuracy 0.781425
+******* Epoch 21 Example 23: Validation accuracy 0.878177
+******* Epoch 21 Example 24: Validation accuracy 0.792251
+******* Epoch 21 Example 25: Validation accuracy 0.544540
+******* Epoch 21 Example 26: Validation accuracy 0.829043
+******* Epoch 21 Example 27: Validation accuracy 0.756526
+******* Epoch 21 Example 28: Validation accuracy 0.733065
+******* Epoch 21 Example 29: Validation accuracy 0.400179
+******* Epoch 21 Example 30: Validation accuracy 0.405213
+******* Epoch 21 Example 31: Validation accuracy 0.553698
+******* Epoch 21 Example 32: Validation accuracy 0.794558
+******* Epoch 21 Example 33: Validation accuracy 0.707399
+******* Epoch 21 Example 34: Validation accuracy 0.511212
+******* Epoch 21 Example 35: Validation accuracy 0.940787
+******* Epoch 21 Example 36: Validation accuracy 0.833378
+******* Epoch 21 Example 37: Validation accuracy 0.854335
+******* Epoch 21 Example 38: Validation accuracy 0.923873
+******* Epoch 21 Example 39: Validation accuracy 0.760230
+******* Epoch 21 Example 40: Validation accuracy 0.385942
+******* Epoch 21 Example 41: Validation accuracy 0.655856
+******* Epoch 21 Example 42: Validation accuracy 0.866019
+******* Epoch 21 Example 43: Validation accuracy 0.450419
+******* Epoch 21 Example 44: Validation accuracy 0.680654
+******* Epoch 21 Example 45: Validation accuracy 0.689891
+******************** Epoch 21: Validation dice score 0.689720
+
+test
+
+******* Epoch 21 Example 0: Test accuracy 0.774957
+******* Epoch 21 Example 1: Test accuracy 0.261809
+******* Epoch 21 Example 2: Test accuracy 0.745473
+******* Epoch 21 Example 3: Test accuracy 0.537265
+******* Epoch 21 Example 4: Test accuracy 0.075242
+******* Epoch 21 Example 5: Test accuracy 0.384279
+******* Epoch 21 Example 6: Test accuracy 0.689774
+******* Epoch 21 Example 7: Test accuracy 0.349501
+******* Epoch 21 Example 8: Test accuracy 0.471812
+******* Epoch 21 Example 9: Test accuracy 0.620636
+******* Epoch 21 Example 10: Test accuracy 0.678156
+******* Epoch 21 Example 11: Test accuracy 0.792745
+******* Epoch 21 Example 12: Test accuracy 0.521083
+******* Epoch 21 Example 13: Test accuracy 0.582874
+******* Epoch 21 Example 14: Test accuracy 0.617593
+******* Epoch 21 Example 15: Test accuracy 0.353880
+******* Epoch 21 Example 16: Test accuracy 0.679952
+******* Epoch 21 Example 17: Test accuracy 0.565999
+******* Epoch 21 Example 18: Test accuracy 0.504373
+******* Epoch 21 Example 19: Test accuracy 0.016487
+******* Epoch 21 Example 20: Test accuracy 0.313707
+******* Epoch 21 Example 21: Test accuracy 0.171947
+******* Epoch 21 Example 22: Test accuracy 0.435311
+******* Epoch 21 Example 23: Test accuracy 0.723440
+******* Epoch 21 Example 24: Test accuracy 0.593870
+******* Epoch 21 Example 25: Test accuracy 0.354382
+******* Epoch 21 Example 26: Test accuracy 0.501309
+******* Epoch 21 Example 27: Test accuracy 0.625318
+******* Epoch 21 Example 28: Test accuracy 0.593613
+******* Epoch 21 Example 29: Test accuracy 0.326982
+******* Epoch 21 Example 30: Test accuracy 0.390671
+******* Epoch 21 Example 31: Test accuracy 0.394863
+******* Epoch 21 Example 32: Test accuracy 0.674323
+******* Epoch 21 Example 33: Test accuracy 0.262237
+******* Epoch 21 Example 34: Test accuracy 0.440272
+******* Epoch 21 Example 35: Test accuracy 0.879039
+******* Epoch 21 Example 36: Test accuracy 0.675873
+******* Epoch 21 Example 37: Test accuracy 0.451561
+******* Epoch 21 Example 38: Test accuracy 0.842799
+******* Epoch 21 Example 39: Test accuracy 0.533468
+******* Epoch 21 Example 40: Test accuracy 0.335118
+******* Epoch 21 Example 41: Test accuracy 0.553494
+******* Epoch 21 Example 42: Test accuracy 0.729801
+******* Epoch 21 Example 43: Test accuracy 0.443089
+******* Epoch 21 Example 44: Test accuracy 0.550621
+******* Epoch 21 Example 45: Test accuracy 0.255474
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 21: Test dice score 0.506010
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 22
+
+train
+
+******* Epoch 22 Example 0: Training loss 0.207922
+******* Epoch 22 Example 1: Training loss 0.328119
+******* Epoch 22 Example 2: Training loss 0.185226
+******* Epoch 22 Example 3: Training loss 0.221714
+******* Epoch 22 Example 4: Training loss 0.133709
+******* Epoch 22 Example 5: Training loss 0.377147
+******* Epoch 22 Example 6: Training loss 0.193179
+******* Epoch 22 Example 7: Training loss 0.248924
+******* Epoch 22 Example 8: Training loss 0.142133
+******* Epoch 22 Example 9: Training loss 0.247279
+******* Epoch 22 Example 10: Training loss 0.141209
+******************** Epoch 22: Training dice score 0.853932
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 23
+
+train
+
+******* Epoch 23 Example 0: Training loss 0.203001
+******* Epoch 23 Example 1: Training loss 0.318460
+******* Epoch 23 Example 2: Training loss 0.188975
+******* Epoch 23 Example 3: Training loss 0.225479
+******* Epoch 23 Example 4: Training loss 0.129190
+******* Epoch 23 Example 5: Training loss 0.376347
+******* Epoch 23 Example 6: Training loss 0.190412
+******* Epoch 23 Example 7: Training loss 0.232208
+******* Epoch 23 Example 8: Training loss 0.136920
+******* Epoch 23 Example 9: Training loss 0.227293
+******* Epoch 23 Example 10: Training loss 0.149356
+******************** Epoch 23: Training dice score 0.860270
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 24
+
+train
+
+******* Epoch 24 Example 0: Training loss 0.202333
+******* Epoch 24 Example 1: Training loss 0.311768
+******* Epoch 24 Example 2: Training loss 0.190450
+******* Epoch 24 Example 3: Training loss 0.209427
+******* Epoch 24 Example 4: Training loss 0.127688
+******* Epoch 24 Example 5: Training loss 0.337372
+******* Epoch 24 Example 6: Training loss 0.192521
+******* Epoch 24 Example 7: Training loss 0.231530
+******* Epoch 24 Example 8: Training loss 0.145491
+******* Epoch 24 Example 9: Training loss 0.237238
+******* Epoch 24 Example 10: Training loss 0.151294
+******************** Epoch 24: Training dice score 0.862816
+
+validate
+
+******* Epoch 24 Example 0: Validation accuracy 0.888398
+******* Epoch 24 Example 1: Validation accuracy 0.646012
+******* Epoch 24 Example 2: Validation accuracy 0.909189
+******* Epoch 24 Example 3: Validation accuracy 0.882499
+******* Epoch 24 Example 4: Validation accuracy 0.309050
+******* Epoch 24 Example 5: Validation accuracy 0.540413
+******* Epoch 24 Example 6: Validation accuracy 0.863646
+******* Epoch 24 Example 7: Validation accuracy 0.784447
+******* Epoch 24 Example 8: Validation accuracy 0.639782
+******* Epoch 24 Example 9: Validation accuracy 0.774609
+******* Epoch 24 Example 10: Validation accuracy 0.768458
+******* Epoch 24 Example 11: Validation accuracy 0.889931
+******* Epoch 24 Example 12: Validation accuracy 0.859090
+******* Epoch 24 Example 13: Validation accuracy 0.720935
+******* Epoch 24 Example 14: Validation accuracy 0.716829
+******* Epoch 24 Example 15: Validation accuracy 0.715254
+******* Epoch 24 Example 16: Validation accuracy 0.865546
+******* Epoch 24 Example 17: Validation accuracy 0.812061
+******* Epoch 24 Example 18: Validation accuracy 0.861766
+******* Epoch 24 Example 19: Validation accuracy 0.075298
+******* Epoch 24 Example 20: Validation accuracy 0.769468
+******* Epoch 24 Example 21: Validation accuracy 0.362585
+******* Epoch 24 Example 22: Validation accuracy 0.794091
+******* Epoch 24 Example 23: Validation accuracy 0.866676
+******* Epoch 24 Example 24: Validation accuracy 0.809977
+******* Epoch 24 Example 25: Validation accuracy 0.581179
+******* Epoch 24 Example 26: Validation accuracy 0.815186
+******* Epoch 24 Example 27: Validation accuracy 0.766031
+******* Epoch 24 Example 28: Validation accuracy 0.753177
+******* Epoch 24 Example 29: Validation accuracy 0.404951
+******* Epoch 24 Example 30: Validation accuracy 0.496141
+******* Epoch 24 Example 31: Validation accuracy 0.613593
+******* Epoch 24 Example 32: Validation accuracy 0.832772
+******* Epoch 24 Example 33: Validation accuracy 0.729655
+******* Epoch 24 Example 34: Validation accuracy 0.608964
+******* Epoch 24 Example 35: Validation accuracy 0.933609
+******* Epoch 24 Example 36: Validation accuracy 0.853789
+******* Epoch 24 Example 37: Validation accuracy 0.862825
+******* Epoch 24 Example 38: Validation accuracy 0.913769
+******* Epoch 24 Example 39: Validation accuracy 0.766362
+******* Epoch 24 Example 40: Validation accuracy 0.433308
+******* Epoch 24 Example 41: Validation accuracy 0.692254
+******* Epoch 24 Example 42: Validation accuracy 0.861166
+******* Epoch 24 Example 43: Validation accuracy 0.505633
+******* Epoch 24 Example 44: Validation accuracy 0.738489
+******* Epoch 24 Example 45: Validation accuracy 0.659986
+******************** Epoch 24: Validation dice score 0.716279
+
+test
+
+******* Epoch 24 Example 0: Test accuracy 0.783564
+******* Epoch 24 Example 1: Test accuracy 0.282902
+******* Epoch 24 Example 2: Test accuracy 0.721665
+******* Epoch 24 Example 3: Test accuracy 0.527883
+******* Epoch 24 Example 4: Test accuracy 0.097576
+******* Epoch 24 Example 5: Test accuracy 0.389175
+******* Epoch 24 Example 6: Test accuracy 0.678291
+******* Epoch 24 Example 7: Test accuracy 0.341046
+******* Epoch 24 Example 8: Test accuracy 0.516783
+******* Epoch 24 Example 9: Test accuracy 0.611845
+******* Epoch 24 Example 10: Test accuracy 0.688035
+******* Epoch 24 Example 11: Test accuracy 0.784451
+******* Epoch 24 Example 12: Test accuracy 0.514372
+******* Epoch 24 Example 13: Test accuracy 0.624293
+******* Epoch 24 Example 14: Test accuracy 0.635491
+******* Epoch 24 Example 15: Test accuracy 0.377510
+******* Epoch 24 Example 16: Test accuracy 0.679062
+******* Epoch 24 Example 17: Test accuracy 0.551850
+******* Epoch 24 Example 18: Test accuracy 0.442939
+******* Epoch 24 Example 19: Test accuracy 0.021559
+******* Epoch 24 Example 20: Test accuracy 0.280935
+******* Epoch 24 Example 21: Test accuracy 0.205434
+******* Epoch 24 Example 22: Test accuracy 0.423374
+******* Epoch 24 Example 23: Test accuracy 0.701873
+******* Epoch 24 Example 24: Test accuracy 0.578717
+******* Epoch 24 Example 25: Test accuracy 0.363826
+******* Epoch 24 Example 26: Test accuracy 0.468183
+******* Epoch 24 Example 27: Test accuracy 0.619313
+******* Epoch 24 Example 28: Test accuracy 0.584171
+******* Epoch 24 Example 29: Test accuracy 0.327634
+******* Epoch 24 Example 30: Test accuracy 0.441814
+******* Epoch 24 Example 31: Test accuracy 0.433054
+******* Epoch 24 Example 32: Test accuracy 0.692886
+******* Epoch 24 Example 33: Test accuracy 0.224995
+******* Epoch 24 Example 34: Test accuracy 0.478158
+******* Epoch 24 Example 35: Test accuracy 0.861921
+******* Epoch 24 Example 36: Test accuracy 0.666770
+******* Epoch 24 Example 37: Test accuracy 0.454806
+******* Epoch 24 Example 38: Test accuracy 0.818938
+******* Epoch 24 Example 39: Test accuracy 0.517139
+******* Epoch 24 Example 40: Test accuracy 0.389558
+******* Epoch 24 Example 41: Test accuracy 0.565777
+******* Epoch 24 Example 42: Test accuracy 0.675601
+******* Epoch 24 Example 43: Test accuracy 0.456650
+******* Epoch 24 Example 44: Test accuracy 0.606427
+******* Epoch 24 Example 45: Test accuracy 0.215962
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 24: Test dice score 0.507048
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 25
+
+train
+
+******* Epoch 25 Example 0: Training loss 0.195951
+******* Epoch 25 Example 1: Training loss 0.319129
+******* Epoch 25 Example 2: Training loss 0.183443
+******* Epoch 25 Example 3: Training loss 0.224649
+******* Epoch 25 Example 4: Training loss 0.124357
+******* Epoch 25 Example 5: Training loss 0.359946
+******* Epoch 25 Example 6: Training loss 0.187572
+******* Epoch 25 Example 7: Training loss 0.229293
+******* Epoch 25 Example 8: Training loss 0.147385
+******* Epoch 25 Example 9: Training loss 0.247933
+******* Epoch 25 Example 10: Training loss 0.151734
+******************** Epoch 25: Training dice score 0.865543
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 26
+
+train
+
+******* Epoch 26 Example 0: Training loss 0.203126
+******* Epoch 26 Example 1: Training loss 0.302691
+******* Epoch 26 Example 2: Training loss 0.187343
+******* Epoch 26 Example 3: Training loss 0.223790
+******* Epoch 26 Example 4: Training loss 0.128120
+******* Epoch 26 Example 5: Training loss 0.356846
+******* Epoch 26 Example 6: Training loss 0.194043
+******* Epoch 26 Example 7: Training loss 0.221103
+******* Epoch 26 Example 8: Training loss 0.143358
+******* Epoch 26 Example 9: Training loss 0.236457
+******* Epoch 26 Example 10: Training loss 0.133692
+******************** Epoch 26: Training dice score 0.867980
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 27
+
+train
+
+******* Epoch 27 Example 0: Training loss 0.196884
+******* Epoch 27 Example 1: Training loss 0.310416
+******* Epoch 27 Example 2: Training loss 0.185091
+******* Epoch 27 Example 3: Training loss 0.227490
+******* Epoch 27 Example 4: Training loss 0.130226
+******* Epoch 27 Example 5: Training loss 0.354882
+******* Epoch 27 Example 6: Training loss 0.188392
+******* Epoch 27 Example 7: Training loss 0.211362
+******* Epoch 27 Example 8: Training loss 0.129642
+******* Epoch 27 Example 9: Training loss 0.239531
+******* Epoch 27 Example 10: Training loss 0.143445
+******************** Epoch 27: Training dice score 0.869378
+
+validate
+
+******* Epoch 27 Example 0: Validation accuracy 0.895945
+******* Epoch 27 Example 1: Validation accuracy 0.655932
+******* Epoch 27 Example 2: Validation accuracy 0.912606
+******* Epoch 27 Example 3: Validation accuracy 0.889891
+******* Epoch 27 Example 4: Validation accuracy 0.319262
+******* Epoch 27 Example 5: Validation accuracy 0.503999
+******* Epoch 27 Example 6: Validation accuracy 0.843341
+******* Epoch 27 Example 7: Validation accuracy 0.788243
+******* Epoch 27 Example 8: Validation accuracy 0.612476
+******* Epoch 27 Example 9: Validation accuracy 0.786980
+******* Epoch 27 Example 10: Validation accuracy 0.783921
+******* Epoch 27 Example 11: Validation accuracy 0.883260
+******* Epoch 27 Example 12: Validation accuracy 0.868836
+******* Epoch 27 Example 13: Validation accuracy 0.698626
+******* Epoch 27 Example 14: Validation accuracy 0.723080
+******* Epoch 27 Example 15: Validation accuracy 0.708568
+******* Epoch 27 Example 16: Validation accuracy 0.869046
+******* Epoch 27 Example 17: Validation accuracy 0.811349
+******* Epoch 27 Example 18: Validation accuracy 0.872019
+******* Epoch 27 Example 19: Validation accuracy 0.058031
+******* Epoch 27 Example 20: Validation accuracy 0.775516
+******* Epoch 27 Example 21: Validation accuracy 0.386071
+******* Epoch 27 Example 22: Validation accuracy 0.781205
+******* Epoch 27 Example 23: Validation accuracy 0.870433
+******* Epoch 27 Example 24: Validation accuracy 0.823047
+******* Epoch 27 Example 25: Validation accuracy 0.604752
+******* Epoch 27 Example 26: Validation accuracy 0.822908
+******* Epoch 27 Example 27: Validation accuracy 0.761892
+******* Epoch 27 Example 28: Validation accuracy 0.738386
+******* Epoch 27 Example 29: Validation accuracy 0.418789
+******* Epoch 27 Example 30: Validation accuracy 0.536806
+******* Epoch 27 Example 31: Validation accuracy 0.631208
+******* Epoch 27 Example 32: Validation accuracy 0.833399
+******* Epoch 27 Example 33: Validation accuracy 0.732621
+******* Epoch 27 Example 34: Validation accuracy 0.606105
+******* Epoch 27 Example 35: Validation accuracy 0.944051
+******* Epoch 27 Example 36: Validation accuracy 0.858507
+******* Epoch 27 Example 37: Validation accuracy 0.856957
+******* Epoch 27 Example 38: Validation accuracy 0.918929
+******* Epoch 27 Example 39: Validation accuracy 0.767874
+******* Epoch 27 Example 40: Validation accuracy 0.450862
+******* Epoch 27 Example 41: Validation accuracy 0.678236
+******* Epoch 27 Example 42: Validation accuracy 0.864770
+******* Epoch 27 Example 43: Validation accuracy 0.487434
+******* Epoch 27 Example 44: Validation accuracy 0.767202
+******* Epoch 27 Example 45: Validation accuracy 0.676129
+******************** Epoch 27: Validation dice score 0.719120
+
+test
+
+******* Epoch 27 Example 0: Test accuracy 0.776940
+******* Epoch 27 Example 1: Test accuracy 0.283444
+******* Epoch 27 Example 2: Test accuracy 0.721161
+******* Epoch 27 Example 3: Test accuracy 0.547795
+******* Epoch 27 Example 4: Test accuracy 0.097370
+******* Epoch 27 Example 5: Test accuracy 0.386377
+******* Epoch 27 Example 6: Test accuracy 0.699891
+******* Epoch 27 Example 7: Test accuracy 0.343483
+******* Epoch 27 Example 8: Test accuracy 0.511252
+******* Epoch 27 Example 9: Test accuracy 0.620264
+******* Epoch 27 Example 10: Test accuracy 0.691647
+******* Epoch 27 Example 11: Test accuracy 0.787322
+******* Epoch 27 Example 12: Test accuracy 0.516063
+******* Epoch 27 Example 13: Test accuracy 0.627618
+******* Epoch 27 Example 14: Test accuracy 0.631617
+******* Epoch 27 Example 15: Test accuracy 0.373205
+******* Epoch 27 Example 16: Test accuracy 0.680174
+******* Epoch 27 Example 17: Test accuracy 0.548991
+******* Epoch 27 Example 18: Test accuracy 0.440666
+******* Epoch 27 Example 19: Test accuracy 0.016196
+******* Epoch 27 Example 20: Test accuracy 0.281733
+******* Epoch 27 Example 21: Test accuracy 0.208044
+******* Epoch 27 Example 22: Test accuracy 0.422435
+******* Epoch 27 Example 23: Test accuracy 0.710490
+******* Epoch 27 Example 24: Test accuracy 0.585922
+******* Epoch 27 Example 25: Test accuracy 0.366649
+******* Epoch 27 Example 26: Test accuracy 0.465348
+******* Epoch 27 Example 27: Test accuracy 0.608727
+******* Epoch 27 Example 28: Test accuracy 0.578993
+******* Epoch 27 Example 29: Test accuracy 0.331829
+******* Epoch 27 Example 30: Test accuracy 0.442831
+******* Epoch 27 Example 31: Test accuracy 0.433279
+******* Epoch 27 Example 32: Test accuracy 0.691764
+******* Epoch 27 Example 33: Test accuracy 0.232429
+******* Epoch 27 Example 34: Test accuracy 0.481195
+******* Epoch 27 Example 35: Test accuracy 0.858428
+******* Epoch 27 Example 36: Test accuracy 0.669056
+******* Epoch 27 Example 37: Test accuracy 0.449275
+******* Epoch 27 Example 38: Test accuracy 0.819198
+******* Epoch 27 Example 39: Test accuracy 0.513542
+******* Epoch 27 Example 40: Test accuracy 0.383403
+******* Epoch 27 Example 41: Test accuracy 0.562937
+******* Epoch 27 Example 42: Test accuracy 0.676703
+******* Epoch 27 Example 43: Test accuracy 0.452930
+******* Epoch 27 Example 44: Test accuracy 0.609097
+******* Epoch 27 Example 45: Test accuracy 0.216240
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 27: Test dice score 0.507695
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 28
+
+train
+
+******* Epoch 28 Example 0: Training loss 0.194513
+******* Epoch 28 Example 1: Training loss 0.303177
+******* Epoch 28 Example 2: Training loss 0.175378
+******* Epoch 28 Example 3: Training loss 0.222073
+******* Epoch 28 Example 4: Training loss 0.125003
+******* Epoch 28 Example 5: Training loss 0.338000
+******* Epoch 28 Example 6: Training loss 0.169797
+******* Epoch 28 Example 7: Training loss 0.209607
+******* Epoch 28 Example 8: Training loss 0.145797
+******* Epoch 28 Example 9: Training loss 0.242780
+******* Epoch 28 Example 10: Training loss 0.139564
+******************** Epoch 28: Training dice score 0.871655
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 29
+
+train
+
+******* Epoch 29 Example 0: Training loss 0.189215
+******* Epoch 29 Example 1: Training loss 0.292521
+******* Epoch 29 Example 2: Training loss 0.178034
+******* Epoch 29 Example 3: Training loss 0.208615
+******* Epoch 29 Example 4: Training loss 0.125675
+******* Epoch 29 Example 5: Training loss 0.336807
+******* Epoch 29 Example 6: Training loss 0.189517
+******* Epoch 29 Example 7: Training loss 0.203329
+******* Epoch 29 Example 8: Training loss 0.140164
+******* Epoch 29 Example 9: Training loss 0.249295
+******* Epoch 29 Example 10: Training loss 0.144886
+******************** Epoch 29: Training dice score 0.872182
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 30
+
+train
+
+******* Epoch 30 Example 0: Training loss 0.201114
+******* Epoch 30 Example 1: Training loss 0.296040
+******* Epoch 30 Example 2: Training loss 0.180979
+******* Epoch 30 Example 3: Training loss 0.220008
+******* Epoch 30 Example 4: Training loss 0.123353
+******* Epoch 30 Example 5: Training loss 0.327694
+******* Epoch 30 Example 6: Training loss 0.177605
+******* Epoch 30 Example 7: Training loss 0.201737
+******* Epoch 30 Example 8: Training loss 0.137883
+******* Epoch 30 Example 9: Training loss 0.232622
+******* Epoch 30 Example 10: Training loss 0.141686
+******************** Epoch 30: Training dice score 0.872053
+
+validate
+
+******* Epoch 30 Example 0: Validation accuracy 0.900225
+******* Epoch 30 Example 1: Validation accuracy 0.666729
+******* Epoch 30 Example 2: Validation accuracy 0.915432
+******* Epoch 30 Example 3: Validation accuracy 0.890592
+******* Epoch 30 Example 4: Validation accuracy 0.343325
+******* Epoch 30 Example 5: Validation accuracy 0.558305
+******* Epoch 30 Example 6: Validation accuracy 0.858942
+******* Epoch 30 Example 7: Validation accuracy 0.778813
+******* Epoch 30 Example 8: Validation accuracy 0.666877
+******* Epoch 30 Example 9: Validation accuracy 0.776654
+******* Epoch 30 Example 10: Validation accuracy 0.776458
+******* Epoch 30 Example 11: Validation accuracy 0.900213
+******* Epoch 30 Example 12: Validation accuracy 0.871731
+******* Epoch 30 Example 13: Validation accuracy 0.720801
+******* Epoch 30 Example 14: Validation accuracy 0.734135
+******* Epoch 30 Example 15: Validation accuracy 0.718597
+******* Epoch 30 Example 16: Validation accuracy 0.872144
+******* Epoch 30 Example 17: Validation accuracy 0.803992
+******* Epoch 30 Example 18: Validation accuracy 0.880751
+******* Epoch 30 Example 19: Validation accuracy 0.052884
+******* Epoch 30 Example 20: Validation accuracy 0.783252
+******* Epoch 30 Example 21: Validation accuracy 0.414468
+******* Epoch 30 Example 22: Validation accuracy 0.775690
+******* Epoch 30 Example 23: Validation accuracy 0.890560
+******* Epoch 30 Example 24: Validation accuracy 0.827239
+******* Epoch 30 Example 25: Validation accuracy 0.594195
+******* Epoch 30 Example 26: Validation accuracy 0.834665
+******* Epoch 30 Example 27: Validation accuracy 0.761668
+******* Epoch 30 Example 28: Validation accuracy 0.754350
+******* Epoch 30 Example 29: Validation accuracy 0.443173
+******* Epoch 30 Example 30: Validation accuracy 0.531865
+******* Epoch 30 Example 31: Validation accuracy 0.655740
+******* Epoch 30 Example 32: Validation accuracy 0.831251
+******* Epoch 30 Example 33: Validation accuracy 0.743682
+******* Epoch 30 Example 34: Validation accuracy 0.570543
+******* Epoch 30 Example 35: Validation accuracy 0.937280
+******* Epoch 30 Example 36: Validation accuracy 0.869937
+******* Epoch 30 Example 37: Validation accuracy 0.860973
+******* Epoch 30 Example 38: Validation accuracy 0.918259
+******* Epoch 30 Example 39: Validation accuracy 0.770057
+******* Epoch 30 Example 40: Validation accuracy 0.391033
+******* Epoch 30 Example 41: Validation accuracy 0.677991
+******* Epoch 30 Example 42: Validation accuracy 0.868423
+******* Epoch 30 Example 43: Validation accuracy 0.497692
+******* Epoch 30 Example 44: Validation accuracy 0.743253
+******* Epoch 30 Example 45: Validation accuracy 0.687900
+******************** Epoch 30: Validation dice score 0.724407
+
+test
+
+******* Epoch 30 Example 0: Test accuracy 0.779619
+******* Epoch 30 Example 1: Test accuracy 0.291166
+******* Epoch 30 Example 2: Test accuracy 0.710308
+******* Epoch 30 Example 3: Test accuracy 0.557928
+******* Epoch 30 Example 4: Test accuracy 0.107509
+******* Epoch 30 Example 5: Test accuracy 0.386387
+******* Epoch 30 Example 6: Test accuracy 0.696028
+******* Epoch 30 Example 7: Test accuracy 0.331962
+******* Epoch 30 Example 8: Test accuracy 0.503606
+******* Epoch 30 Example 9: Test accuracy 0.628433
+******* Epoch 30 Example 10: Test accuracy 0.696451
+******* Epoch 30 Example 11: Test accuracy 0.790619
+******* Epoch 30 Example 12: Test accuracy 0.521487
+******* Epoch 30 Example 13: Test accuracy 0.626902
+******* Epoch 30 Example 14: Test accuracy 0.633722
+******* Epoch 30 Example 15: Test accuracy 0.382345
+******* Epoch 30 Example 16: Test accuracy 0.681053
+******* Epoch 30 Example 17: Test accuracy 0.545479
+******* Epoch 30 Example 18: Test accuracy 0.428755
+******* Epoch 30 Example 19: Test accuracy 0.014208
+******* Epoch 30 Example 20: Test accuracy 0.282945
+******* Epoch 30 Example 21: Test accuracy 0.216459
+******* Epoch 30 Example 22: Test accuracy 0.425028
+******* Epoch 30 Example 23: Test accuracy 0.718611
+******* Epoch 30 Example 24: Test accuracy 0.590043
+******* Epoch 30 Example 25: Test accuracy 0.359763
+******* Epoch 30 Example 26: Test accuracy 0.446288
+******* Epoch 30 Example 27: Test accuracy 0.600661
+******* Epoch 30 Example 28: Test accuracy 0.583758
+******* Epoch 30 Example 29: Test accuracy 0.354204
+******* Epoch 30 Example 30: Test accuracy 0.457927
+******* Epoch 30 Example 31: Test accuracy 0.444432
+******* Epoch 30 Example 32: Test accuracy 0.692979
+******* Epoch 30 Example 33: Test accuracy 0.234708
+******* Epoch 30 Example 34: Test accuracy 0.483844
+******* Epoch 30 Example 35: Test accuracy 0.852792
+******* Epoch 30 Example 36: Test accuracy 0.672994
+******* Epoch 30 Example 37: Test accuracy 0.432836
+******* Epoch 30 Example 38: Test accuracy 0.814428
+******* Epoch 30 Example 39: Test accuracy 0.515581
+******* Epoch 30 Example 40: Test accuracy 0.377325
+******* Epoch 30 Example 41: Test accuracy 0.564683
+******* Epoch 30 Example 42: Test accuracy 0.666368
+******* Epoch 30 Example 43: Test accuracy 0.453752
+******* Epoch 30 Example 44: Test accuracy 0.604367
+******* Epoch 30 Example 45: Test accuracy 0.215701
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 30: Test dice score 0.508184
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 31
+
+train
+
+******* Epoch 31 Example 0: Training loss 0.195993
+******* Epoch 31 Example 1: Training loss 0.302139
+******* Epoch 31 Example 2: Training loss 0.173815
+******* Epoch 31 Example 3: Training loss 0.221519
+******* Epoch 31 Example 4: Training loss 0.125412
+******* Epoch 31 Example 5: Training loss 0.321694
+******* Epoch 31 Example 6: Training loss 0.175959
+******* Epoch 31 Example 7: Training loss 0.202992
+******* Epoch 31 Example 8: Training loss 0.138573
+******* Epoch 31 Example 9: Training loss 0.245142
+******* Epoch 31 Example 10: Training loss 0.134321
+******************** Epoch 31: Training dice score 0.875127
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 32
+
+train
+
+******* Epoch 32 Example 0: Training loss 0.183938
+******* Epoch 32 Example 1: Training loss 0.287787
+******* Epoch 32 Example 2: Training loss 0.170215
+******* Epoch 32 Example 3: Training loss 0.213643
+******* Epoch 32 Example 4: Training loss 0.120465
+******* Epoch 32 Example 5: Training loss 0.311188
+******* Epoch 32 Example 6: Training loss 0.171658
+******* Epoch 32 Example 7: Training loss 0.200545
+******* Epoch 32 Example 8: Training loss 0.138344
+******* Epoch 32 Example 9: Training loss 0.240704
+******* Epoch 32 Example 10: Training loss 0.141860
+******************** Epoch 32: Training dice score 0.876389
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 33
+
+train
+
+******* Epoch 33 Example 0: Training loss 0.187997
+******* Epoch 33 Example 1: Training loss 0.305752
+******* Epoch 33 Example 2: Training loss 0.166602
+******* Epoch 33 Example 3: Training loss 0.214332
+******* Epoch 33 Example 4: Training loss 0.129276
+******* Epoch 33 Example 5: Training loss 0.307643
+******* Epoch 33 Example 6: Training loss 0.168653
+******* Epoch 33 Example 7: Training loss 0.212140
+******* Epoch 33 Example 8: Training loss 0.134598
+******* Epoch 33 Example 9: Training loss 0.214213
+******* Epoch 33 Example 10: Training loss 0.141571
+******************** Epoch 33: Training dice score 0.880675
+
+validate
+
+******* Epoch 33 Example 0: Validation accuracy 0.894764
+******* Epoch 33 Example 1: Validation accuracy 0.665002
+******* Epoch 33 Example 2: Validation accuracy 0.916545
+******* Epoch 33 Example 3: Validation accuracy 0.899294
+******* Epoch 33 Example 4: Validation accuracy 0.340072
+******* Epoch 33 Example 5: Validation accuracy 0.514926
+******* Epoch 33 Example 6: Validation accuracy 0.872454
+******* Epoch 33 Example 7: Validation accuracy 0.772070
+******* Epoch 33 Example 8: Validation accuracy 0.667307
+******* Epoch 33 Example 9: Validation accuracy 0.777527
+******* Epoch 33 Example 10: Validation accuracy 0.785840
+******* Epoch 33 Example 11: Validation accuracy 0.898136
+******* Epoch 33 Example 12: Validation accuracy 0.867458
+******* Epoch 33 Example 13: Validation accuracy 0.703109
+******* Epoch 33 Example 14: Validation accuracy 0.735905
+******* Epoch 33 Example 15: Validation accuracy 0.706615
+******* Epoch 33 Example 16: Validation accuracy 0.871927
+******* Epoch 33 Example 17: Validation accuracy 0.815271
+******* Epoch 33 Example 18: Validation accuracy 0.892084
+******* Epoch 33 Example 19: Validation accuracy 0.053811
+******* Epoch 33 Example 20: Validation accuracy 0.787814
+******* Epoch 33 Example 21: Validation accuracy 0.386415
+******* Epoch 33 Example 22: Validation accuracy 0.776955
+******* Epoch 33 Example 23: Validation accuracy 0.872919
+******* Epoch 33 Example 24: Validation accuracy 0.835829
+******* Epoch 33 Example 25: Validation accuracy 0.582713
+******* Epoch 33 Example 26: Validation accuracy 0.839686
+******* Epoch 33 Example 27: Validation accuracy 0.762919
+******* Epoch 33 Example 28: Validation accuracy 0.739788
+******* Epoch 33 Example 29: Validation accuracy 0.478982
+******* Epoch 33 Example 30: Validation accuracy 0.509907
+******* Epoch 33 Example 31: Validation accuracy 0.638762
+******* Epoch 33 Example 32: Validation accuracy 0.834092
+******* Epoch 33 Example 33: Validation accuracy 0.740842
+******* Epoch 33 Example 34: Validation accuracy 0.609274
+******* Epoch 33 Example 35: Validation accuracy 0.942511
+******* Epoch 33 Example 36: Validation accuracy 0.869420
+******* Epoch 33 Example 37: Validation accuracy 0.861082
+******* Epoch 33 Example 38: Validation accuracy 0.922512
+******* Epoch 33 Example 39: Validation accuracy 0.764267
+******* Epoch 33 Example 40: Validation accuracy 0.407242
+******* Epoch 33 Example 41: Validation accuracy 0.673945
+******* Epoch 33 Example 42: Validation accuracy 0.872481
+******* Epoch 33 Example 43: Validation accuracy 0.484481
+******* Epoch 33 Example 44: Validation accuracy 0.737699
+******* Epoch 33 Example 45: Validation accuracy 0.687719
+******************** Epoch 33: Validation dice score 0.723269
+
+test
+
+******* Epoch 33 Example 0: Test accuracy 0.788800
+******* Epoch 33 Example 1: Test accuracy 0.290878
+******* Epoch 33 Example 2: Test accuracy 0.722261
+******* Epoch 33 Example 3: Test accuracy 0.586176
+******* Epoch 33 Example 4: Test accuracy 0.101759
+******* Epoch 33 Example 5: Test accuracy 0.379575
+******* Epoch 33 Example 6: Test accuracy 0.688844
+******* Epoch 33 Example 7: Test accuracy 0.320822
+******* Epoch 33 Example 8: Test accuracy 0.485596
+******* Epoch 33 Example 9: Test accuracy 0.631594
+******* Epoch 33 Example 10: Test accuracy 0.695269
+******* Epoch 33 Example 11: Test accuracy 0.794257
+******* Epoch 33 Example 12: Test accuracy 0.531715
+******* Epoch 33 Example 13: Test accuracy 0.620699
+******* Epoch 33 Example 14: Test accuracy 0.631609
+******* Epoch 33 Example 15: Test accuracy 0.378195
+******* Epoch 33 Example 16: Test accuracy 0.683922
+******* Epoch 33 Example 17: Test accuracy 0.538404
+******* Epoch 33 Example 18: Test accuracy 0.435161
+******* Epoch 33 Example 19: Test accuracy 0.015078
+******* Epoch 33 Example 20: Test accuracy 0.284723
+******* Epoch 33 Example 21: Test accuracy 0.210409
+******* Epoch 33 Example 22: Test accuracy 0.423093
+******* Epoch 33 Example 23: Test accuracy 0.728002
+******* Epoch 33 Example 24: Test accuracy 0.595353
+******* Epoch 33 Example 25: Test accuracy 0.358320
+******* Epoch 33 Example 26: Test accuracy 0.429495
+******* Epoch 33 Example 27: Test accuracy 0.593870
+******* Epoch 33 Example 28: Test accuracy 0.581663
+******* Epoch 33 Example 29: Test accuracy 0.366404
+******* Epoch 33 Example 30: Test accuracy 0.443616
+******* Epoch 33 Example 31: Test accuracy 0.443365
+******* Epoch 33 Example 32: Test accuracy 0.688648
+******* Epoch 33 Example 33: Test accuracy 0.239195
+******* Epoch 33 Example 34: Test accuracy 0.473655
+******* Epoch 33 Example 35: Test accuracy 0.851149
+******* Epoch 33 Example 36: Test accuracy 0.675583
+******* Epoch 33 Example 37: Test accuracy 0.429707
+******* Epoch 33 Example 38: Test accuracy 0.808410
+******* Epoch 33 Example 39: Test accuracy 0.512546
+******* Epoch 33 Example 40: Test accuracy 0.371374
+******* Epoch 33 Example 41: Test accuracy 0.560692
+******* Epoch 33 Example 42: Test accuracy 0.673198
+******* Epoch 33 Example 43: Test accuracy 0.447949
+******* Epoch 33 Example 44: Test accuracy 0.591670
+******* Epoch 33 Example 45: Test accuracy 0.217074
+******************** Epoch 33: Test dice score 0.506952
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 34
+
+train
+
+******* Epoch 34 Example 0: Training loss 0.181160
+******* Epoch 34 Example 1: Training loss 0.301822
+******* Epoch 34 Example 2: Training loss 0.188129
+******* Epoch 34 Example 3: Training loss 0.218804
+******* Epoch 34 Example 4: Training loss 0.121663
+******* Epoch 34 Example 5: Training loss 0.305738
+******* Epoch 34 Example 6: Training loss 0.178412
+******* Epoch 34 Example 7: Training loss 0.191363
+******* Epoch 34 Example 8: Training loss 0.134332
+******* Epoch 34 Example 9: Training loss 0.233428
+******* Epoch 34 Example 10: Training loss 0.139909
+******************** Epoch 34: Training dice score 0.874956
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 35
+
+train
+
+******* Epoch 35 Example 0: Training loss 0.176922
+******* Epoch 35 Example 1: Training loss 0.283644
+******* Epoch 35 Example 2: Training loss 0.164862
+******* Epoch 35 Example 3: Training loss 0.214726
+******* Epoch 35 Example 4: Training loss 0.116330
+******* Epoch 35 Example 5: Training loss 0.299805
+******* Epoch 35 Example 6: Training loss 0.165132
+******* Epoch 35 Example 7: Training loss 0.192000
+******* Epoch 35 Example 8: Training loss 0.135057
+******* Epoch 35 Example 9: Training loss 0.222344
+******* Epoch 35 Example 10: Training loss 0.142190
+******************** Epoch 35: Training dice score 0.880648
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 36
+
+train
+
+******* Epoch 36 Example 0: Training loss 0.197140
+******* Epoch 36 Example 1: Training loss 0.299221
+******* Epoch 36 Example 2: Training loss 0.165772
+******* Epoch 36 Example 3: Training loss 0.202059
+******* Epoch 36 Example 4: Training loss 0.106846
+******* Epoch 36 Example 5: Training loss 0.303865
+******* Epoch 36 Example 6: Training loss 0.168003
+******* Epoch 36 Example 7: Training loss 0.191191
+******* Epoch 36 Example 8: Training loss 0.131307
+******* Epoch 36 Example 9: Training loss 0.230815
+******* Epoch 36 Example 10: Training loss 0.138358
+******************** Epoch 36: Training dice score 0.879663
+
+validate
+
+******* Epoch 36 Example 0: Validation accuracy 0.898997
+******* Epoch 36 Example 1: Validation accuracy 0.690006
+******* Epoch 36 Example 2: Validation accuracy 0.916024
+******* Epoch 36 Example 3: Validation accuracy 0.908398
+******* Epoch 36 Example 4: Validation accuracy 0.351625
+******* Epoch 36 Example 5: Validation accuracy 0.526419
+******* Epoch 36 Example 6: Validation accuracy 0.867459
+******* Epoch 36 Example 7: Validation accuracy 0.771482
+******* Epoch 36 Example 8: Validation accuracy 0.643369
+******* Epoch 36 Example 9: Validation accuracy 0.793493
+******* Epoch 36 Example 10: Validation accuracy 0.784681
+******* Epoch 36 Example 11: Validation accuracy 0.896585
+******* Epoch 36 Example 12: Validation accuracy 0.868967
+******* Epoch 36 Example 13: Validation accuracy 0.674382
+******* Epoch 36 Example 14: Validation accuracy 0.711515
+******* Epoch 36 Example 15: Validation accuracy 0.709316
+******* Epoch 36 Example 16: Validation accuracy 0.872304
+******* Epoch 36 Example 17: Validation accuracy 0.819798
+******* Epoch 36 Example 18: Validation accuracy 0.914824
+******* Epoch 36 Example 19: Validation accuracy 0.057053
+******* Epoch 36 Example 20: Validation accuracy 0.791842
+******* Epoch 36 Example 21: Validation accuracy 0.405050
+******* Epoch 36 Example 22: Validation accuracy 0.784524
+******* Epoch 36 Example 23: Validation accuracy 0.883236
+******* Epoch 36 Example 24: Validation accuracy 0.853041
+******* Epoch 36 Example 25: Validation accuracy 0.588360
+******* Epoch 36 Example 26: Validation accuracy 0.845627
+******* Epoch 36 Example 27: Validation accuracy 0.751529
+******* Epoch 36 Example 28: Validation accuracy 0.744876
+******* Epoch 36 Example 29: Validation accuracy 0.462453
+******* Epoch 36 Example 30: Validation accuracy 0.527804
+******* Epoch 36 Example 31: Validation accuracy 0.619543
+******* Epoch 36 Example 32: Validation accuracy 0.845851
+******* Epoch 36 Example 33: Validation accuracy 0.749168
+******* Epoch 36 Example 34: Validation accuracy 0.585978
+******* Epoch 36 Example 35: Validation accuracy 0.939097
+******* Epoch 36 Example 36: Validation accuracy 0.851515
+******* Epoch 36 Example 37: Validation accuracy 0.868416
+******* Epoch 36 Example 38: Validation accuracy 0.912099
+******* Epoch 36 Example 39: Validation accuracy 0.785798
+******* Epoch 36 Example 40: Validation accuracy 0.380928
+******* Epoch 36 Example 41: Validation accuracy 0.679908
+******* Epoch 36 Example 42: Validation accuracy 0.871167
+******* Epoch 36 Example 43: Validation accuracy 0.504120
+******* Epoch 36 Example 44: Validation accuracy 0.722176
+******* Epoch 36 Example 45: Validation accuracy 0.695178
+******************** Epoch 36: Validation dice score 0.724478
+
+test
+
+******* Epoch 36 Example 0: Test accuracy 0.798486
+******* Epoch 36 Example 1: Test accuracy 0.304621
+******* Epoch 36 Example 2: Test accuracy 0.732945
+******* Epoch 36 Example 3: Test accuracy 0.600566
+******* Epoch 36 Example 4: Test accuracy 0.107113
+******* Epoch 36 Example 5: Test accuracy 0.385330
+******* Epoch 36 Example 6: Test accuracy 0.689789
+******* Epoch 36 Example 7: Test accuracy 0.315885
+******* Epoch 36 Example 8: Test accuracy 0.477436
+******* Epoch 36 Example 9: Test accuracy 0.636547
+******* Epoch 36 Example 10: Test accuracy 0.702873
+******* Epoch 36 Example 11: Test accuracy 0.797747
+******* Epoch 36 Example 12: Test accuracy 0.534269
+******* Epoch 36 Example 13: Test accuracy 0.607931
+******* Epoch 36 Example 14: Test accuracy 0.636248
+******* Epoch 36 Example 15: Test accuracy 0.387306
+******* Epoch 36 Example 16: Test accuracy 0.686694
+******* Epoch 36 Example 17: Test accuracy 0.537922
+******* Epoch 36 Example 18: Test accuracy 0.448245
+******* Epoch 36 Example 19: Test accuracy 0.011333
+******* Epoch 36 Example 20: Test accuracy 0.285798
+******* Epoch 36 Example 21: Test accuracy 0.214319
+******* Epoch 36 Example 22: Test accuracy 0.427418
+******* Epoch 36 Example 23: Test accuracy 0.733902
+******* Epoch 36 Example 24: Test accuracy 0.606164
+******* Epoch 36 Example 25: Test accuracy 0.363909
+******* Epoch 36 Example 26: Test accuracy 0.417311
+******* Epoch 36 Example 27: Test accuracy 0.586028
+******* Epoch 36 Example 28: Test accuracy 0.589820
+******* Epoch 36 Example 29: Test accuracy 0.372754
+******* Epoch 36 Example 30: Test accuracy 0.452745
+******* Epoch 36 Example 31: Test accuracy 0.448269
+******* Epoch 36 Example 32: Test accuracy 0.690203
+******* Epoch 36 Example 33: Test accuracy 0.246408
+******* Epoch 36 Example 34: Test accuracy 0.472237
+******* Epoch 36 Example 35: Test accuracy 0.853381
+******* Epoch 36 Example 36: Test accuracy 0.678565
+******* Epoch 36 Example 37: Test accuracy 0.425363
+******* Epoch 36 Example 38: Test accuracy 0.804664
+******* Epoch 36 Example 39: Test accuracy 0.523034
+******* Epoch 36 Example 40: Test accuracy 0.351223
+******* Epoch 36 Example 41: Test accuracy 0.562215
+******* Epoch 36 Example 42: Test accuracy 0.677720
+******* Epoch 36 Example 43: Test accuracy 0.445273
+******* Epoch 36 Example 44: Test accuracy 0.585662
+******* Epoch 36 Example 45: Test accuracy 0.219035
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 36: Test dice score 0.509407
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 37
+
+train
+
+******* Epoch 37 Example 0: Training loss 0.188032
+******* Epoch 37 Example 1: Training loss 0.297052
+******* Epoch 37 Example 2: Training loss 0.167091
+******* Epoch 37 Example 3: Training loss 0.216278
+******* Epoch 37 Example 4: Training loss 0.111298
+******* Epoch 37 Example 5: Training loss 0.289105
+******* Epoch 37 Example 6: Training loss 0.174225
+******* Epoch 37 Example 7: Training loss 0.186310
+******* Epoch 37 Example 8: Training loss 0.136125
+******* Epoch 37 Example 9: Training loss 0.201628
+******* Epoch 37 Example 10: Training loss 0.126054
+******************** Epoch 37: Training dice score 0.881696
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 38
+
+train
+
+******* Epoch 38 Example 0: Training loss 0.177754
+******* Epoch 38 Example 1: Training loss 0.301261
+******* Epoch 38 Example 2: Training loss 0.168711
+******* Epoch 38 Example 3: Training loss 0.214492
+******* Epoch 38 Example 4: Training loss 0.115531
+******* Epoch 38 Example 5: Training loss 0.296735
+******* Epoch 38 Example 6: Training loss 0.164212
+******* Epoch 38 Example 7: Training loss 0.185204
+******* Epoch 38 Example 8: Training loss 0.128053
+******* Epoch 38 Example 9: Training loss 0.219498
+******* Epoch 38 Example 10: Training loss 0.135352
+******************** Epoch 38: Training dice score 0.883869
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 39
+
+train
+
+******* Epoch 39 Example 0: Training loss 0.191869
+******* Epoch 39 Example 1: Training loss 0.271565
+******* Epoch 39 Example 2: Training loss 0.153911
+******* Epoch 39 Example 3: Training loss 0.213641
+******* Epoch 39 Example 4: Training loss 0.120130
+******* Epoch 39 Example 5: Training loss 0.293453
+******* Epoch 39 Example 6: Training loss 0.166047
+******* Epoch 39 Example 7: Training loss 0.187153
+******* Epoch 39 Example 8: Training loss 0.125737
+******* Epoch 39 Example 9: Training loss 0.199504
+******* Epoch 39 Example 10: Training loss 0.125913
+******************** Epoch 39: Training dice score 0.886164
+
+validate
+
+******* Epoch 39 Example 0: Validation accuracy 0.905609
+******* Epoch 39 Example 1: Validation accuracy 0.677559
+******* Epoch 39 Example 2: Validation accuracy 0.922865
+******* Epoch 39 Example 3: Validation accuracy 0.909876
+******* Epoch 39 Example 4: Validation accuracy 0.300494
+******* Epoch 39 Example 5: Validation accuracy 0.512422
+******* Epoch 39 Example 6: Validation accuracy 0.868024
+******* Epoch 39 Example 7: Validation accuracy 0.769031
+******* Epoch 39 Example 8: Validation accuracy 0.607435
+******* Epoch 39 Example 9: Validation accuracy 0.807005
+******* Epoch 39 Example 10: Validation accuracy 0.802649
+******* Epoch 39 Example 11: Validation accuracy 0.909124
+******* Epoch 39 Example 12: Validation accuracy 0.863357
+******* Epoch 39 Example 13: Validation accuracy 0.692257
+******* Epoch 39 Example 14: Validation accuracy 0.751532
+******* Epoch 39 Example 15: Validation accuracy 0.710353
+******* Epoch 39 Example 16: Validation accuracy 0.878095
+******* Epoch 39 Example 17: Validation accuracy 0.796410
+******* Epoch 39 Example 18: Validation accuracy 0.911391
+******* Epoch 39 Example 19: Validation accuracy 0.039065
+******* Epoch 39 Example 20: Validation accuracy 0.794919
+******* Epoch 39 Example 21: Validation accuracy 0.367635
+******* Epoch 39 Example 22: Validation accuracy 0.788185
+******* Epoch 39 Example 23: Validation accuracy 0.888933
+******* Epoch 39 Example 24: Validation accuracy 0.851572
+******* Epoch 39 Example 25: Validation accuracy 0.594431
+******* Epoch 39 Example 26: Validation accuracy 0.841668
+******* Epoch 39 Example 27: Validation accuracy 0.748063
+******* Epoch 39 Example 28: Validation accuracy 0.740450
+******* Epoch 39 Example 29: Validation accuracy 0.463676
+******* Epoch 39 Example 30: Validation accuracy 0.504751
+******* Epoch 39 Example 31: Validation accuracy 0.655499
+******* Epoch 39 Example 32: Validation accuracy 0.834862
+******* Epoch 39 Example 33: Validation accuracy 0.754483
+******* Epoch 39 Example 34: Validation accuracy 0.572025
+******* Epoch 39 Example 35: Validation accuracy 0.941597
+******* Epoch 39 Example 36: Validation accuracy 0.865166
+******* Epoch 39 Example 37: Validation accuracy 0.851953
+******* Epoch 39 Example 38: Validation accuracy 0.914486
+******* Epoch 39 Example 39: Validation accuracy 0.765460
+******* Epoch 39 Example 40: Validation accuracy 0.421336
+******* Epoch 39 Example 41: Validation accuracy 0.664787
+******* Epoch 39 Example 42: Validation accuracy 0.874839
+******* Epoch 39 Example 43: Validation accuracy 0.500579
+******* Epoch 39 Example 44: Validation accuracy 0.739372
+******* Epoch 39 Example 45: Validation accuracy 0.685793
+******************** Epoch 39: Validation dice score 0.723067
+
+test
+
+******* Epoch 39 Example 0: Test accuracy 0.811030
+******* Epoch 39 Example 1: Test accuracy 0.297642
+******* Epoch 39 Example 2: Test accuracy 0.744757
+******* Epoch 39 Example 3: Test accuracy 0.610051
+******* Epoch 39 Example 4: Test accuracy 0.092450
+******* Epoch 39 Example 5: Test accuracy 0.383691
+******* Epoch 39 Example 6: Test accuracy 0.688531
+******* Epoch 39 Example 7: Test accuracy 0.309122
+******* Epoch 39 Example 8: Test accuracy 0.471941
+******* Epoch 39 Example 9: Test accuracy 0.639406
+******* Epoch 39 Example 10: Test accuracy 0.701076
+******* Epoch 39 Example 11: Test accuracy 0.803361
+******* Epoch 39 Example 12: Test accuracy 0.539577
+******* Epoch 39 Example 13: Test accuracy 0.594497
+******* Epoch 39 Example 14: Test accuracy 0.629597
+******* Epoch 39 Example 15: Test accuracy 0.381113
+******* Epoch 39 Example 16: Test accuracy 0.692021
+******* Epoch 39 Example 17: Test accuracy 0.535054
+******* Epoch 39 Example 18: Test accuracy 0.461083
+******* Epoch 39 Example 19: Test accuracy 0.008266
+******* Epoch 39 Example 20: Test accuracy 0.285732
+******* Epoch 39 Example 21: Test accuracy 0.208829
+******* Epoch 39 Example 22: Test accuracy 0.423745
+******* Epoch 39 Example 23: Test accuracy 0.739421
+******* Epoch 39 Example 24: Test accuracy 0.613289
+******* Epoch 39 Example 25: Test accuracy 0.368596
+******* Epoch 39 Example 26: Test accuracy 0.403120
+******* Epoch 39 Example 27: Test accuracy 0.579336
+******* Epoch 39 Example 28: Test accuracy 0.584072
+******* Epoch 39 Example 29: Test accuracy 0.383086
+******* Epoch 39 Example 30: Test accuracy 0.436835
+******* Epoch 39 Example 31: Test accuracy 0.444251
+******* Epoch 39 Example 32: Test accuracy 0.685605
+******* Epoch 39 Example 33: Test accuracy 0.263192
+******* Epoch 39 Example 34: Test accuracy 0.461167
+******* Epoch 39 Example 35: Test accuracy 0.863369
+******* Epoch 39 Example 36: Test accuracy 0.677667
+******* Epoch 39 Example 37: Test accuracy 0.413834
+******* Epoch 39 Example 38: Test accuracy 0.802561
+******* Epoch 39 Example 39: Test accuracy 0.524193
+******* Epoch 39 Example 40: Test accuracy 0.342298
+******* Epoch 39 Example 41: Test accuracy 0.553906
+******* Epoch 39 Example 42: Test accuracy 0.703827
+******* Epoch 39 Example 43: Test accuracy 0.438921
+******* Epoch 39 Example 44: Test accuracy 0.589755
+******* Epoch 39 Example 45: Test accuracy 0.214845
+******************** Epoch 39: Test dice score 0.508690
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 40
+
+train
+
+******* Epoch 40 Example 0: Training loss 0.178951
+******* Epoch 40 Example 1: Training loss 0.284123
+******* Epoch 40 Example 2: Training loss 0.156833
+******* Epoch 40 Example 3: Training loss 0.216078
+******* Epoch 40 Example 4: Training loss 0.117218
+******* Epoch 40 Example 5: Training loss 0.283850
+******* Epoch 40 Example 6: Training loss 0.163940
+******* Epoch 40 Example 7: Training loss 0.182132
+******* Epoch 40 Example 8: Training loss 0.123164
+******* Epoch 40 Example 9: Training loss 0.212732
+******* Epoch 40 Example 10: Training loss 0.133757
+******************** Epoch 40: Training dice score 0.884931
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 41
+
+train
+
+******* Epoch 41 Example 0: Training loss 0.177748
+******* Epoch 41 Example 1: Training loss 0.279158
+******* Epoch 41 Example 2: Training loss 0.161138
+******* Epoch 41 Example 3: Training loss 0.208204
+******* Epoch 41 Example 4: Training loss 0.111465
+******* Epoch 41 Example 5: Training loss 0.291307
+******* Epoch 41 Example 6: Training loss 0.163563
+******* Epoch 41 Example 7: Training loss 0.180134
+******* Epoch 41 Example 8: Training loss 0.131190
+******* Epoch 41 Example 9: Training loss 0.220132
+******* Epoch 41 Example 10: Training loss 0.123350
+******************** Epoch 41: Training dice score 0.886901
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 42
+
+train
+
+******* Epoch 42 Example 0: Training loss 0.177187
+******* Epoch 42 Example 1: Training loss 0.279388
+******* Epoch 42 Example 2: Training loss 0.155228
+******* Epoch 42 Example 3: Training loss 0.214616
+******* Epoch 42 Example 4: Training loss 0.119560
+******* Epoch 42 Example 5: Training loss 0.286884
+******* Epoch 42 Example 6: Training loss 0.167995
+******* Epoch 42 Example 7: Training loss 0.176922
+******* Epoch 42 Example 8: Training loss 0.122192
+******* Epoch 42 Example 9: Training loss 0.220386
+******* Epoch 42 Example 10: Training loss 0.128008
+******************** Epoch 42: Training dice score 0.886882
+
+validate
+
+******* Epoch 42 Example 0: Validation accuracy 0.896567
+******* Epoch 42 Example 1: Validation accuracy 0.671356
+******* Epoch 42 Example 2: Validation accuracy 0.922405
+******* Epoch 42 Example 3: Validation accuracy 0.901740
+******* Epoch 42 Example 4: Validation accuracy 0.285189
+******* Epoch 42 Example 5: Validation accuracy 0.491516
+******* Epoch 42 Example 6: Validation accuracy 0.860537
+******* Epoch 42 Example 7: Validation accuracy 0.770564
+******* Epoch 42 Example 8: Validation accuracy 0.618150
+******* Epoch 42 Example 9: Validation accuracy 0.791810
+******* Epoch 42 Example 10: Validation accuracy 0.769299
+******* Epoch 42 Example 11: Validation accuracy 0.904808
+******* Epoch 42 Example 12: Validation accuracy 0.865492
+******* Epoch 42 Example 13: Validation accuracy 0.676358
+******* Epoch 42 Example 14: Validation accuracy 0.718338
+******* Epoch 42 Example 15: Validation accuracy 0.671378
+******* Epoch 42 Example 16: Validation accuracy 0.886286
+******* Epoch 42 Example 17: Validation accuracy 0.807550
+******* Epoch 42 Example 18: Validation accuracy 0.915399
+******* Epoch 42 Example 19: Validation accuracy 0.048668
+******* Epoch 42 Example 20: Validation accuracy 0.800803
+******* Epoch 42 Example 21: Validation accuracy 0.380598
+******* Epoch 42 Example 22: Validation accuracy 0.791099
+******* Epoch 42 Example 23: Validation accuracy 0.883387
+******* Epoch 42 Example 24: Validation accuracy 0.849543
+******* Epoch 42 Example 25: Validation accuracy 0.573482
+******* Epoch 42 Example 26: Validation accuracy 0.848228
+******* Epoch 42 Example 27: Validation accuracy 0.718668
+******* Epoch 42 Example 28: Validation accuracy 0.726388
+******* Epoch 42 Example 29: Validation accuracy 0.510307
+******* Epoch 42 Example 30: Validation accuracy 0.511089
+******* Epoch 42 Example 31: Validation accuracy 0.624015
+******* Epoch 42 Example 32: Validation accuracy 0.808982
+******* Epoch 42 Example 33: Validation accuracy 0.751890
+******* Epoch 42 Example 34: Validation accuracy 0.562517
+******* Epoch 42 Example 35: Validation accuracy 0.937722
+******* Epoch 42 Example 36: Validation accuracy 0.854569
+******* Epoch 42 Example 37: Validation accuracy 0.851982
+******* Epoch 42 Example 38: Validation accuracy 0.927058
+******* Epoch 42 Example 39: Validation accuracy 0.764409
+******* Epoch 42 Example 40: Validation accuracy 0.395990
+******* Epoch 42 Example 41: Validation accuracy 0.656219
+******* Epoch 42 Example 42: Validation accuracy 0.876767
+******* Epoch 42 Example 43: Validation accuracy 0.480708
+******* Epoch 42 Example 44: Validation accuracy 0.723843
+******* Epoch 42 Example 45: Validation accuracy 0.710630
+******************** Epoch 42: Validation dice score 0.717267
+
+test
+
+******* Epoch 42 Example 0: Test accuracy 0.804900
+******* Epoch 42 Example 1: Test accuracy 0.292926
+******* Epoch 42 Example 2: Test accuracy 0.750963
+******* Epoch 42 Example 3: Test accuracy 0.608752
+******* Epoch 42 Example 4: Test accuracy 0.089281
+******* Epoch 42 Example 5: Test accuracy 0.371972
+******* Epoch 42 Example 6: Test accuracy 0.678170
+******* Epoch 42 Example 7: Test accuracy 0.308462
+******* Epoch 42 Example 8: Test accuracy 0.467358
+******* Epoch 42 Example 9: Test accuracy 0.641633
+******* Epoch 42 Example 10: Test accuracy 0.694481
+******* Epoch 42 Example 11: Test accuracy 0.801248
+******* Epoch 42 Example 12: Test accuracy 0.539014
+******* Epoch 42 Example 13: Test accuracy 0.588092
+******* Epoch 42 Example 14: Test accuracy 0.619532
+******* Epoch 42 Example 15: Test accuracy 0.374903
+******* Epoch 42 Example 16: Test accuracy 0.693499
+******* Epoch 42 Example 17: Test accuracy 0.527408
+******* Epoch 42 Example 18: Test accuracy 0.461188
+******* Epoch 42 Example 19: Test accuracy 0.010468
+******* Epoch 42 Example 20: Test accuracy 0.288593
+******* Epoch 42 Example 21: Test accuracy 0.204097
+******* Epoch 42 Example 22: Test accuracy 0.422609
+******* Epoch 42 Example 23: Test accuracy 0.742241
+******* Epoch 42 Example 24: Test accuracy 0.600067
+******* Epoch 42 Example 25: Test accuracy 0.364741
+******* Epoch 42 Example 26: Test accuracy 0.384327
+******* Epoch 42 Example 27: Test accuracy 0.570396
+******* Epoch 42 Example 28: Test accuracy 0.581841
+******* Epoch 42 Example 29: Test accuracy 0.403378
+******* Epoch 42 Example 30: Test accuracy 0.429307
+******* Epoch 42 Example 31: Test accuracy 0.441854
+******* Epoch 42 Example 32: Test accuracy 0.676886
+******* Epoch 42 Example 33: Test accuracy 0.265989
+******* Epoch 42 Example 34: Test accuracy 0.456660
+******* Epoch 42 Example 35: Test accuracy 0.860627
+******* Epoch 42 Example 36: Test accuracy 0.674159
+******* Epoch 42 Example 37: Test accuracy 0.402712
+******* Epoch 42 Example 38: Test accuracy 0.795172
+******* Epoch 42 Example 39: Test accuracy 0.527110
+******* Epoch 42 Example 40: Test accuracy 0.338238
+******* Epoch 42 Example 41: Test accuracy 0.553958
+******* Epoch 42 Example 42: Test accuracy 0.713372
+******* Epoch 42 Example 43: Test accuracy 0.436410
+******* Epoch 42 Example 44: Test accuracy 0.585335
+******* Epoch 42 Example 45: Test accuracy 0.217047
+******************** Epoch 42: Test dice score 0.505682
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 43
+
+train
+
+******* Epoch 43 Example 0: Training loss 0.175583
+******* Epoch 43 Example 1: Training loss 0.289890
+******* Epoch 43 Example 2: Training loss 0.162426
+******* Epoch 43 Example 3: Training loss 0.212475
+******* Epoch 43 Example 4: Training loss 0.116158
+******* Epoch 43 Example 5: Training loss 0.284597
+******* Epoch 43 Example 6: Training loss 0.158810
+******* Epoch 43 Example 7: Training loss 0.188073
+******* Epoch 43 Example 8: Training loss 0.133033
+******* Epoch 43 Example 9: Training loss 0.206392
+******* Epoch 43 Example 10: Training loss 0.128964
+******************** Epoch 43: Training dice score 0.885301
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 44
+
+train
+
+******* Epoch 44 Example 0: Training loss 0.173711
+******* Epoch 44 Example 1: Training loss 0.265347
+******* Epoch 44 Example 2: Training loss 0.160845
+******* Epoch 44 Example 3: Training loss 0.204944
+******* Epoch 44 Example 4: Training loss 0.107787
+******* Epoch 44 Example 5: Training loss 0.281125
+******* Epoch 44 Example 6: Training loss 0.160704
+******* Epoch 44 Example 7: Training loss 0.176385
+******* Epoch 44 Example 8: Training loss 0.122502
+******* Epoch 44 Example 9: Training loss 0.217974
+******* Epoch 44 Example 10: Training loss 0.126336
+******************** Epoch 44: Training dice score 0.891233
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 45
+
+train
+
+******* Epoch 45 Example 0: Training loss 0.172288
+******* Epoch 45 Example 1: Training loss 0.274228
+******* Epoch 45 Example 2: Training loss 0.148483
+******* Epoch 45 Example 3: Training loss 0.209717
+******* Epoch 45 Example 4: Training loss 0.106626
+******* Epoch 45 Example 5: Training loss 0.269675
+******* Epoch 45 Example 6: Training loss 0.154337
+******* Epoch 45 Example 7: Training loss 0.169553
+******* Epoch 45 Example 8: Training loss 0.122220
+******* Epoch 45 Example 9: Training loss 0.217913
+******* Epoch 45 Example 10: Training loss 0.130058
+******************** Epoch 45: Training dice score 0.891479
+
+validate
+
+******* Epoch 45 Example 0: Validation accuracy 0.895814
+******* Epoch 45 Example 1: Validation accuracy 0.660894
+******* Epoch 45 Example 2: Validation accuracy 0.920882
+******* Epoch 45 Example 3: Validation accuracy 0.906988
+******* Epoch 45 Example 4: Validation accuracy 0.300691
+******* Epoch 45 Example 5: Validation accuracy 0.504486
+******* Epoch 45 Example 6: Validation accuracy 0.872563
+******* Epoch 45 Example 7: Validation accuracy 0.760476
+******* Epoch 45 Example 8: Validation accuracy 0.626428
+******* Epoch 45 Example 9: Validation accuracy 0.804022
+******* Epoch 45 Example 10: Validation accuracy 0.780344
+******* Epoch 45 Example 11: Validation accuracy 0.900473
+******* Epoch 45 Example 12: Validation accuracy 0.875315
+******* Epoch 45 Example 13: Validation accuracy 0.668898
+******* Epoch 45 Example 14: Validation accuracy 0.744669
+******* Epoch 45 Example 15: Validation accuracy 0.693600
+******* Epoch 45 Example 16: Validation accuracy 0.884715
+******* Epoch 45 Example 17: Validation accuracy 0.822107
+******* Epoch 45 Example 18: Validation accuracy 0.915499
+******* Epoch 45 Example 19: Validation accuracy 0.010719
+******* Epoch 45 Example 20: Validation accuracy 0.777177
+******* Epoch 45 Example 21: Validation accuracy 0.334400
+******* Epoch 45 Example 22: Validation accuracy 0.770306
+******* Epoch 45 Example 23: Validation accuracy 0.881764
+******* Epoch 45 Example 24: Validation accuracy 0.849914
+******* Epoch 45 Example 25: Validation accuracy 0.558972
+******* Epoch 45 Example 26: Validation accuracy 0.851083
+******* Epoch 45 Example 27: Validation accuracy 0.712557
+******* Epoch 45 Example 28: Validation accuracy 0.738510
+******* Epoch 45 Example 29: Validation accuracy 0.497068
+******* Epoch 45 Example 30: Validation accuracy 0.505536
+******* Epoch 45 Example 31: Validation accuracy 0.637661
+******* Epoch 45 Example 32: Validation accuracy 0.828998
+******* Epoch 45 Example 33: Validation accuracy 0.760331
+******* Epoch 45 Example 34: Validation accuracy 0.574097
+******* Epoch 45 Example 35: Validation accuracy 0.937686
+******* Epoch 45 Example 36: Validation accuracy 0.853444
+******* Epoch 45 Example 37: Validation accuracy 0.844245
+******* Epoch 45 Example 38: Validation accuracy 0.928069
+******* Epoch 45 Example 39: Validation accuracy 0.774501
+******* Epoch 45 Example 40: Validation accuracy 0.329191
+******* Epoch 45 Example 41: Validation accuracy 0.664935
+******* Epoch 45 Example 42: Validation accuracy 0.882870
+******* Epoch 45 Example 43: Validation accuracy 0.488456
+******* Epoch 45 Example 44: Validation accuracy 0.702920
+******* Epoch 45 Example 45: Validation accuracy 0.707680
+******************** Epoch 45: Validation dice score 0.716129
+
+test
+
+******* Epoch 45 Example 0: Test accuracy 0.810532
+******* Epoch 45 Example 1: Test accuracy 0.298782
+******* Epoch 45 Example 2: Test accuracy 0.775547
+******* Epoch 45 Example 3: Test accuracy 0.597225
+******* Epoch 45 Example 4: Test accuracy 0.089558
+******* Epoch 45 Example 5: Test accuracy 0.378436
+******* Epoch 45 Example 6: Test accuracy 0.681421
+******* Epoch 45 Example 7: Test accuracy 0.277135
+******* Epoch 45 Example 8: Test accuracy 0.457348
+******* Epoch 45 Example 9: Test accuracy 0.646684
+******* Epoch 45 Example 10: Test accuracy 0.698445
+******* Epoch 45 Example 11: Test accuracy 0.806660
+******* Epoch 45 Example 12: Test accuracy 0.545827
+******* Epoch 45 Example 13: Test accuracy 0.551124
+******* Epoch 45 Example 14: Test accuracy 0.628481
+******* Epoch 45 Example 15: Test accuracy 0.376419
+******* Epoch 45 Example 16: Test accuracy 0.698704
+******* Epoch 45 Example 17: Test accuracy 0.536267
+******* Epoch 45 Example 18: Test accuracy 0.473749
+******* Epoch 45 Example 19: Test accuracy 0.002751
+******* Epoch 45 Example 20: Test accuracy 0.283862
+******* Epoch 45 Example 21: Test accuracy 0.200076
+******* Epoch 45 Example 22: Test accuracy 0.422818
+******* Epoch 45 Example 23: Test accuracy 0.744433
+******* Epoch 45 Example 24: Test accuracy 0.611001
+******* Epoch 45 Example 25: Test accuracy 0.347419
+******* Epoch 45 Example 26: Test accuracy 0.375628
+******* Epoch 45 Example 27: Test accuracy 0.566840
+******* Epoch 45 Example 28: Test accuracy 0.587188
+******* Epoch 45 Example 29: Test accuracy 0.413961
+******* Epoch 45 Example 30: Test accuracy 0.436354
+******* Epoch 45 Example 31: Test accuracy 0.442106
+******* Epoch 45 Example 32: Test accuracy 0.674916
+******* Epoch 45 Example 33: Test accuracy 0.270748
+******* Epoch 45 Example 34: Test accuracy 0.446509
+******* Epoch 45 Example 35: Test accuracy 0.868226
+******* Epoch 45 Example 36: Test accuracy 0.673177
+******* Epoch 45 Example 37: Test accuracy 0.383162
+******* Epoch 45 Example 38: Test accuracy 0.798421
+******* Epoch 45 Example 39: Test accuracy 0.534583
+******* Epoch 45 Example 40: Test accuracy 0.302147
+******* Epoch 45 Example 41: Test accuracy 0.554978
+******* Epoch 45 Example 42: Test accuracy 0.702113
+******* Epoch 45 Example 43: Test accuracy 0.430954
+******* Epoch 45 Example 44: Test accuracy 0.557257
+******* Epoch 45 Example 45: Test accuracy 0.201849
+******************** Epoch 45: Test dice score 0.503518
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 46
+
+train
+
+******* Epoch 46 Example 0: Training loss 0.181123
+******* Epoch 46 Example 1: Training loss 0.285002
+******* Epoch 46 Example 2: Training loss 0.146586
+******* Epoch 46 Example 3: Training loss 0.203726
+******* Epoch 46 Example 4: Training loss 0.102188
+******* Epoch 46 Example 5: Training loss 0.287003
+******* Epoch 46 Example 6: Training loss 0.150363
+******* Epoch 46 Example 7: Training loss 0.177570
+******* Epoch 46 Example 8: Training loss 0.128425
+******* Epoch 46 Example 9: Training loss 0.206479
+******* Epoch 46 Example 10: Training loss 0.125606
+******************** Epoch 46: Training dice score 0.890556
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 47
+
+train
+
+******* Epoch 47 Example 0: Training loss 0.177909
+******* Epoch 47 Example 1: Training loss 0.269374
+******* Epoch 47 Example 2: Training loss 0.147805
+******* Epoch 47 Example 3: Training loss 0.197531
+******* Epoch 47 Example 4: Training loss 0.109806
+******* Epoch 47 Example 5: Training loss 0.272911
+******* Epoch 47 Example 6: Training loss 0.162473
+******* Epoch 47 Example 7: Training loss 0.176057
+******* Epoch 47 Example 8: Training loss 0.121983
+******* Epoch 47 Example 9: Training loss 0.209126
+******* Epoch 47 Example 10: Training loss 0.126028
+******************** Epoch 47: Training dice score 0.893462
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 48
+
+train
+
+******* Epoch 48 Example 0: Training loss 0.176113
+******* Epoch 48 Example 1: Training loss 0.291863
+******* Epoch 48 Example 2: Training loss 0.146484
+******* Epoch 48 Example 3: Training loss 0.209081
+******* Epoch 48 Example 4: Training loss 0.111158
+******* Epoch 48 Example 5: Training loss 0.269034
+******* Epoch 48 Example 6: Training loss 0.148536
+******* Epoch 48 Example 7: Training loss 0.171021
+******* Epoch 48 Example 8: Training loss 0.123516
+******* Epoch 48 Example 9: Training loss 0.200513
+******* Epoch 48 Example 10: Training loss 0.126701
+******************** Epoch 48: Training dice score 0.893720
+
+validate
+
+******* Epoch 48 Example 0: Validation accuracy 0.901121
+******* Epoch 48 Example 1: Validation accuracy 0.645567
+******* Epoch 48 Example 2: Validation accuracy 0.922800
+******* Epoch 48 Example 3: Validation accuracy 0.896595
+******* Epoch 48 Example 4: Validation accuracy 0.297569
+******* Epoch 48 Example 5: Validation accuracy 0.504536
+******* Epoch 48 Example 6: Validation accuracy 0.866975
+******* Epoch 48 Example 7: Validation accuracy 0.756116
+******* Epoch 48 Example 8: Validation accuracy 0.607347
+******* Epoch 48 Example 9: Validation accuracy 0.804525
+******* Epoch 48 Example 10: Validation accuracy 0.801216
+******* Epoch 48 Example 11: Validation accuracy 0.905891
+******* Epoch 48 Example 12: Validation accuracy 0.861866
+******* Epoch 48 Example 13: Validation accuracy 0.651746
+******* Epoch 48 Example 14: Validation accuracy 0.715012
+******* Epoch 48 Example 15: Validation accuracy 0.689040
+******* Epoch 48 Example 16: Validation accuracy 0.877545
+******* Epoch 48 Example 17: Validation accuracy 0.813777
+******* Epoch 48 Example 18: Validation accuracy 0.909296
+******* Epoch 48 Example 19: Validation accuracy 0.017056
+******* Epoch 48 Example 20: Validation accuracy 0.790243
+******* Epoch 48 Example 21: Validation accuracy 0.372179
+******* Epoch 48 Example 22: Validation accuracy 0.779439
+******* Epoch 48 Example 23: Validation accuracy 0.883003
+******* Epoch 48 Example 24: Validation accuracy 0.848731
+******* Epoch 48 Example 25: Validation accuracy 0.573357
+******* Epoch 48 Example 26: Validation accuracy 0.864848
+******* Epoch 48 Example 27: Validation accuracy 0.706537
+******* Epoch 48 Example 28: Validation accuracy 0.731821
+******* Epoch 48 Example 29: Validation accuracy 0.520505
+******* Epoch 48 Example 30: Validation accuracy 0.514246
+******* Epoch 48 Example 31: Validation accuracy 0.625133
+******* Epoch 48 Example 32: Validation accuracy 0.816616
+******* Epoch 48 Example 33: Validation accuracy 0.762925
+******* Epoch 48 Example 34: Validation accuracy 0.585246
+******* Epoch 48 Example 35: Validation accuracy 0.934609
+******* Epoch 48 Example 36: Validation accuracy 0.846885
+******* Epoch 48 Example 37: Validation accuracy 0.841670
+******* Epoch 48 Example 38: Validation accuracy 0.925130
+******* Epoch 48 Example 39: Validation accuracy 0.783801
+******* Epoch 48 Example 40: Validation accuracy 0.343209
+******* Epoch 48 Example 41: Validation accuracy 0.683099
+******* Epoch 48 Example 42: Validation accuracy 0.878751
+******* Epoch 48 Example 43: Validation accuracy 0.467593
+******* Epoch 48 Example 44: Validation accuracy 0.709155
+******* Epoch 48 Example 45: Validation accuracy 0.712688
+******************** Epoch 48: Validation dice score 0.716239
+
+test
+
+******* Epoch 48 Example 0: Test accuracy 0.808455
+******* Epoch 48 Example 1: Test accuracy 0.310180
+******* Epoch 48 Example 2: Test accuracy 0.757484
+******* Epoch 48 Example 3: Test accuracy 0.621239
+******* Epoch 48 Example 4: Test accuracy 0.091097
+******* Epoch 48 Example 5: Test accuracy 0.368387
+******* Epoch 48 Example 6: Test accuracy 0.691674
+******* Epoch 48 Example 7: Test accuracy 0.311702
+******* Epoch 48 Example 8: Test accuracy 0.464358
+******* Epoch 48 Example 9: Test accuracy 0.651103
+******* Epoch 48 Example 10: Test accuracy 0.697688
+******* Epoch 48 Example 11: Test accuracy 0.807784
+******* Epoch 48 Example 12: Test accuracy 0.549026
+******* Epoch 48 Example 13: Test accuracy 0.550925
+******* Epoch 48 Example 14: Test accuracy 0.623343
+******* Epoch 48 Example 15: Test accuracy 0.389361
+******* Epoch 48 Example 16: Test accuracy 0.707611
+******* Epoch 48 Example 17: Test accuracy 0.530660
+******* Epoch 48 Example 18: Test accuracy 0.482974
+******* Epoch 48 Example 19: Test accuracy 0.004994
+******* Epoch 48 Example 20: Test accuracy 0.294278
+******* Epoch 48 Example 21: Test accuracy 0.209004
+******* Epoch 48 Example 22: Test accuracy 0.426083
+******* Epoch 48 Example 23: Test accuracy 0.750465
+******* Epoch 48 Example 24: Test accuracy 0.618110
+******* Epoch 48 Example 25: Test accuracy 0.351696
+******* Epoch 48 Example 26: Test accuracy 0.377605
+******* Epoch 48 Example 27: Test accuracy 0.555553
+******* Epoch 48 Example 28: Test accuracy 0.589832
+******* Epoch 48 Example 29: Test accuracy 0.420257
+******* Epoch 48 Example 30: Test accuracy 0.441029
+******* Epoch 48 Example 31: Test accuracy 0.444686
+******* Epoch 48 Example 32: Test accuracy 0.682550
+******* Epoch 48 Example 33: Test accuracy 0.281910
+******* Epoch 48 Example 34: Test accuracy 0.449487
+******* Epoch 48 Example 35: Test accuracy 0.866319
+******* Epoch 48 Example 36: Test accuracy 0.677125
+******* Epoch 48 Example 37: Test accuracy 0.399125
+******* Epoch 48 Example 38: Test accuracy 0.799004
+******* Epoch 48 Example 39: Test accuracy 0.544860
+******* Epoch 48 Example 40: Test accuracy 0.296878
+******* Epoch 48 Example 41: Test accuracy 0.558299
+******* Epoch 48 Example 42: Test accuracy 0.731666
+******* Epoch 48 Example 43: Test accuracy 0.435814
+******* Epoch 48 Example 44: Test accuracy 0.579085
+******* Epoch 48 Example 45: Test accuracy 0.218736
+******************** Epoch 48: Test dice score 0.509120
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 49
+
+train
+
+******* Epoch 49 Example 0: Training loss 0.171267
+******* Epoch 49 Example 1: Training loss 0.284327
+******* Epoch 49 Example 2: Training loss 0.141049
+******* Epoch 49 Example 3: Training loss 0.200668
+******* Epoch 49 Example 4: Training loss 0.112457
+******* Epoch 49 Example 5: Training loss 0.282265
+******* Epoch 49 Example 6: Training loss 0.159051
+******* Epoch 49 Example 7: Training loss 0.176873
+******* Epoch 49 Example 8: Training loss 0.123714
+******* Epoch 49 Example 9: Training loss 0.209684
+******* Epoch 49 Example 10: Training loss 0.125513
+******************** Epoch 49: Training dice score 0.895793
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 50
+
+train
+
+******* Epoch 50 Example 0: Training loss 0.180474
+******* Epoch 50 Example 1: Training loss 0.262260
+******* Epoch 50 Example 2: Training loss 0.150099
+******* Epoch 50 Example 3: Training loss 0.213081
+******* Epoch 50 Example 4: Training loss 0.104504
+******* Epoch 50 Example 5: Training loss 0.283594
+******* Epoch 50 Example 6: Training loss 0.151239
+******* Epoch 50 Example 7: Training loss 0.182911
+******* Epoch 50 Example 8: Training loss 0.128505
+******* Epoch 50 Example 9: Training loss 0.194871
+******* Epoch 50 Example 10: Training loss 0.119881
+******************** Epoch 50: Training dice score 0.891766
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 51
+
+train
+
+******* Epoch 51 Example 0: Training loss 0.177705
+******* Epoch 51 Example 1: Training loss 0.255844
+******* Epoch 51 Example 2: Training loss 0.141546
+******* Epoch 51 Example 3: Training loss 0.208760
+******* Epoch 51 Example 4: Training loss 0.116588
+******* Epoch 51 Example 5: Training loss 0.265817
+******* Epoch 51 Example 6: Training loss 0.153509
+******* Epoch 51 Example 7: Training loss 0.161946
+******* Epoch 51 Example 8: Training loss 0.123654
+******* Epoch 51 Example 9: Training loss 0.209223
+******* Epoch 51 Example 10: Training loss 0.124243
+******************** Epoch 51: Training dice score 0.893978
+
+validate
+
+******* Epoch 51 Example 0: Validation accuracy 0.904101
+******* Epoch 51 Example 1: Validation accuracy 0.647521
+******* Epoch 51 Example 2: Validation accuracy 0.927588
+******* Epoch 51 Example 3: Validation accuracy 0.896426
+******* Epoch 51 Example 4: Validation accuracy 0.321856
+******* Epoch 51 Example 5: Validation accuracy 0.476021
+******* Epoch 51 Example 6: Validation accuracy 0.864526
+******* Epoch 51 Example 7: Validation accuracy 0.784549
+******* Epoch 51 Example 8: Validation accuracy 0.632947
+******* Epoch 51 Example 9: Validation accuracy 0.804837
+******* Epoch 51 Example 10: Validation accuracy 0.789346
+******* Epoch 51 Example 11: Validation accuracy 0.904107
+******* Epoch 51 Example 12: Validation accuracy 0.867760
+******* Epoch 51 Example 13: Validation accuracy 0.670460
+******* Epoch 51 Example 14: Validation accuracy 0.745556
+******* Epoch 51 Example 15: Validation accuracy 0.701761
+******* Epoch 51 Example 16: Validation accuracy 0.877703
+******* Epoch 51 Example 17: Validation accuracy 0.816417
+******* Epoch 51 Example 18: Validation accuracy 0.918756
+******* Epoch 51 Example 19: Validation accuracy 0.016152
+******* Epoch 51 Example 20: Validation accuracy 0.784196
+******* Epoch 51 Example 21: Validation accuracy 0.370372
+******* Epoch 51 Example 22: Validation accuracy 0.766094
+******* Epoch 51 Example 23: Validation accuracy 0.883340
+******* Epoch 51 Example 24: Validation accuracy 0.848876
+******* Epoch 51 Example 25: Validation accuracy 0.578414
+******* Epoch 51 Example 26: Validation accuracy 0.854707
+******* Epoch 51 Example 27: Validation accuracy 0.729766
+******* Epoch 51 Example 28: Validation accuracy 0.743685
+******* Epoch 51 Example 29: Validation accuracy 0.518618
+******* Epoch 51 Example 30: Validation accuracy 0.546291
+******* Epoch 51 Example 31: Validation accuracy 0.638650
+******* Epoch 51 Example 32: Validation accuracy 0.807804
+******* Epoch 51 Example 33: Validation accuracy 0.754253
+******* Epoch 51 Example 34: Validation accuracy 0.576634
+******* Epoch 51 Example 35: Validation accuracy 0.936283
+******* Epoch 51 Example 36: Validation accuracy 0.863797
+******* Epoch 51 Example 37: Validation accuracy 0.846725
+******* Epoch 51 Example 38: Validation accuracy 0.917209
+******* Epoch 51 Example 39: Validation accuracy 0.793241
+******* Epoch 51 Example 40: Validation accuracy 0.371377
+******* Epoch 51 Example 41: Validation accuracy 0.686601
+******* Epoch 51 Example 42: Validation accuracy 0.878943
+******* Epoch 51 Example 43: Validation accuracy 0.483700
+******* Epoch 51 Example 44: Validation accuracy 0.737739
+******* Epoch 51 Example 45: Validation accuracy 0.739463
+******************** Epoch 51: Validation dice score 0.722286
+
+test
+
+******* Epoch 51 Example 0: Test accuracy 0.827480
+******* Epoch 51 Example 1: Test accuracy 0.307989
+******* Epoch 51 Example 2: Test accuracy 0.776082
+******* Epoch 51 Example 3: Test accuracy 0.617919
+******* Epoch 51 Example 4: Test accuracy 0.099715
+******* Epoch 51 Example 5: Test accuracy 0.391093
+******* Epoch 51 Example 6: Test accuracy 0.686681
+******* Epoch 51 Example 7: Test accuracy 0.318404
+******* Epoch 51 Example 8: Test accuracy 0.496978
+******* Epoch 51 Example 9: Test accuracy 0.652607
+******* Epoch 51 Example 10: Test accuracy 0.703246
+******* Epoch 51 Example 11: Test accuracy 0.812567
+******* Epoch 51 Example 12: Test accuracy 0.551963
+******* Epoch 51 Example 13: Test accuracy 0.571268
+******* Epoch 51 Example 14: Test accuracy 0.629579
+******* Epoch 51 Example 15: Test accuracy 0.395717
+******* Epoch 51 Example 16: Test accuracy 0.709022
+******* Epoch 51 Example 17: Test accuracy 0.536010
+******* Epoch 51 Example 18: Test accuracy 0.490953
+******* Epoch 51 Example 19: Test accuracy 0.004159
+******* Epoch 51 Example 20: Test accuracy 0.294870
+******* Epoch 51 Example 21: Test accuracy 0.221497
+******* Epoch 51 Example 22: Test accuracy 0.425191
+******* Epoch 51 Example 23: Test accuracy 0.749790
+******* Epoch 51 Example 24: Test accuracy 0.629394
+******* Epoch 51 Example 25: Test accuracy 0.374156
+******* Epoch 51 Example 26: Test accuracy 0.390627
+******* Epoch 51 Example 27: Test accuracy 0.566468
+******* Epoch 51 Example 28: Test accuracy 0.596460
+******* Epoch 51 Example 29: Test accuracy 0.419595
+******* Epoch 51 Example 30: Test accuracy 0.467106
+******* Epoch 51 Example 31: Test accuracy 0.454415
+******* Epoch 51 Example 32: Test accuracy 0.682603
+******* Epoch 51 Example 33: Test accuracy 0.294867
+******* Epoch 51 Example 34: Test accuracy 0.462147
+******* Epoch 51 Example 35: Test accuracy 0.872067
+******* Epoch 51 Example 36: Test accuracy 0.679603
+******* Epoch 51 Example 37: Test accuracy 0.403052
+******* Epoch 51 Example 38: Test accuracy 0.802099
+******* Epoch 51 Example 39: Test accuracy 0.548082
+******* Epoch 51 Example 40: Test accuracy 0.315103
+******* Epoch 51 Example 41: Test accuracy 0.563550
+******* Epoch 51 Example 42: Test accuracy 0.738307
+******* Epoch 51 Example 43: Test accuracy 0.434127
+******* Epoch 51 Example 44: Test accuracy 0.597314
+******* Epoch 51 Example 45: Test accuracy 0.220930
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 51: Test dice score 0.517018
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 52
+
+train
+
+******* Epoch 52 Example 0: Training loss 0.163574
+******* Epoch 52 Example 1: Training loss 0.268525
+******* Epoch 52 Example 2: Training loss 0.148935
+******* Epoch 52 Example 3: Training loss 0.203286
+******* Epoch 52 Example 4: Training loss 0.110303
+******* Epoch 52 Example 5: Training loss 0.278509
+******* Epoch 52 Example 6: Training loss 0.149399
+******* Epoch 52 Example 7: Training loss 0.174165
+******* Epoch 52 Example 8: Training loss 0.125099
+******* Epoch 52 Example 9: Training loss 0.207379
+******* Epoch 52 Example 10: Training loss 0.129464
+******************** Epoch 52: Training dice score 0.893590
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 53
+
+train
+
+******* Epoch 53 Example 0: Training loss 0.173311
+******* Epoch 53 Example 1: Training loss 0.273574
+******* Epoch 53 Example 2: Training loss 0.143307
+******* Epoch 53 Example 3: Training loss 0.201645
+******* Epoch 53 Example 4: Training loss 0.104869
+******* Epoch 53 Example 5: Training loss 0.254872
+******* Epoch 53 Example 6: Training loss 0.142922
+******* Epoch 53 Example 7: Training loss 0.171782
+******* Epoch 53 Example 8: Training loss 0.127155
+******* Epoch 53 Example 9: Training loss 0.197230
+******* Epoch 53 Example 10: Training loss 0.117440
+******************** Epoch 53: Training dice score 0.894953
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 54
+
+train
+
+******* Epoch 54 Example 0: Training loss 0.183622
+******* Epoch 54 Example 1: Training loss 0.269934
+******* Epoch 54 Example 2: Training loss 0.146816
+******* Epoch 54 Example 3: Training loss 0.208936
+******* Epoch 54 Example 4: Training loss 0.104126
+******* Epoch 54 Example 5: Training loss 0.269718
+******* Epoch 54 Example 6: Training loss 0.145653
+******* Epoch 54 Example 7: Training loss 0.163913
+******* Epoch 54 Example 8: Training loss 0.124162
+******* Epoch 54 Example 9: Training loss 0.187937
+******* Epoch 54 Example 10: Training loss 0.118659
+******************** Epoch 54: Training dice score 0.897729
+
+validate
+
+******* Epoch 54 Example 0: Validation accuracy 0.898623
+******* Epoch 54 Example 1: Validation accuracy 0.666634
+******* Epoch 54 Example 2: Validation accuracy 0.924123
+******* Epoch 54 Example 3: Validation accuracy 0.903482
+******* Epoch 54 Example 4: Validation accuracy 0.316036
+******* Epoch 54 Example 5: Validation accuracy 0.489347
+******* Epoch 54 Example 6: Validation accuracy 0.869579
+******* Epoch 54 Example 7: Validation accuracy 0.769060
+******* Epoch 54 Example 8: Validation accuracy 0.635338
+******* Epoch 54 Example 9: Validation accuracy 0.805665
+******* Epoch 54 Example 10: Validation accuracy 0.788410
+******* Epoch 54 Example 11: Validation accuracy 0.907443
+******* Epoch 54 Example 12: Validation accuracy 0.862269
+******* Epoch 54 Example 13: Validation accuracy 0.642408
+******* Epoch 54 Example 14: Validation accuracy 0.726204
+******* Epoch 54 Example 15: Validation accuracy 0.721264
+******* Epoch 54 Example 16: Validation accuracy 0.870355
+******* Epoch 54 Example 17: Validation accuracy 0.811775
+******* Epoch 54 Example 18: Validation accuracy 0.911925
+******* Epoch 54 Example 19: Validation accuracy 0.001939
+******* Epoch 54 Example 20: Validation accuracy 0.807867
+******* Epoch 54 Example 21: Validation accuracy 0.365070
+******* Epoch 54 Example 22: Validation accuracy 0.787785
+******* Epoch 54 Example 23: Validation accuracy 0.880585
+******* Epoch 54 Example 24: Validation accuracy 0.854636
+******* Epoch 54 Example 25: Validation accuracy 0.566531
+******* Epoch 54 Example 26: Validation accuracy 0.863620
+******* Epoch 54 Example 27: Validation accuracy 0.719629
+******* Epoch 54 Example 28: Validation accuracy 0.753901
+******* Epoch 54 Example 29: Validation accuracy 0.501546
+******* Epoch 54 Example 30: Validation accuracy 0.534597
+******* Epoch 54 Example 31: Validation accuracy 0.641860
+******* Epoch 54 Example 32: Validation accuracy 0.816266
+******* Epoch 54 Example 33: Validation accuracy 0.772025
+******* Epoch 54 Example 34: Validation accuracy 0.543234
+******* Epoch 54 Example 35: Validation accuracy 0.934610
+******* Epoch 54 Example 36: Validation accuracy 0.855971
+******* Epoch 54 Example 37: Validation accuracy 0.853721
+******* Epoch 54 Example 38: Validation accuracy 0.927841
+******* Epoch 54 Example 39: Validation accuracy 0.797454
+******* Epoch 54 Example 40: Validation accuracy 0.368283
+******* Epoch 54 Example 41: Validation accuracy 0.647054
+******* Epoch 54 Example 42: Validation accuracy 0.878329
+******* Epoch 54 Example 43: Validation accuracy 0.487067
+******* Epoch 54 Example 44: Validation accuracy 0.730018
+******* Epoch 54 Example 45: Validation accuracy 0.734319
+******************** Epoch 54: Validation dice score 0.720559
+
+test
+
+******* Epoch 54 Example 0: Test accuracy 0.829154
+******* Epoch 54 Example 1: Test accuracy 0.312535
+******* Epoch 54 Example 2: Test accuracy 0.784745
+******* Epoch 54 Example 3: Test accuracy 0.620275
+******* Epoch 54 Example 4: Test accuracy 0.097208
+******* Epoch 54 Example 5: Test accuracy 0.390482
+******* Epoch 54 Example 6: Test accuracy 0.704657
+******* Epoch 54 Example 7: Test accuracy 0.312290
+******* Epoch 54 Example 8: Test accuracy 0.495851
+******* Epoch 54 Example 9: Test accuracy 0.655471
+******* Epoch 54 Example 10: Test accuracy 0.704492
+******* Epoch 54 Example 11: Test accuracy 0.813793
+******* Epoch 54 Example 12: Test accuracy 0.559465
+******* Epoch 54 Example 13: Test accuracy 0.559569
+******* Epoch 54 Example 14: Test accuracy 0.635796
+******* Epoch 54 Example 15: Test accuracy 0.393854
+******* Epoch 54 Example 16: Test accuracy 0.715227
+******* Epoch 54 Example 17: Test accuracy 0.542761
+******* Epoch 54 Example 18: Test accuracy 0.498503
+******* Epoch 54 Example 19: Test accuracy 0.000503
+******* Epoch 54 Example 20: Test accuracy 0.295480
+******* Epoch 54 Example 21: Test accuracy 0.223963
+******* Epoch 54 Example 22: Test accuracy 0.427551
+******* Epoch 54 Example 23: Test accuracy 0.755312
+******* Epoch 54 Example 24: Test accuracy 0.645317
+******* Epoch 54 Example 25: Test accuracy 0.360726
+******* Epoch 54 Example 26: Test accuracy 0.394856
+******* Epoch 54 Example 27: Test accuracy 0.566321
+******* Epoch 54 Example 28: Test accuracy 0.597396
+******* Epoch 54 Example 29: Test accuracy 0.416474
+******* Epoch 54 Example 30: Test accuracy 0.468132
+******* Epoch 54 Example 31: Test accuracy 0.450420
+******* Epoch 54 Example 32: Test accuracy 0.682050
+******* Epoch 54 Example 33: Test accuracy 0.309131
+******* Epoch 54 Example 34: Test accuracy 0.455945
+******* Epoch 54 Example 35: Test accuracy 0.873504
+******* Epoch 54 Example 36: Test accuracy 0.679055
+******* Epoch 54 Example 37: Test accuracy 0.399290
+******* Epoch 54 Example 38: Test accuracy 0.803687
+******* Epoch 54 Example 39: Test accuracy 0.552131
+******* Epoch 54 Example 40: Test accuracy 0.300970
+******* Epoch 54 Example 41: Test accuracy 0.564709
+******* Epoch 54 Example 42: Test accuracy 0.742352
+******* Epoch 54 Example 43: Test accuracy 0.434961
+******* Epoch 54 Example 44: Test accuracy 0.584439
+******* Epoch 54 Example 45: Test accuracy 0.221848
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 54: Test dice score 0.518101
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 55
+
+train
+
+******* Epoch 55 Example 0: Training loss 0.181797
+******* Epoch 55 Example 1: Training loss 0.271236
+******* Epoch 55 Example 2: Training loss 0.133805
+******* Epoch 55 Example 3: Training loss 0.210479
+******* Epoch 55 Example 4: Training loss 0.103028
+******* Epoch 55 Example 5: Training loss 0.254161
+******* Epoch 55 Example 6: Training loss 0.145219
+******* Epoch 55 Example 7: Training loss 0.165565
+******* Epoch 55 Example 8: Training loss 0.127138
+******* Epoch 55 Example 9: Training loss 0.217258
+******* Epoch 55 Example 10: Training loss 0.124932
+******************** Epoch 55: Training dice score 0.894999
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 56
+
+train
+
+******* Epoch 56 Example 0: Training loss 0.164565
+******* Epoch 56 Example 1: Training loss 0.256231
+******* Epoch 56 Example 2: Training loss 0.138135
+******* Epoch 56 Example 3: Training loss 0.215696
+******* Epoch 56 Example 4: Training loss 0.101030
+******* Epoch 56 Example 5: Training loss 0.271730
+******* Epoch 56 Example 6: Training loss 0.140367
+******* Epoch 56 Example 7: Training loss 0.167250
+******* Epoch 56 Example 8: Training loss 0.126377
+******* Epoch 56 Example 9: Training loss 0.207124
+******* Epoch 56 Example 10: Training loss 0.124382
+******************** Epoch 56: Training dice score 0.897430
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 57
+
+train
+
+******* Epoch 57 Example 0: Training loss 0.174452
+******* Epoch 57 Example 1: Training loss 0.274042
+******* Epoch 57 Example 2: Training loss 0.130390
+******* Epoch 57 Example 3: Training loss 0.207771
+******* Epoch 57 Example 4: Training loss 0.107361
+******* Epoch 57 Example 5: Training loss 0.245085
+******* Epoch 57 Example 6: Training loss 0.147058
+******* Epoch 57 Example 7: Training loss 0.167116
+******* Epoch 57 Example 8: Training loss 0.125366
+******* Epoch 57 Example 9: Training loss 0.188183
+******* Epoch 57 Example 10: Training loss 0.123365
+******************** Epoch 57: Training dice score 0.896679
+
+validate
+
+******* Epoch 57 Example 0: Validation accuracy 0.889213
+******* Epoch 57 Example 1: Validation accuracy 0.687980
+******* Epoch 57 Example 2: Validation accuracy 0.926313
+******* Epoch 57 Example 3: Validation accuracy 0.892084
+******* Epoch 57 Example 4: Validation accuracy 0.354562
+******* Epoch 57 Example 5: Validation accuracy 0.504367
+******* Epoch 57 Example 6: Validation accuracy 0.868850
+******* Epoch 57 Example 7: Validation accuracy 0.789811
+******* Epoch 57 Example 8: Validation accuracy 0.668493
+******* Epoch 57 Example 9: Validation accuracy 0.806045
+******* Epoch 57 Example 10: Validation accuracy 0.794616
+******* Epoch 57 Example 11: Validation accuracy 0.907563
+******* Epoch 57 Example 12: Validation accuracy 0.871654
+******* Epoch 57 Example 13: Validation accuracy 0.640714
+******* Epoch 57 Example 14: Validation accuracy 0.758645
+******* Epoch 57 Example 15: Validation accuracy 0.720933
+******* Epoch 57 Example 16: Validation accuracy 0.872014
+******* Epoch 57 Example 17: Validation accuracy 0.804744
+******* Epoch 57 Example 18: Validation accuracy 0.907936
+******* Epoch 57 Example 19: Validation accuracy 0.000000
+******* Epoch 57 Example 20: Validation accuracy 0.805081
+******* Epoch 57 Example 21: Validation accuracy 0.407165
+******* Epoch 57 Example 22: Validation accuracy 0.776576
+******* Epoch 57 Example 23: Validation accuracy 0.890312
+******* Epoch 57 Example 24: Validation accuracy 0.844655
+******* Epoch 57 Example 25: Validation accuracy 0.562902
+******* Epoch 57 Example 26: Validation accuracy 0.869396
+******* Epoch 57 Example 27: Validation accuracy 0.716149
+******* Epoch 57 Example 28: Validation accuracy 0.742920
+******* Epoch 57 Example 29: Validation accuracy 0.508851
+******* Epoch 57 Example 30: Validation accuracy 0.577254
+******* Epoch 57 Example 31: Validation accuracy 0.642890
+******* Epoch 57 Example 32: Validation accuracy 0.827672
+******* Epoch 57 Example 33: Validation accuracy 0.781584
+******* Epoch 57 Example 34: Validation accuracy 0.579275
+******* Epoch 57 Example 35: Validation accuracy 0.928557
+******* Epoch 57 Example 36: Validation accuracy 0.853474
+******* Epoch 57 Example 37: Validation accuracy 0.846050
+******* Epoch 57 Example 38: Validation accuracy 0.920395
+******* Epoch 57 Example 39: Validation accuracy 0.789586
+******* Epoch 57 Example 40: Validation accuracy 0.354133
+******* Epoch 57 Example 41: Validation accuracy 0.697919
+******* Epoch 57 Example 42: Validation accuracy 0.884447
+******* Epoch 57 Example 43: Validation accuracy 0.469803
+******* Epoch 57 Example 44: Validation accuracy 0.723740
+******* Epoch 57 Example 45: Validation accuracy 0.729020
+******************** Epoch 57: Validation dice score 0.726007
+
+test
+
+******* Epoch 57 Example 0: Test accuracy 0.826494
+******* Epoch 57 Example 1: Test accuracy 0.332744
+******* Epoch 57 Example 2: Test accuracy 0.793699
+******* Epoch 57 Example 3: Test accuracy 0.637365
+******* Epoch 57 Example 4: Test accuracy 0.110750
+******* Epoch 57 Example 5: Test accuracy 0.409883
+******* Epoch 57 Example 6: Test accuracy 0.723536
+******* Epoch 57 Example 7: Test accuracy 0.337082
+******* Epoch 57 Example 8: Test accuracy 0.528191
+******* Epoch 57 Example 9: Test accuracy 0.663019
+******* Epoch 57 Example 10: Test accuracy 0.714792
+******* Epoch 57 Example 11: Test accuracy 0.822632
+******* Epoch 57 Example 12: Test accuracy 0.563299
+******* Epoch 57 Example 13: Test accuracy 0.559870
+******* Epoch 57 Example 14: Test accuracy 0.644198
+******* Epoch 57 Example 15: Test accuracy 0.411223
+******* Epoch 57 Example 16: Test accuracy 0.721894
+******* Epoch 57 Example 17: Test accuracy 0.550428
+******* Epoch 57 Example 18: Test accuracy 0.525054
+******* Epoch 57 Example 19: Test accuracy 0.000000
+******* Epoch 57 Example 20: Test accuracy 0.306234
+******* Epoch 57 Example 21: Test accuracy 0.235920
+******* Epoch 57 Example 22: Test accuracy 0.434766
+******* Epoch 57 Example 23: Test accuracy 0.761617
+******* Epoch 57 Example 24: Test accuracy 0.668746
+******* Epoch 57 Example 25: Test accuracy 0.380495
+******* Epoch 57 Example 26: Test accuracy 0.412847
+******* Epoch 57 Example 27: Test accuracy 0.559120
+******* Epoch 57 Example 28: Test accuracy 0.602697
+******* Epoch 57 Example 29: Test accuracy 0.419465
+******* Epoch 57 Example 30: Test accuracy 0.496980
+******* Epoch 57 Example 31: Test accuracy 0.462264
+******* Epoch 57 Example 32: Test accuracy 0.699221
+******* Epoch 57 Example 33: Test accuracy 0.329383
+******* Epoch 57 Example 34: Test accuracy 0.467311
+******* Epoch 57 Example 35: Test accuracy 0.871320
+******* Epoch 57 Example 36: Test accuracy 0.686240
+******* Epoch 57 Example 37: Test accuracy 0.413224
+******* Epoch 57 Example 38: Test accuracy 0.809694
+******* Epoch 57 Example 39: Test accuracy 0.562202
+******* Epoch 57 Example 40: Test accuracy 0.297242
+******* Epoch 57 Example 41: Test accuracy 0.578495
+******* Epoch 57 Example 42: Test accuracy 0.764440
+******* Epoch 57 Example 43: Test accuracy 0.437320
+******* Epoch 57 Example 44: Test accuracy 0.602991
+******* Epoch 57 Example 45: Test accuracy 0.231125
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 57: Test dice score 0.529729
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 58
+
+train
+
+******* Epoch 58 Example 0: Training loss 0.159723
+******* Epoch 58 Example 1: Training loss 0.261965
+******* Epoch 58 Example 2: Training loss 0.137721
+******* Epoch 58 Example 3: Training loss 0.203997
+******* Epoch 58 Example 4: Training loss 0.099896
+******* Epoch 58 Example 5: Training loss 0.257074
+******* Epoch 58 Example 6: Training loss 0.147580
+******* Epoch 58 Example 7: Training loss 0.164427
+******* Epoch 58 Example 8: Training loss 0.125953
+******* Epoch 58 Example 9: Training loss 0.200955
+******* Epoch 58 Example 10: Training loss 0.125396
+******************** Epoch 58: Training dice score 0.897445
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 59
+
+train
+
+******* Epoch 59 Example 0: Training loss 0.169084
+******* Epoch 59 Example 1: Training loss 0.263229
+******* Epoch 59 Example 2: Training loss 0.140762
+******* Epoch 59 Example 3: Training loss 0.199684
+******* Epoch 59 Example 4: Training loss 0.105188
+******* Epoch 59 Example 5: Training loss 0.262986
+******* Epoch 59 Example 6: Training loss 0.154941
+******* Epoch 59 Example 7: Training loss 0.170739
+******* Epoch 59 Example 8: Training loss 0.124511
+******* Epoch 59 Example 9: Training loss 0.201919
+******* Epoch 59 Example 10: Training loss 0.125005
+******************** Epoch 59: Training dice score 0.894954
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........
+
+epoch 60
+
+train
+
+******* Epoch 60 Example 0: Training loss 0.168502
+******* Epoch 60 Example 1: Training loss 0.254067
+******* Epoch 60 Example 2: Training loss 0.136379
+******* Epoch 60 Example 3: Training loss 0.201471
+******* Epoch 60 Example 4: Training loss 0.116729
+******* Epoch 60 Example 5: Training loss 0.249491
+******* Epoch 60 Example 6: Training loss 0.135903
+******* Epoch 60 Example 7: Training loss 0.178587
+******* Epoch 60 Example 8: Training loss 0.128292
+******* Epoch 60 Example 9: Training loss 0.208695
+******* Epoch 60 Example 10: Training loss 0.119904
+******************** Epoch 60: Training dice score 0.897599
+
+validate
+
+******* Epoch 60 Example 0: Validation accuracy 0.900173
+******* Epoch 60 Example 1: Validation accuracy 0.696808
+******* Epoch 60 Example 2: Validation accuracy 0.931039
+******* Epoch 60 Example 3: Validation accuracy 0.891101
+******* Epoch 60 Example 4: Validation accuracy 0.361476
+******* Epoch 60 Example 5: Validation accuracy 0.505495
+******* Epoch 60 Example 6: Validation accuracy 0.860434
+******* Epoch 60 Example 7: Validation accuracy 0.794424
+******* Epoch 60 Example 8: Validation accuracy 0.694806
+******* Epoch 60 Example 9: Validation accuracy 0.800150
+******* Epoch 60 Example 10: Validation accuracy 0.789197
+******* Epoch 60 Example 11: Validation accuracy 0.903280
+******* Epoch 60 Example 12: Validation accuracy 0.873927
+******* Epoch 60 Example 13: Validation accuracy 0.654108
+******* Epoch 60 Example 14: Validation accuracy 0.743763
+******* Epoch 60 Example 15: Validation accuracy 0.740494
+******* Epoch 60 Example 16: Validation accuracy 0.876008
+******* Epoch 60 Example 17: Validation accuracy 0.822674
+******* Epoch 60 Example 18: Validation accuracy 0.899735
+******* Epoch 60 Example 19: Validation accuracy 0.000318
+******* Epoch 60 Example 20: Validation accuracy 0.789437
+******* Epoch 60 Example 21: Validation accuracy 0.453061
+******* Epoch 60 Example 22: Validation accuracy 0.772272
+******* Epoch 60 Example 23: Validation accuracy 0.880802
+******* Epoch 60 Example 24: Validation accuracy 0.858260
+******* Epoch 60 Example 25: Validation accuracy 0.599673
+******* Epoch 60 Example 26: Validation accuracy 0.864201
+******* Epoch 60 Example 27: Validation accuracy 0.717932
+******* Epoch 60 Example 28: Validation accuracy 0.746938
+******* Epoch 60 Example 29: Validation accuracy 0.512985
+******* Epoch 60 Example 30: Validation accuracy 0.590182
+******* Epoch 60 Example 31: Validation accuracy 0.661734
+******* Epoch 60 Example 32: Validation accuracy 0.823134
+******* Epoch 60 Example 33: Validation accuracy 0.762304
+******* Epoch 60 Example 34: Validation accuracy 0.592038
+******* Epoch 60 Example 35: Validation accuracy 0.935936
+******* Epoch 60 Example 36: Validation accuracy 0.853060
+******* Epoch 60 Example 37: Validation accuracy 0.833324
+******* Epoch 60 Example 38: Validation accuracy 0.929442
+******* Epoch 60 Example 39: Validation accuracy 0.803011
+******* Epoch 60 Example 40: Validation accuracy 0.350510
+******* Epoch 60 Example 41: Validation accuracy 0.688430
+******* Epoch 60 Example 42: Validation accuracy 0.881975
+******* Epoch 60 Example 43: Validation accuracy 0.468693
+******* Epoch 60 Example 44: Validation accuracy 0.730790
+******* Epoch 60 Example 45: Validation accuracy 0.740089
+******************** Epoch 60: Validation dice score 0.729992
+
+test
+
+******* Epoch 60 Example 0: Test accuracy 0.831470
+******* Epoch 60 Example 1: Test accuracy 0.336879
+******* Epoch 60 Example 2: Test accuracy 0.799853
+******* Epoch 60 Example 3: Test accuracy 0.649715
+******* Epoch 60 Example 4: Test accuracy 0.117101
+******* Epoch 60 Example 5: Test accuracy 0.413777
+******* Epoch 60 Example 6: Test accuracy 0.724062
+******* Epoch 60 Example 7: Test accuracy 0.348451
+******* Epoch 60 Example 8: Test accuracy 0.542866
+******* Epoch 60 Example 9: Test accuracy 0.663422
+******* Epoch 60 Example 10: Test accuracy 0.718632
+******* Epoch 60 Example 11: Test accuracy 0.822243
+******* Epoch 60 Example 12: Test accuracy 0.568685
+******* Epoch 60 Example 13: Test accuracy 0.566095
+******* Epoch 60 Example 14: Test accuracy 0.652732
+******* Epoch 60 Example 15: Test accuracy 0.414871
+******* Epoch 60 Example 16: Test accuracy 0.725709
+******* Epoch 60 Example 17: Test accuracy 0.552787
+******* Epoch 60 Example 18: Test accuracy 0.530943
+******* Epoch 60 Example 19: Test accuracy 0.000000
+******* Epoch 60 Example 20: Test accuracy 0.312308
+******* Epoch 60 Example 21: Test accuracy 0.245009
+******* Epoch 60 Example 22: Test accuracy 0.438537
+******* Epoch 60 Example 23: Test accuracy 0.761863
+******* Epoch 60 Example 24: Test accuracy 0.670032
+******* Epoch 60 Example 25: Test accuracy 0.385673
+******* Epoch 60 Example 26: Test accuracy 0.429515
+******* Epoch 60 Example 27: Test accuracy 0.561166
+******* Epoch 60 Example 28: Test accuracy 0.612791
+******* Epoch 60 Example 29: Test accuracy 0.439608
+******* Epoch 60 Example 30: Test accuracy 0.513292
+******* Epoch 60 Example 31: Test accuracy 0.469136
+******* Epoch 60 Example 32: Test accuracy 0.697229
+******* Epoch 60 Example 33: Test accuracy 0.333928
+******* Epoch 60 Example 34: Test accuracy 0.470712
+******* Epoch 60 Example 35: Test accuracy 0.874351
+******* Epoch 60 Example 36: Test accuracy 0.690638
+******* Epoch 60 Example 37: Test accuracy 0.422561
+******* Epoch 60 Example 38: Test accuracy 0.815181
+******* Epoch 60 Example 39: Test accuracy 0.569486
+******* Epoch 60 Example 40: Test accuracy 0.301502
+******* Epoch 60 Example 41: Test accuracy 0.578429
+******* Epoch 60 Example 42: Test accuracy 0.768358
+******* Epoch 60 Example 43: Test accuracy 0.436113
+******* Epoch 60 Example 44: Test accuracy 0.608380
+******* Epoch 60 Example 45: Test accuracy 0.239578
+Saving checkpoint to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/cnn_finetune.ckpt ......
+******************** Epoch 60: Test dice score 0.535341
+Saving training losses to /share/PI/ogevaert/shirley/rembrandt/fine_tune_result/fine_tune_02/cnn/fine_tune/finetune_results.npz........

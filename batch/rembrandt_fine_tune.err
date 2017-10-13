@@ -1,0 +1,14 @@
+I tensorflow/stream_executor/dso_loader.cc:130] successfully opened CUDA library libcublas.so.8.0 locally
+I tensorflow/stream_executor/dso_loader.cc:130] successfully opened CUDA library libcudnn.so.5.1 locally
+I tensorflow/stream_executor/dso_loader.cc:130] successfully opened CUDA library libcufft.so.8.0 locally
+I tensorflow/stream_executor/dso_loader.cc:130] successfully opened CUDA library libcuda.so.1 locally
+I tensorflow/stream_executor/dso_loader.cc:130] successfully opened CUDA library libcurand.so.8.0 locally
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:888] Found device 0 with properties: 
+name: Tesla K80
+major: 3 minor: 7 memoryClockRate (GHz) 0.8235
+pciBusID 0000:85:00.0
+Total memory: 11.92GiB
+Free memory: 11.86GiB
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:909] DMA: 0 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:919] 0:   Y 
+I tensorflow/core/common_runtime/gpu/gpu_device.cc:978] Creating TensorFlow device (/gpu:0) -> (device: 0, name: Tesla K80, pci bus id: 0000:85:00.0)

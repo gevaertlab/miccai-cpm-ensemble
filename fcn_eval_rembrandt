@@ -1,0 +1,11 @@
+l2 0.0001
+res_path /share/PI/ogevaert/shirley/rembrandt/fcn_test_result/
+val_path /share/PI/ogevaert/raghav/rembrandt/test/
+num_epochs 20
+ckpt_path /share/PI/ogevaert/shirley/brats_hgg/ckpt/fcn_brats.ckpt
+train_path /share/PI/ogevaert/raghav/rembrandt/test/
+num_train_batches 20
+num_val_batches 20
+batch_size 50
+lr 0.001
+fine_tune_ckpt_path _
