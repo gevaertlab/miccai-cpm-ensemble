@@ -27,7 +27,7 @@ def train(cfg_path, debug):
 
     ckpt_path = config.ckpt_path
     res_path = config.res_path
-    
+
     model = BaselineSmallerModel(config)
 
     train_ex_paths = model.train_ex_paths
@@ -40,7 +40,7 @@ def train(cfg_path, debug):
 
     with tf.Session() as sess:
 
-        sess.run(tf.initialize_all_variables())
+        sess.run(tf.global_variables_initializer())
 
         train_losses = []
         train_bdices = []
@@ -58,11 +58,11 @@ def train(cfg_path, debug):
                 losses, bdices = model._train(ex_path, sess)
                 train_losses.extend(losses)
                 ex_bdices.append(np.mean(bdices))
-                print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))   # average loss for 20 batches of every sample
+                print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))  # average loss for 20 batches of every sample
 
             train_bdices.append(np.mean(ex_bdices))
-            print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))    # average dice score for all samples
-            
+            print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))  # average dice score for all samples
+
             # print('\nvalidate\n')
             # ex_bdices = []
             # for ex, ex_path in enumerate(val_ex_paths):
@@ -82,7 +82,6 @@ def train(cfg_path, debug):
             #         best_fdice = np.mean(ex_fdices)
             #         saver.save(sess, ckpt_path)
             #     val_fdices.append(np.mean(ex_fdices))
-
 
             if epoch % 5 == 0:
                 print('\nvalidate\n')
