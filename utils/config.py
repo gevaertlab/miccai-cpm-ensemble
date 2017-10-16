@@ -2,7 +2,7 @@ class Config:
 
     def __init__(self, path):
         param_dict = {}
-        with open(path, 'rb') as f:
+        with open(path, 'r') as f:
             for line in f:
                 param_dict[line.split()[0]] = line.split()[1]
         
