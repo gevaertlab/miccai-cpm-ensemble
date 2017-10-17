@@ -9,7 +9,7 @@ from utils.data_utils import im_path_to_arr
 # def data_iter(ex_path, samp_mode, batch_size, num_batches, fg_prob):
 
 patch = 24
-half_patch = patch/2
+half_patch = patch // 2
 
 def data_iter(ex_path, samp_mode, batch_size, num_batches):
     """ Generate input and label data from the BRATS dataset.
@@ -143,9 +143,9 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
 
 # generalize this later
 def get_patch_centers(im_size):
-    quotient = (im_size-16) / 9
+    quotient = (im_size-16) // 9
     remainder = (im_size-16) % 9
-    start = remainder/2 + 12
+    start = remainder // 2 + 12
     end = start + (quotient-1)*9 + 1
     return range(start, end, 9)
 
@@ -267,8 +267,8 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
         j_rem = j_len % patch
         k_rem = k_len % patch
 
-        for i in range(i_rem/2, i_len, patch):
-            for j in range(j_rem/2, j_len, patch):
+        for i in range(i_rem // 2, i_len, patch):
+            for j in range(j_rem // 2, j_len, patch):
                 for k in range(k_rem/2, k_len, patch):
 
                     if( (i+patch) <= i_len and (j+patch) <= j_len and (k+patch) <= k_len ):
