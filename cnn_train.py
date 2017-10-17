@@ -24,6 +24,8 @@ from models.cnn_only_bn import BaselineOnlyBnModel
 # from models.baseline_dropout import BaselineDropoutModel
 
 from utils.config import Config
+from utils.general import Progbar
+
 
 def train(cfg_path, debug):
 
@@ -40,6 +42,7 @@ def train(cfg_path, debug):
         train_ex_paths = train_ex_paths[:2]
         val_ex_paths = val_ex_paths[:2]
 
+    prog = Progbar(target=len(train_ex_paths))
     saver = tf.train.Saver()
 
     with tf.Session() as sess:
@@ -61,7 +64,7 @@ def train(cfg_path, debug):
             # print(ex_path)
             bdices = model._validate(ex_path, sess)
             ex_bdices.append(np.mean(bdices))
-            print('******* Epoch %d Example %d: Validation accuracy %5f' %(0, ex, np.mean(bdices)))   # average dice score for 20 batches of every sample  
+            # print('******* Epoch %d Example %d: Validation accuracy %5f' %(0, ex, np.mean(bdices)))   # average dice score for 20 batches of every sample  
 
         val_bdices.append(np.mean(ex_bdices))
         print('******************** Epoch %d: Validation dice score %5f' %(0, np.mean(ex_bdices)))     # average dice score for all samples
@@ -73,7 +76,7 @@ def train(cfg_path, debug):
             # print(ex_path)
             _, _, _, fdice = model._segment(ex_path, sess)
             ex_fdices.append(fdice)
-            print('******* Epoch %d Example %d: Test accuracy %5f' %(0, ex, fdice))             # full dice score per sample
+            # print('******* Epoch %d Example %d: Test accuracy %5f' %(0, ex, fdice))             # full dice score per sample
 
         if np.mean(ex_fdices) >= best_fdice:
             best_fdice = np.mean(ex_fdices)
@@ -81,8 +84,6 @@ def train(cfg_path, debug):
             
         val_fdices.append(np.mean(ex_fdices))
         print('******************** Epoch %d: Test dice score %5f' %(0, np.mean(ex_fdices)))        # average full dice score for all samples
-
-
 
         for epoch in range(1, model.config.num_epochs+1):
             print('\nepoch {}'.format(epoch))
@@ -94,7 +95,10 @@ def train(cfg_path, debug):
                 losses, bdices = model._train(ex_path, sess)
                 train_losses.extend(losses)
                 ex_bdices.append(np.mean(bdices))
-                print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))   # average loss for 20 batches of every sample
+
+                # logging
+                prog.update(i + 1, values=[('loss', np.mean(losses)), ('dice_score', np.mean(bdices))])
+                # print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))   # average loss for 20 batches of every sample
 
             train_bdices.append(np.mean(ex_bdices))
             print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))    # average dice score for all samples
@@ -107,7 +111,7 @@ def train(cfg_path, debug):
                     # print(ex_path)
                     bdices = model._validate(ex_path, sess)
                     ex_bdices.append(np.mean(bdices))
-                    print('******* Epoch %d Example %d: Validation accuracy %5f' %(epoch, ex, np.mean(bdices)))   # average dice score for 20 batches of every sample  
+                    # print('******* Epoch %d Example %d: Validation accuracy %5f' %(epoch, ex, np.mean(bdices)))   # average dice score for 20 batches of every sample  
 
                 val_bdices.append(np.mean(ex_bdices))
                 print('******************** Epoch %d: Validation dice score %5f' %(epoch, np.mean(ex_bdices)))     # average dice score for all samples
@@ -119,7 +123,7 @@ def train(cfg_path, debug):
                     # print(ex_path)
                     _, _, _, fdice = model._segment(ex_path, sess)
                     ex_fdices.append(fdice)
-                    print('******* Epoch %d Example %d: Test accuracy %5f' %(epoch, ex, fdice))             # full dice score per sample
+                    # print('******* Epoch %d Example %d: Test accuracy %5f' %(epoch, ex, fdice))             # full dice score per sample
 
                 if np.mean(ex_fdices) >= best_fdice:
                     best_fdice = np.mean(ex_fdices)
