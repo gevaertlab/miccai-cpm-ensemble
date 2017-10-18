@@ -47,7 +47,6 @@ def train(cfg_path, debug):
 
     with tf.Session() as sess:
 
-        # sess.run(tf.initialize_all_variables())
         sess.run(tf.global_variables_initializer()) 
 
         train_losses = []
@@ -58,7 +57,7 @@ def train(cfg_path, debug):
 
 
         print('Initialization......')
-        print('\nvalidate\n')
+        print('validate')
         ex_bdices = []
         for ex, ex_path in enumerate(val_ex_paths):
             # print(ex_path)
@@ -70,7 +69,7 @@ def train(cfg_path, debug):
         print('******************** Epoch %d: Validation dice score %5f' %(0, np.mean(ex_bdices)))     # average dice score for all samples
 
 
-        print('\ntest\n')
+        print('test')
         ex_fdices = []
         for ex, ex_path in enumerate(val_ex_paths):
             # print(ex_path)
@@ -88,7 +87,7 @@ def train(cfg_path, debug):
         for epoch in range(1, model.config.num_epochs+1):
             print('\nepoch {}'.format(epoch))
 
-            print('\ntrain\n')
+            print('train')
             ex_bdices = []
             for ex, ex_path in enumerate(train_ex_paths):
                 # print(ex_path)
@@ -97,7 +96,7 @@ def train(cfg_path, debug):
                 ex_bdices.append(np.mean(bdices))
 
                 # logging
-                prog.update(i + 1, values=[('loss', np.mean(losses)), ('dice_score', np.mean(bdices))])
+                prog.update(ex + 1, values=[('loss', np.mean(losses)), ('dice_score', np.mean(bdices))])
                 # print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))   # average loss for 20 batches of every sample
 
             train_bdices.append(np.mean(ex_bdices))
@@ -105,7 +104,7 @@ def train(cfg_path, debug):
 
 
             if epoch % 3 == 0:
-                print('\nvalidate\n')
+                print('validate')
                 ex_bdices = []
                 for ex, ex_path in enumerate(val_ex_paths):
                     # print(ex_path)
@@ -117,7 +116,7 @@ def train(cfg_path, debug):
                 print('******************** Epoch %d: Validation dice score %5f' %(epoch, np.mean(ex_bdices)))     # average dice score for all samples
 
 
-                print('\ntest\n')
+                print('test')
                 ex_fdices = []
                 for ex, ex_path in enumerate(val_ex_paths):
                     # print(ex_path)
