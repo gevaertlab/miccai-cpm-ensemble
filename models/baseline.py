@@ -30,12 +30,10 @@ class BaselineModel(Model):
         self.val_ex_paths = get_ex_paths(self.config.val_path)
         
     def add_placeholders(self):
-        self.image_placeholder = tf.placeholder(tf.float32,
-                                                shape=[None, 25, 25, 25, 4])
-        self.label_placeholder = tf.placeholder(tf.int32,
-                                                shape=[None, 9, 9, 9])
-        self.dropout_placeholder = tf.placeholder(tf.float32,
-                                                  shape=[])
+        self.image_placeholder = tf.placeholder(tf.float32, shape=[None, 25, 25, 25, 4])
+        self.label_placeholder = tf.placeholder(tf.int32, shape=[None, 9, 9, 9])
+        self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
+        self.lr_placeholder = tf.placeholder(tf.float32, shape=[])
 
     def add_model(self):
 
@@ -145,10 +143,9 @@ class BaselineModel(Model):
 
 
     def add_train_op(self):
-        self.train = tf.train.AdamOptimizer(
-                     learning_rate=self.config.lr).minimize(self.loss) 
+        self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss) 
 
-    def _train(self, ex_path, sess):
+    def _train(self, ex_path, sess, lr):
         
         losses = []
         bdices = []
@@ -161,7 +158,8 @@ class BaselineModel(Model):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
-                    self.dropout_placeholder: 0.5}
+                    self.dropout_placeholder: 0.5
+                    self.lr_placeholder: lr}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train],
                             feed_dict=feed)

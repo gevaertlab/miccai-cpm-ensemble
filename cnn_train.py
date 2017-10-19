@@ -25,6 +25,7 @@ from models.cnn_only_bn import BaselineOnlyBnModel
 
 from utils.config import Config
 from utils.general import Progbar
+from utils.lr_schedule import LRSchedule
 
 
 def train(cfg_path, debug):
@@ -42,11 +43,15 @@ def train(cfg_path, debug):
         train_ex_paths = train_ex_paths[:2]
         val_ex_paths = val_ex_paths[:2]
 
-    prog = Progbar(target=len(train_ex_paths))
+    lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min, 
+                             start_decay=config.start_decay * len(train_ex_paths),
+                             end_decay=config.end_decay * len(train_ex_paths),
+                             lr_warm=config.lr_warm,
+                             end_warm=config.end_warm * len(train_ex_paths))
+
     saver = tf.train.Saver()
 
     with tf.Session() as sess:
-
         sess.run(tf.global_variables_initializer()) 
 
         train_losses = []
@@ -54,7 +59,6 @@ def train(cfg_path, debug):
         val_bdices = []
         val_fdices = []
         best_fdice = 0
-
 
         print('Initialization......')
         print('validate')
@@ -67,7 +71,6 @@ def train(cfg_path, debug):
 
         val_bdices.append(np.mean(ex_bdices))
         print('******************** Epoch %d: Validation dice score %5f' %(0, np.mean(ex_bdices)))     # average dice score for all samples
-
 
         print('test')
         ex_fdices = []
@@ -84,24 +87,22 @@ def train(cfg_path, debug):
         val_fdices.append(np.mean(ex_fdices))
         print('******************** Epoch %d: Test dice score %5f' %(0, np.mean(ex_fdices)))        # average full dice score for all samples
 
-        for epoch in range(1, model.config.num_epochs+1):
+        for epoch in range(1, config.num_epochs+1):
             print('\nepoch {}'.format(epoch))
-
             print('train')
+
+            prog = Progbar(target=len(train_ex_paths))
             ex_bdices = []
             for ex, ex_path in enumerate(train_ex_paths):
                 # print(ex_path)
-                losses, bdices = model._train(ex_path, sess)
+                losses, bdices = model._train(ex_path, sess, lr_schedule.lr)
                 train_losses.extend(losses)
                 ex_bdices.append(np.mean(bdices))
-
-                # logging
-                prog.update(ex + 1, values=[('loss', np.mean(losses)), ('dice_score', np.mean(bdices))])
+                lr_schedule.update(batch_no=epoch * len(train_ex_paths) + ex)
+                prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr_schedule.lr)])
                 # print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))   # average loss for 20 batches of every sample
-
             train_bdices.append(np.mean(ex_bdices))
             print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))    # average dice score for all samples
-
 
             if epoch % 3 == 0:
                 print('validate')
@@ -111,10 +112,8 @@ def train(cfg_path, debug):
                     bdices = model._validate(ex_path, sess)
                     ex_bdices.append(np.mean(bdices))
                     # print('******* Epoch %d Example %d: Validation accuracy %5f' %(epoch, ex, np.mean(bdices)))   # average dice score for 20 batches of every sample  
-
                 val_bdices.append(np.mean(ex_bdices))
                 print('******************** Epoch %d: Validation dice score %5f' %(epoch, np.mean(ex_bdices)))     # average dice score for all samples
-
 
                 print('test')
                 ex_fdices = []
@@ -123,15 +122,13 @@ def train(cfg_path, debug):
                     _, _, _, fdice = model._segment(ex_path, sess)
                     ex_fdices.append(fdice)
                     # print('******* Epoch %d Example %d: Test accuracy %5f' %(epoch, ex, fdice))             # full dice score per sample
+                val_fdices.append(np.mean(ex_fdices))
+                print('******************** Epoch %d: Test dice score %5f' %(epoch, np.mean(ex_fdices)))        # average full dice score for all samples
 
                 if np.mean(ex_fdices) >= best_fdice:
                     best_fdice = np.mean(ex_fdices)
                     saver.save(sess, ckpt_path)
-                    print('Saving checkpoint to %s ......' %(ckpt_path))
-                    
-                val_fdices.append(np.mean(ex_fdices))
-                print('******************** Epoch %d: Test dice score %5f' %(epoch, np.mean(ex_fdices)))        # average full dice score for all samples
-
+                    print('Saving checkpoint to %s ......' %(ckpt_path))  
 
             print('Saving training losses to %s........' %(res_path))
             np.savez(res_path,
