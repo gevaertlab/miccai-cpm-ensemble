@@ -13,7 +13,7 @@ class Config:
         self.val_path = param_dict.get('val_path')
 
         # learning rate schedule parameters
-        self.lr = float(param_dict.get('lr'))
+        # self.lr = float(param_dict.get('lr'))
         self.lr_init = float(param_dict.get('lr_init'))
         self.lr_min = float(param_dict.get('lr_min'))
         self.start_decay = float(param_dict.get('start_decay'))  # id of epoch to start decay

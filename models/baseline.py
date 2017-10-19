@@ -158,7 +158,7 @@ class BaselineModel(Model):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
-                    self.dropout_placeholder: 0.5
+                    self.dropout_placeholder: 0.5,
                     self.lr_placeholder: lr}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train],
