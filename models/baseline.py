@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import numpy as np
 import tensorflow as tf
 
@@ -112,7 +110,6 @@ class BaselineModel(Model):
                   tf.nn.sparse_softmax_cross_entropy_with_logits(
                   logits=logits, labels=labels))
 
-
 ######### use dice score as loss function 
         # preds = tf.reshape(self.pred, [-1])
         # dice_score_loss = dice_score(labels.eval(), preds.eval())
@@ -139,8 +136,6 @@ class BaselineModel(Model):
                                    + tf.nn.l2_loss(wfc2))
 
         self.loss = ce_loss + reg_loss
-        
-
 
     def add_train_op(self):
         self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss) 
@@ -158,7 +153,7 @@ class BaselineModel(Model):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
-                    self.dropout_placeholder: 0.5,
+                    self.dropout_placeholder: self.config.dropout,
                     self.lr_placeholder: lr}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train],

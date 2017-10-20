@@ -102,12 +102,12 @@ class Progbar(object):
                 info += ' - %ds' % (now - self.start)
             for k in self.unique_values:
                 if isinstance(self.sum_values[k], list):
-                    info += ' - %s: %.4f' % (k, self.sum_values[k][0] / max(1, self.sum_values[k][1]))
+                    info += ' - %s: %.6f' % (k, self.sum_values[k][0] / max(1, self.sum_values[k][1]))
                 else:
                     info += ' - %s: %s' % (k, self.sum_values[k])
 
             for k, v in self.exp_avg.items():
-                info += ' - %s: %.4f' % (k, v)
+                info += ' - %s: %.6f' % (k, v)
 
             self.total_width += len(info)
             if prev_total_width > self.total_width:
@@ -123,7 +123,7 @@ class Progbar(object):
             if current >= self.target:
                 info = '%ds' % (now - self.start)
                 for k in self.unique_values:
-                    info += ' - %s: %.4f' % (k, self.sum_values[k][0] / max(1, self.sum_values[k][1]))
+                    info += ' - %s: %.6f' % (k, self.sum_values[k][0] / max(1, self.sum_values[k][1]))
                 sys.stdout.write(info + "\n")
 
     def add(self, n, values=None):

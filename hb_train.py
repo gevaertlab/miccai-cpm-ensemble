@@ -1,8 +1,8 @@
-"""Training script.
+"""Training script for Heidelberg dataset.
 
 Usage:
-    train.py (--cfg-path=<p>) [--debug]
-    train.py -h | --help
+    train_hb.py (--cfg-path=<p>) [--debug]
+    train_hb.py -h | --help
 
 Options:
     -h --help       Show this screen.
@@ -10,14 +10,9 @@ Options:
     --debug         Run in debug mode.
 
 """
-
 from docopt import docopt
 
-from models.baseline_bn import BaselineBnModel
-# from models.cnn_only_bn import BaselineOnlyBnModel
-# from models.baseline_smaller import BaselineSmallerModel
-# from models.baseline_dropout import BaselineDropoutModel
-
+from models.heidelberg import HeidelbergModel
 from train import train
 from utils.config import Config
 
@@ -26,5 +21,5 @@ if __name__ == '__main__':
     cfg_path = arguments['--cfg-path']
 
     config = Config(cfg_path)
-    model = BaselineBnModel(config)
+    model = HeidelbergModel(config)
     train(model, debug)

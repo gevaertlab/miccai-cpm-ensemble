@@ -35,7 +35,7 @@ class Model:
         """
         pass
 
-    def _validation(self):
+    def _validate(self):
         """ Validate on an image and return pertinent data.
         """
         pass

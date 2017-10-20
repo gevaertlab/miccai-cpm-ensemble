@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import numpy as np
 import tensorflow as tf
 
@@ -8,7 +6,6 @@ from models.baseline import BaselineModel
 class BaselineBnModel(BaselineModel):
 
     def add_model(self):
-        keep_rate = 0.8
 
         with tf.variable_scope('conv1') as scope:
             kernel = tf.get_variable('weights', [5, 5, 5, 4, 10],
@@ -20,7 +17,7 @@ class BaselineBnModel(BaselineModel):
                                 [1, 1, 1, 1, 1], padding='VALID')
             bn1 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu1 = tf.nn.relu(bn1)
-            drop1 = tf.nn.dropout(relu1, keep_prob=keep_rate)
+            drop1 = tf.nn.dropout(relu1, keep_prob=self.dropout_placeholder)  # shape = (21, 21, 21)
 
         with tf.variable_scope('conv2') as scope:
             kernel = tf.get_variable('weights', [5, 5, 5, 10, 15],
@@ -32,7 +29,7 @@ class BaselineBnModel(BaselineModel):
                                 [1, 1, 1, 1, 1], padding='VALID')
             bn2 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu2 = tf.nn.relu(bn2)
-            drop2 = tf.nn.dropout(relu2, keep_prob=keep_rate)
+            drop2 = tf.nn.dropout(relu2, keep_prob=self.dropout_placeholder)  # shape = (17, 17, 17)
 
         with tf.variable_scope('conv3') as scope:
             kernel = tf.get_variable('weights', [5, 5, 5, 15, 15],
@@ -44,7 +41,7 @@ class BaselineBnModel(BaselineModel):
                                 [1, 1, 1, 1, 1], padding='VALID')
             bn3 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu3 = tf.nn.relu(bn3)
-            drop3 = tf.nn.dropout(relu3, keep_prob=keep_rate)
+            drop3 = tf.nn.dropout(relu3, keep_prob=self.dropout_placeholder)  # shape = (13, 13, 13)
 
         with tf.variable_scope('conv4') as scope:
             kernel = tf.get_variable('weights', [5, 5, 5, 15, 20],
@@ -56,7 +53,7 @@ class BaselineBnModel(BaselineModel):
                                 [1, 1, 1, 1, 1], padding='VALID')
             bn4 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu4 = tf.nn.relu(bn4)
-            drop4 = tf.nn.dropout(relu4, keep_prob=keep_rate)
+            drop4 = tf.nn.dropout(relu4, keep_prob=self.dropout_placeholder)  # shape = (9, 9, 9)
 
         with tf.variable_scope('fc1') as scope:
             kernel = tf.get_variable('weights', [1, 1, 1, 20, 80],

@@ -13,21 +13,22 @@ class Config:
         self.val_path = param_dict.get('val_path')
 
         # learning rate schedule parameters
-        # self.lr = float(param_dict.get('lr'))
-        self.lr_init = float(param_dict.get('lr_init'))
-        self.lr_min = float(param_dict.get('lr_min'))
-        self.start_decay = float(param_dict.get('start_decay'))  # id of epoch to start decay
-        self.decay_rate = float(param_dict.get('decay_rate'))  # id of epoch to end decay
-        self.end_decay = float(param_dict.get('end_decay'))
-        self.lr_warm = float(param_dict.get('lr_warm'))
-        self.lr_warm = float(param_dict.get('lr_warm'))
-        self.end_warm = float(param_dict.get('end_warm'))
+        self.lr_init = float(param_dict.get('lr_init'), 1e-4)
+        self.lr_min = float(param_dict.get('lr_min'), 1e-6)
+        self.start_decay = float(param_dict.get('start_decay'), 10)  # id of epoch to start decay
+        self.decay_rate = float(param_dict.get('decay_rate'), 0.8)  # id of epoch to end decay
+        self.end_decay = float(param_dict.get('end_decay'), 30)
+        self.lr_warm = float(param_dict.get('lr_warm', 5e-5))
+        self.end_warm = float(param_dict.get('end_warm', 3))
 
-        self.l2 = float(param_dict.get('l2'))
+        self.l2 = float(param_dict.get('l2'), 1e-4)
+        self.dropout = float(param_dict.get('dropout', 0.5))
 
-        self.batch_size = int(param_dict.get('batch_size'))
-        self.num_epochs = int(param_dict.get('num_epochs'))
-        self.num_train_batches = int(param_dict.get('num_train_batches'))
-        self.num_val_batches = int(param_dict.get('num_val_batches'))
+        self.patch_size = int(param_dict.get('patch_size', 24))
+
+        self.batch_size = int(param_dict.get('batch_size'), 50)
+        self.num_epochs = int(param_dict.get('num_epochs'), 50)
+        self.num_train_batches = int(param_dict.get('num_train_batches'), 20)
+        self.num_val_batches = int(param_dict.get('num_val_batches'), 20)
 
         self.fine_tune_ckpt_path = param_dict.get('fine_tune_ckpt_path')

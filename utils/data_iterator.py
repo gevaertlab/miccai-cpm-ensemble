@@ -6,10 +6,6 @@ import SimpleITK as sitk
 
 from utils.data_utils import im_path_to_arr
 
-# def data_iter(ex_path, samp_mode, batch_size, num_batches, fg_prob):
-
-patch = 24
-half_patch = patch // 2
 
 def data_iter(ex_path, samp_mode, batch_size, num_batches):
     """ Generate input and label data from the BRATS dataset.
@@ -151,7 +147,7 @@ def get_patch_centers(im_size):
 
 
 
-def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
+def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
     """ Generate input and label data from the BRATS dataset.
 
     params:
@@ -173,6 +169,7 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
     y: labels patch (batch_sizex9x9x9)
     """
     data = [None]*4
+    half_patch = patch_size // 2
 
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
@@ -195,8 +192,8 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
         # trimmed_data = data[12:-12, 12:-12, 12:-12, :]
         # trimmed_labels = labels[12:-12, 12:-12, 12:-12]
 
-        # trimmed_data = data[0:-patch, 0:-patch, 0:-patch, :]
-        # trimmed_labels = labels[0:-patch, 0:-patch, 0:-patch]
+        # trimmed_data = data[0:-patch_size, 0:-patch_size, 0:-patch_size, :]
+        # trimmed_labels = labels[0:-patch_size, 0:-patch_size, 0:-patch_size]
 
         trimmed_data = data[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch, :]
         trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
@@ -225,8 +222,8 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
                     # y = labels[i-half_patch:i+half_patch, j-half_patch:j+half_patch, k-half_patch:k+half_patch]
                     # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
                     # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
-                    x = data[i:i+patch, j:j+patch, k:k+patch, :]
-                    y = labels[i:i+patch, j:j+patch, k:k+patch]
+                    x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
+                    y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
                     # print('!!!!!!!')
                     # print(x.shape)
                 else:
@@ -236,8 +233,8 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
                     k = fg[2][idx]
                     # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
                     # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
-                    x = data[i:i+patch, j:j+patch, k:k+patch, :]
-                    y = labels[i:i+patch, j:j+patch, k:k+patch]
+                    x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
+                    y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
                     # print('$$$$$$$$')
                     # print(x.shape)
 
@@ -263,18 +260,18 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches):
 
         i_len, j_len, k_len = labels.shape
 
-        i_rem = i_len % patch
-        j_rem = j_len % patch
-        k_rem = k_len % patch
+        i_rem = i_len % patch_size
+        j_rem = j_len % patch_size
+        k_rem = k_len % patch_size
 
-        for i in range(i_rem // 2, i_len, patch):
-            for j in range(j_rem // 2, j_len, patch):
-                for k in range(k_rem/2, k_len, patch):
+        for i in range(i_rem // 2, i_len, patch_size):
+            for j in range(j_rem // 2, j_len, patch_size):
+                for k in range(k_rem/2, k_len, patch_size):
 
-                    if( (i+patch) <= i_len and (j+patch) <= j_len and (k+patch) <= k_len ):
+                    if( (i+patch_size) <= i_len and (j+patch_size) <= j_len and (k+patch_size) <= k_len ):
 
-                        x = data[i:i+patch, j:j+patch, k:k+patch, :]
-                        y = labels[i:i+patch, j:j+patch, k:k+patch]
+                        x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
+                        y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
                         
                         i_batch.append(i)
                         j_batch.append(j)
