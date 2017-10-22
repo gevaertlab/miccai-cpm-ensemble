@@ -1,8 +1,6 @@
 import os
-import random
 
 import numpy as np
-import SimpleITK as sitk
 
 from utils.data_utils import im_path_to_arr
 
@@ -47,7 +45,7 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     if samp_mode == 'fgbg':
-        
+
         trimmed_data = data[12:-12, 12:-12, 12:-12, :]
         trimmed_labels = labels[12:-12, 12:-12, 12:-12]
 
@@ -57,12 +55,12 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
         num_bg = len(bg[0])
         num_fg = len(fg[0])
 
-        for batch in range(num_batches):
+        for _ in range(num_batches):
 
             x_batch = []
             y_batch = []
 
-            for elem in range(batch_size):
+            for _ in range(batch_size):
                 if np.random.rand() <= 0.5:
                     idx = np.random.randint(num_bg)
                     i = bg[0][idx]
@@ -81,15 +79,13 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
                 x_batch.append(x)
                 y_batch.append(y)
 
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
 
             yield x_batch, y_batch
 
     elif samp_mode == 'full':
-        
+
         i_batch = []
         j_batch = []
         k_batch = []
@@ -104,9 +100,9 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
             for j in get_patch_centers(j_len):
                 for k in get_patch_centers(k_len):
 
-                    x = data[i-12:i+13, j-12:j+13, k-12:k+13, :]
-                    y = labels[i-4:i+5, j-4:j+5, k-4:k+5]
-                    
+                    x = data[i - 12:i + 13, j - 12:j + 13, k - 12:k + 13, :]
+                    y = labels[i - 4:i + 5, j - 4:j + 5, k - 4:k + 5]
+
                     i_batch.append(i)
                     j_batch.append(j)
                     k_batch.append(k)
@@ -116,12 +112,10 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
                     batch_count += 1
 
                     if batch_count == batch_size:
-                        x_batch = np.concatenate([item[np.newaxis, ...]
-                                  for item in x_batch])
-                        y_batch = np.concatenate([item[np.newaxis, ...]
-                                  for item in y_batch])
+                        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+                        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
                         yield i_batch, j_batch, k_batch, x_batch, y_batch
-                        
+
                         i_batch = []
                         j_batch = []
                         k_batch = []
@@ -131,10 +125,8 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
                         batch_count = 0
 
         if batch_count != 0:
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
             yield i_batch, j_batch, k_batch, x_batch, y_batch
 
 # generalize this later
@@ -188,7 +180,7 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     if samp_mode == 'fgbg':
-        
+
         # trimmed_data = data[12:-12, 12:-12, 12:-12, :]
         # trimmed_labels = labels[12:-12, 12:-12, 12:-12]
 
@@ -207,12 +199,12 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
         num_bg = len(bg[0])
         num_fg = len(fg[0])
 
-        for batch in range(num_batches):
+        for _ in range(num_batches):
 
             x_batch = []
             y_batch = []
 
-            for elem in range(batch_size):
+            for _ in range(batch_size):
                 if np.random.rand() <= 0.5:
                     idx = np.random.randint(num_bg)
                     i = bg[0][idx]
@@ -222,8 +214,8 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
                     # y = labels[i-half_patch:i+half_patch, j-half_patch:j+half_patch, k-half_patch:k+half_patch]
                     # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
                     # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
-                    x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
-                    y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
+                    x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+                    y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
                     # print('!!!!!!!')
                     # print(x.shape)
                 else:
@@ -233,23 +225,21 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
                     k = fg[2][idx]
                     # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
                     # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
-                    x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
-                    y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
+                    x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+                    y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
                     # print('$$$$$$$$')
                     # print(x.shape)
 
                 x_batch.append(x)
                 y_batch.append(y)
 
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
 
             yield x_batch, y_batch
 
     elif samp_mode == 'full':
-        
+
         i_batch = []
         j_batch = []
         k_batch = []
@@ -268,11 +258,11 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
             for j in range(j_rem // 2, j_len, patch_size):
                 for k in range(k_rem // 2, k_len, patch_size):
 
-                    if((i + patch_size) <= i_len and (j + patch_size) <= j_len and (k + patch_size) <= k_len):
+                    if (i + patch_size) <= i_len and (j + patch_size) <= j_len and (k + patch_size) <= k_len:
 
                         x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
                         y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
-                        
+
                         i_batch.append(i)
                         j_batch.append(j)
                         k_batch.append(k)
@@ -282,12 +272,10 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
                         batch_count += 1
 
                         if batch_count == batch_size:
-                            x_batch = np.concatenate([item[np.newaxis, ...]
-                                      for item in x_batch])
-                            y_batch = np.concatenate([item[np.newaxis, ...]
-                                      for item in y_batch])
+                            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+                            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
                             yield i_batch, j_batch, k_batch, x_batch, y_batch
-                            
+
                             i_batch = []
                             j_batch = []
                             k_batch = []
@@ -296,14 +284,12 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
                             batch_count = 0
 
-                    else: 
+                    else:
                         continue
 
         if batch_count != 0:
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
             yield i_batch, j_batch, k_batch, x_batch, y_batch
 
 
@@ -349,7 +335,7 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     if samp_mode == 'fgbg':
-        
+
         trimmed_data = data[12:-12, 12:-12, 12:-12, :]
         trimmed_labels = labels[12:-12, 12:-12, 12:-12]
 
@@ -359,12 +345,12 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
         num_bg = len(bg[0])
         num_fg = len(fg[0])
 
-        for batch in range(num_batches):
+        for _ in range(num_batches):
 
             x_batch = []
             y_batch = []
 
-            for elem in range(batch_size):
+            for _ in range(batch_size):
                 if np.random.rand() <= 0.5:
                     idx = np.random.randint(num_bg)
                     i = bg[0][idx]
@@ -383,15 +369,13 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
                 x_batch.append(x)
                 y_batch.append(y)
 
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
 
             yield x_batch, y_batch
 
     elif samp_mode == 'full':
-        
+
         i_batch = []
         j_batch = []
         k_batch = []
@@ -408,7 +392,7 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
 
                     x = data[i-12:i+13, j-12:j+13, k-12:k+13, :]
                     y = labels[i-4:i+5, j-4:j+5, k-4:k+5]
-                    
+
                     i_batch.append(i)
                     j_batch.append(j)
                     k_batch.append(k)
@@ -418,12 +402,10 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
                     batch_count += 1
 
                     if batch_count == batch_size:
-                        x_batch = np.concatenate([item[np.newaxis, ...]
-                                  for item in x_batch])
-                        y_batch = np.concatenate([item[np.newaxis, ...]
-                                  for item in y_batch])
+                        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+                        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
                         yield i_batch, j_batch, k_batch, x_batch, y_batch
-                        
+
                         i_batch = []
                         j_batch = []
                         k_batch = []
@@ -433,8 +415,6 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
                         batch_count = 0
 
         if batch_count != 0:
-            x_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in x_batch])
-            y_batch = np.concatenate([item[np.newaxis, ...]
-                      for item in y_batch])
+            x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+            y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
             yield i_batch, j_batch, k_batch, x_batch, y_batch
