@@ -266,7 +266,7 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
         for i in range(i_rem // 2, i_len, patch_size):
             for j in range(j_rem // 2, j_len, patch_size):
-                for k in range(k_rem/2, k_len, patch_size):
+                for k in range(k_rem // 2, k_len, patch_size):
 
                     if( (i+patch_size) <= i_len and (j+patch_size) <= j_len and (k+patch_size) <= k_len ):
 

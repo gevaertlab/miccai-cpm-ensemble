@@ -24,6 +24,7 @@ from utils.config import Config
 if __name__ == '__main__':
     arguments = docopt(__doc__)
     cfg_path = arguments['--cfg-path']
+    debug = arguments['--debug']
 
     config = Config(cfg_path)
     model = BaselineBnModel(config)
