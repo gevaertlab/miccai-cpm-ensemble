@@ -28,7 +28,7 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
     x: data patch (batch_sizex25x25x25x4)
     y: labels patch (batch_sizex9x9x9)
     """
-    data = [None]*4
+    data = [None] * 4
 
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
@@ -68,15 +68,15 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
                     i = bg[0][idx]
                     j = bg[1][idx]
                     k = bg[2][idx]
-                    x = data[i:i+25, j:j+25, k:k+25, :]
-                    y = labels[i+8:i+17, j+8:j+17, k+8:k+17]
+                    x = data[i:i + 25, j:j + 25, k:k + 25, :]
+                    y = labels[i + 8:i + 17, j + 8:j + 17, k + 8:k + 17]
                 else:
                     idx = np.random.randint(num_fg)
                     i = fg[0][idx]
                     j = fg[1][idx]
                     k = fg[2][idx]
-                    x = data[i:i+25, j:j+25, k:k+25, :]
-                    y = labels[i+8:i+17, j+8:j+17, k+8:k+17]
+                    x = data[i:i + 25, j:j + 25, k:k + 25, :]
+                    y = labels[i + 8:i + 17, j + 8:j + 17, k + 8:k + 17]
 
                 x_batch.append(x)
                 y_batch.append(y)
@@ -139,10 +139,10 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
 
 # generalize this later
 def get_patch_centers(im_size):
-    quotient = (im_size-16) // 9
-    remainder = (im_size-16) % 9
+    quotient = (im_size - 16) // 9
+    remainder = (im_size - 16) % 9
     start = remainder // 2 + 12
-    end = start + (quotient-1)*9 + 1
+    end = start + (quotient - 1) * 9 + 1
     return range(start, end, 9)
 
 
@@ -168,7 +168,7 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
     x: data patch (batch_sizex25x25x25x4)
     y: labels patch (batch_sizex9x9x9)
     """
-    data = [None]*4
+    data = [None] * 4
     half_patch = patch_size // 2
 
     for im_name in os.listdir(ex_path):
@@ -268,10 +268,10 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
             for j in range(j_rem // 2, j_len, patch_size):
                 for k in range(k_rem // 2, k_len, patch_size):
 
-                    if( (i+patch_size) <= i_len and (j+patch_size) <= j_len and (k+patch_size) <= k_len ):
+                    if((i + patch_size) <= i_len and (j + patch_size) <= j_len and (k + patch_size) <= k_len):
 
-                        x = data[i:i+patch_size, j:j+patch_size, k:k+patch_size, :]
-                        y = labels[i:i+patch_size, j:j+patch_size, k:k+patch_size]
+                        x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+                        y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
                         
                         i_batch.append(i)
                         j_batch.append(j)
@@ -298,7 +298,6 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
                     else: 
                         continue
-
 
         if batch_count != 0:
             x_batch = np.concatenate([item[np.newaxis, ...]

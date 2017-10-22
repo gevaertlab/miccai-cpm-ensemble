@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from models.fcn import FCN_Model
 
-class FCN_6_Model(FCN_Model):
+class FCN_Concat(FCN_Model):
 
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
