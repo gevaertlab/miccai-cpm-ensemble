@@ -30,17 +30,17 @@ class Model:
         """
         pass
 
-    def _train(self):
+    def _train(self, ex_path, sess, lr):
         """ Train on an image and return pertinent data.
         """
         pass
 
-    def _validate(self):
+    def _validate(self, ex_path, sess):
         """ Validate on an image and return pertinent data.
         """
         pass
 
-    def _segment(self):
+    def _segment(self, ex_path, sess):
         """ Segment an image and return pertinent data.
         """
         pass

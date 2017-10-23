@@ -48,7 +48,6 @@ class FCN_6_Model(FCN_Model):
             # print(conv.get_shape())
             # print(pool2.get_shape())
 
-
         with tf.variable_scope('conv3') as scope:
 
             kernel = tf.get_variable('weights', [5, 5, 5, 20, 40],
@@ -122,14 +121,12 @@ class FCN_6_Model(FCN_Model):
 
             self.score = deconv6 + bias
 
-
     def add_loss_op(self):
         logits = tf.reshape(self.score, [-1, 2])
         labels = tf.reshape(self.label_placeholder, [-1])
         print(logits.shape)
         print(labels.shape)
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
-
 
         with tf.variable_scope('conv1', reuse=True) as scope:
             w1 = tf.get_variable('weights')
@@ -149,6 +146,5 @@ class FCN_6_Model(FCN_Model):
                                      + tf.nn.l2_loss(w4)
                                      + tf.nn.l2_loss(w5)
                                      + tf.nn.l2_loss(w6))
-
 
         self.loss = ce_loss + reg_loss

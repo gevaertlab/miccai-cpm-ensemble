@@ -36,7 +36,6 @@ class FCN_Model(Model):
                                              shape=[])
 
     def add_model(self):
-        # pass
         batch_size = tf.shape(self.label_placeholder)[0]
 
         with tf.variable_scope('conv1') as scope:
@@ -157,7 +156,6 @@ class FCN_Model(Model):
         self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss)
 
     def _train(self, ex_path, sess, lr):
-
         losses = []
         bdices = []
 
@@ -181,7 +179,6 @@ class FCN_Model(Model):
         return losses, bdices
 
     def _validate(self, ex_path, sess):
-
         bdices = []
 
         bs = self.config.batch_size
@@ -202,7 +199,6 @@ class FCN_Model(Model):
         return bdices
 
     def _segment(self, ex_path, sess):
-
         fpred = np.zeros(get_shape(ex_path))
         fy = np.zeros(get_shape(ex_path))
         fprob = np.zeros(get_shape(ex_path) + (2,))

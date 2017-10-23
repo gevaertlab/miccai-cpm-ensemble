@@ -3,7 +3,7 @@ import tensorflow as tf
 from models.fcn import FCN_Model
 
 
-class FCN_Concat(FCN_Model):
+class FCN_Skip(FCN_Model):
 
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
@@ -21,6 +21,7 @@ class FCN_Concat(FCN_Model):
             bn1 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu1 = tf.nn.relu(bn1)
 
+            # shape = (patch/2, patch/2, patch/2)
             pool1 = tf.layers.max_pooling3d(inputs=relu1, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
 
@@ -42,6 +43,7 @@ class FCN_Concat(FCN_Model):
             bn2 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu2 = tf.nn.relu(bn2)
 
+            # shape = (patch/4, patch/4, patch/4)
             pool2 = tf.layers.max_pooling3d(inputs=relu2, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
             # drop2 = tf.nn.dropout(pool2, self.dropout_placeholder)
@@ -62,6 +64,7 @@ class FCN_Concat(FCN_Model):
             bn3 = tf.layers.batch_normalization(conv + bias, axis=-1)
             relu3 = tf.nn.relu(bn3)
 
+            # shape = (patch/8, patch/8, patch/8)
             pool3 = tf.layers.max_pooling3d(inputs=relu3, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
             drop3 = tf.nn.dropout(pool3, self.dropout_placeholder)
@@ -81,7 +84,9 @@ class FCN_Concat(FCN_Model):
                                             output_shape=[batch_size, out_dim, out_dim, out_dim, 20],
                                             strides=[1, 2, 2, 2, 1], padding='SAME')
 
+            # shape = (patch/4, patch/4, patch/4)
             bn4 = tf.layers.batch_normalization(deconv + bias, axis=-1)
+            bn4 = tf.add(pool2, bn4)
             relu4 = tf.nn.relu(bn4)
 
             drop4 = tf.nn.dropout(relu4, self.dropout_placeholder)
@@ -98,7 +103,9 @@ class FCN_Concat(FCN_Model):
                                             output_shape=[batch_size, out_dim, out_dim, out_dim, 10],
                                             strides=[1, 2, 2, 2, 1], padding='SAME')
 
+            # shape = (patch/2, patch/2, patch/2)
             bn5 = tf.layers.batch_normalization(deconv + bias, axis=-1)
+            bn5 = tf.add(pool1, bn5)
             relu5 = tf.nn.relu(bn5)
 
             drop5 = tf.nn.dropout(relu5, self.dropout_placeholder)
@@ -126,10 +133,9 @@ class FCN_Concat(FCN_Model):
     def add_loss_op(self):
         logits = tf.reshape(self.score, [-1, 2])
         labels = tf.reshape(self.label_placeholder, [-1])
-        print(logits.shape)
-        print(labels.shape)
+        # print(logits.shape)
+        # print(labels.shape)
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
-
 
         with tf.variable_scope('conv1', reuse=True) as scope:
             w1 = tf.get_variable('weights')
@@ -149,6 +155,5 @@ class FCN_Concat(FCN_Model):
                                      + tf.nn.l2_loss(w4)
                                      + tf.nn.l2_loss(w5)
                                      + tf.nn.l2_loss(w6))
-
 
         self.loss = ce_loss + reg_loss
