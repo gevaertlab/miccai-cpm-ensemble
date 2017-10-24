@@ -10,9 +10,9 @@ def data_iter(ex_path, samp_mode, batch_size, num_batches):
 
     params:
     ex_path: path to example directory
-    samp_mode: the sampling algorithm used to extract image patches
+    samp_mode: the sampling algorithm used to extract image patches ('fgbg', 'unif')
     batch_size: the number of image patches per batch
-    num_batches: the number of batches per image ('fgbg', 'unif')
+    num_batches: the number of batches per image
 
     Yields patches of data and labels as inputs to a dense DNN classifier.
     The sampling algorithm 'fgbg' selects patches uniformly randomly from the
@@ -144,9 +144,9 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
     params:
     ex_path: path to example directory
-    samp_mode: the sampling algorithm used to extract image patches
+    samp_mode: the sampling algorithm used to extract image patches ('fgbg', 'unif')
     batch_size: the number of image patches per batch
-    num_batches: the number of batches per image ('fgbg', 'unif')
+    num_batches: the number of batches per image
 
     Yields patches of data and labels as inputs to a dense DNN classifier.
     The sampling algorithm 'fgbg' selects patches uniformly randomly from the
@@ -181,9 +181,6 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
     if samp_mode == 'fgbg':
 
-        # trimmed_data = data[12:-12, 12:-12, 12:-12, :]
-        # trimmed_labels = labels[12:-12, 12:-12, 12:-12]
-
         # trimmed_data = data[0:-patch_size, 0:-patch_size, 0:-patch_size, :]
         # trimmed_labels = labels[0:-patch_size, 0:-patch_size, 0:-patch_size]
 
@@ -212,22 +209,16 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
                     k = bg[2][idx]
                     # x = data[i-half_patch:i+half_patch, j-half_patch:j+half_patch, k-half_patch:k+half_patch, :]
                     # y = labels[i-half_patch:i+half_patch, j-half_patch:j+half_patch, k-half_patch:k+half_patch]
-                    # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
-                    # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
                     x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
                     y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
-                    # print('!!!!!!!')
                     # print(x.shape)
                 else:
                     idx = np.random.randint(num_fg)
                     i = fg[0][idx]
                     j = fg[1][idx]
                     k = fg[2][idx]
-                    # x = data[i-12:i+12, j-12:j+12, k-12:k+12, :]
-                    # y = labels[i-12:i+12, j-12:j+12, k-12:k+12]
                     x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
                     y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
-                    # print('$$$$$$$$')
                     # print(x.shape)
 
                 x_batch.append(x)
@@ -299,9 +290,9 @@ def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):
 
     params:
     ex_path: path to example directory
-    samp_mode: the sampling algorithm used to extract image patches
+    samp_mode: the sampling algorithm used to extract image patches ('fgbg', 'unif')
     batch_size: the number of image patches per batch
-    num_batches: the number of batches per image ('fgbg', 'unif')
+    num_batches: the number of batches per image
 
     Yields patches of data and labels as inputs to a dense DNN classifier.
     The sampling algorithm 'fgbg' selects patches uniformly randomly from the

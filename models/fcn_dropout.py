@@ -1,6 +1,3 @@
-from __future__ import print_function
-
-import numpy as np
 import tensorflow as tf
 
 from models.fcn import FCN_Model

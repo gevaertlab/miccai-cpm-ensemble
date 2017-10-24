@@ -38,7 +38,7 @@ class FCN_Model(Model):
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
 
-        with tf.variable_scope('conv1') as scope:
+        with tf.variable_scope('conv1'):
 
             conv1 = tf.layers.conv3d(inputs=self.image_placeholder, filters=10,
                                      kernel_size=[5, 5, 5], padding="SAME",
@@ -52,7 +52,7 @@ class FCN_Model(Model):
             print(conv1.get_shape())
             print(pool1.get_shape())
 
-        with tf.variable_scope('conv2') as scope:
+        with tf.variable_scope('conv2'):
 
             conv2 = tf.layers.conv3d(inputs=pool1, filters=20,
                                      kernel_size=[5, 5, 5], padding="SAME",
@@ -66,7 +66,7 @@ class FCN_Model(Model):
             print(conv2.get_shape())
             print(pool2.get_shape())
 
-        with tf.variable_scope('deconv3') as scope:
+        with tf.variable_scope('deconv3'):
 
             kernel = tf.get_variable('weights', [5, 5, 5, 10, 20],
                                      initializer=tf.contrib.layers.xavier_initializer())
@@ -83,7 +83,7 @@ class FCN_Model(Model):
             print(deconv3.get_shape())
             print(relu3.get_shape())
 
-        with tf.variable_scope('deconv4') as scope:
+        with tf.variable_scope('deconv4'):
 
             kernel = tf.get_variable('weights', [5, 5, 5, 2, 10],
                                      initializer=tf.contrib.layers.xavier_initializer())
@@ -115,13 +115,13 @@ class FCN_Model(Model):
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
                                                                                 labels=labels))
 
-        with tf.variable_scope('conv1', reuse=True) as scope:
+        with tf.variable_scope('conv1', reuse=True):
             w1 = tf.get_variable('weights')
-        with tf.variable_scope('conv2', reuse=True) as scope:
+        with tf.variable_scope('conv2', reuse=True):
             w2 = tf.get_variable('weights')
-        with tf.variable_scope('deconv3', reuse=True) as scope:
+        with tf.variable_scope('deconv3', reuse=True):
             w3 = tf.get_variable('weights')
-        with tf.variable_scope('deconv4', reuse=True) as scope:
+        with tf.variable_scope('deconv4', reuse=True):
             w4 = tf.get_variable('weights')
         reg_loss = self.config.l2 * (tf.nn.l2_loss(w1) + tf.nn.l2_loss(w2)
                                      + tf.nn.l2_loss(w3)
@@ -214,15 +214,15 @@ class FCN_Model(Model):
             pred, prob = sess.run([self.pred, self.prob], feed_dict=feed)
 
             for idx, _ in enumerate(i):
-                fy[i[idx]:i[idx]+self.patch,
-                   j[idx]:j[idx]+self.patch,
-                   k[idx]:k[idx]+self.patch] = y[idx, :, :, :]
-                fpred[i[idx]:i[idx]+self.patch,
-                      j[idx]:j[idx]+self.patch,
-                      k[idx]:k[idx]+self.patch] = pred[idx, :, :, :]
-                fprob[i[idx]:i[idx]+self.patch,
-                      j[idx]:j[idx]+self.patch,
-                      k[idx]:k[idx]+self.patch, :] = prob[idx, :, :, :, :]
+                fy[i[idx]:i[idx] + self.patch,
+                   j[idx]:j[idx] + self.patch,
+                   k[idx]:k[idx] + self.patch] = y[idx, :, :, :]
+                fpred[i[idx]:i[idx] + self.patch,
+                      j[idx]:j[idx] + self.patch,
+                      k[idx]:k[idx] + self.patch] = pred[idx, :, :, :]
+                fprob[i[idx]:i[idx] + self.patch,
+                      j[idx]:j[idx] + self.patch,
+                      k[idx]:k[idx] + self.patch, :] = prob[idx, :, :, :, :]
 
         fdice = dice_score(fy, fpred)
 
