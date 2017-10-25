@@ -1,26 +1,31 @@
 import numpy as np
 import tensorflow as tf
 
+from utils.general import Progbar
 from utils.lr_schedule import LRSchedule
 
 
 def finetune_all_layers(sess, model, train_ex_paths, lr):
     ex_bdices = []
     ex_losses = []
+    prog = Progbar(target=len(train_ex_paths))
     for _, ex_path in enumerate(train_ex_paths):
         losses, bdices = model._train(ex_path, sess, lr)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))
+        prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr)])
     return ex_bdices, ex_losses
 
 
 def finetune_last_layers(sess, model, train_ex_paths, lr):
     ex_bdices = []
     ex_losses = []
+    prog = Progbar(target=len(train_ex_paths))
     for _, ex_path in enumerate(train_ex_paths):
         losses, bdices = model._train_last_layers(ex_path, sess, lr)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))
+        prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr)])
     return ex_bdices, ex_losses
 
 
@@ -105,7 +110,6 @@ def finetune(model, debug):
                 print('validate')
                 ex_bdices = []
                 for _, ex_path in enumerate(val_ex_paths):
-                    # print(ex_path)
                     bdices = model._validate(ex_path, sess)
                     ex_bdices.append(np.mean(bdices))
                 val_bdices.append(np.mean(ex_bdices))
