@@ -40,8 +40,8 @@ def finetune(model, debug):
     ckpt_path = config.ckpt_path
     res_path = config.res_path
 
-    train_ex_paths = config.train_ex_paths
-    val_ex_paths = config.val_ex_paths
+    train_ex_paths = model.train_ex_paths
+    val_ex_paths = model.val_ex_paths
     if debug:
         train_ex_paths = train_ex_paths[:2]
         val_ex_paths = val_ex_paths[:2]
