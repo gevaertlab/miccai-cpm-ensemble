@@ -85,7 +85,7 @@ def finetune(model, debug):
             best_fdice = np.mean(ex_fdices)
             saver.save(sess, config.fine_tune_ckpt_path)
 
-        for epoch in range(1, config.config.num_epochs+2):
+        for epoch in range(1, config.num_epochs+2):
             print('epoch {}'.format(epoch))
             if finetuning_method == "all_layers":
                 ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
