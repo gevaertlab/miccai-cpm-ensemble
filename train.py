@@ -1,15 +1,3 @@
-"""Training script.
-
-Usage:
-    train.py (--cfg-path=<p>) [--debug]
-    train.py -h | --help
-
-Options:
-    -h --help       Show this screen.
-    --cfg-path=<p>  Config path.
-    --debug         Run in debug mode.
-
-"""
 import numpy as np
 import tensorflow as tf
 
@@ -119,12 +107,12 @@ def train(model, debug):
                     saver.save(sess, ckpt_path)
                     print('Saving checkpoint to %s ......' %(ckpt_path))
 
-            print('Saving training losses to %s........' %(res_path))
-            np.savez(res_path,
-            			train_losses=train_losses,
-                 	  	train_bdices=train_bdices,
-                 	  	val_bdices=val_bdices,
-                 	  	val_fdices=val_fdices,
-                 	  	train_ex_paths=train_ex_paths,
-                 	  	val_ex_paths=val_ex_paths,
-                 	  	config_file=config.__dict__)
+        print('Saving losses to %s........' %(res_path))
+        np.savez(res_path,
+        			train_losses=train_losses,
+             	  	train_bdices=train_bdices,
+             	  	val_bdices=val_bdices,
+             	  	val_fdices=val_fdices,
+             	  	train_ex_paths=train_ex_paths,
+             	  	val_ex_paths=val_ex_paths,
+             	  	config_file=config.__dict__)

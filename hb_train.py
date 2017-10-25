@@ -1,8 +1,8 @@
 """Training script for Heidelberg dataset.
 
 Usage:
-    train_hb.py (--cfg-path=<p>) [--debug]
-    train_hb.py -h | --help
+    hb_train.py (--cfg-path=<p>) [--debug]
+    hb_train.py -h | --help
 
 Options:
     -h --help       Show this screen.

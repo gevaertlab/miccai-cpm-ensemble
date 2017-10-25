@@ -10,9 +10,6 @@ Options:
     --debug         Run in debug mode.
 
 """
-
-from __future__ import print_function
-
 import os
 
 from docopt import docopt

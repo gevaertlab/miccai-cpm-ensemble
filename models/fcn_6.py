@@ -148,3 +148,10 @@ class FCN_6_Model(FCN_Model):
                                      + tf.nn.l2_loss(w6))
 
         self.loss = ce_loss + reg_loss
+
+    def add_train_last_layers_op(self):
+        train_vars = []
+        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv5')
+        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv6')
+        self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).\
+                                             minimize(self.loss, var_list=train_vars)

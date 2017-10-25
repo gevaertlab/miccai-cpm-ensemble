@@ -32,3 +32,4 @@ class Config:
         self.num_val_batches = int(param_dict.get('num_val_batches', 20))
 
         self.fine_tune_ckpt_path = param_dict.get('fine_tune_ckpt_path')
+        self.finetuning_method = param_dict.get('finetuning_method', 'all_layers')

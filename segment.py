@@ -10,15 +10,11 @@ Options:
     --debug         Run in debug mode.
 
 """
-
-from __future__ import print_function
-
 import os
 # import sys
 # sys.path.insert(0, os.getcwd())
 # sys.path.append('~/tumor_seg/models')
 # sys.path()
-
 
 from docopt import docopt
 
@@ -27,6 +23,7 @@ import tensorflow as tf
 
 from models.baseline_smaller import BaselineSmallerModel
 from utils.config import Config
+
 
 def get_probs(cfg_path, debug):
 

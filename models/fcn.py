@@ -155,6 +155,13 @@ class FCN_Model(Model):
     def add_train_op(self):
         self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss)
 
+    def add_train_last_layers_op(self):
+        train_vars = []
+        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv3')
+        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv4')
+        self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).\
+                                             minimize(self.loss, var_list=train_vars)
+
     def _train(self, ex_path, sess, lr):
         losses = []
         bdices = []
@@ -170,6 +177,29 @@ class FCN_Model(Model):
                     self.lr_placeholder: lr}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
+
+            losses.append(loss)
+
+            bdice = dice_score(y, pred)
+            bdices.append(bdice)
+
+        return losses, bdices
+
+    def _train_last_layers(self, ex_path, sess, lr):
+        losses = []
+        bdices = []
+
+        bs = self.config.batch_size
+        nb = self.config.num_train_batches
+
+        for _, (x, y) in enumerate(fcn_data_iter(ex_path, 'fgbg', bs, nb, self.patch)):
+
+            feed = {self.image_placeholder: x,
+                    self.label_placeholder: y,
+                    self.dropout_placeholder: self.config.dropout,
+                    self.lr_placeholder: lr}
+
+            pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
 
             losses.append(loss)
 

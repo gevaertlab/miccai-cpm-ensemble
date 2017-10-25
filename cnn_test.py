@@ -1,8 +1,8 @@
-"""Priming script.
+"""Evaluation script.
 
 Usage:
-    prime.py (--cfg-path=<p>) [--debug]
-    prime.py -h | --help
+    cnn_test.py (--cfg-path=<p>) [--debug]
+    cnn_test.py -h | --help
 
 Options:
     -h --help       Show this screen.

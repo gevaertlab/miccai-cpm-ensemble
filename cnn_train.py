@@ -1,14 +1,13 @@
 """Training script.
 
 Usage:
-    train.py (--cfg-path=<p>) [--debug]
-    train.py -h | --help
+    cnn_train.py (--cfg-path=<p>) [--debug]
+    cnn_train.py -h | --help
 
 Options:
     -h --help       Show this screen.
     --cfg-path=<p>  Config path.
     --debug         Run in debug mode.
-
 """
 
 from docopt import docopt

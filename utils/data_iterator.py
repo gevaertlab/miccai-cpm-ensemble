@@ -138,7 +138,6 @@ def get_patch_centers(im_size):
     return range(start, end, 9)
 
 
-
 def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
     """ Generate input and label data from the BRATS dataset.
 
@@ -282,7 +281,6 @@ def fcn_data_iter(ex_path, samp_mode, batch_size, num_batches, patch_size):
             x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
             y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
             yield i_batch, j_batch, k_batch, x_batch, y_batch
-
 
 
 def heidelberg_iter(ex_path, samp_mode, batch_size, num_batches):

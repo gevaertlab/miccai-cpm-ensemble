@@ -1,8 +1,8 @@
 """Training script.
 
 Usage:
-    train.py (--cfg-path=<p>) [--debug]
-    train.py -h | --help
+    fcn_train.py (--cfg-path=<p>) [--debug]
+    fcn_train.py -h | --help
 
 Options:
     -h --help       Show this screen.
@@ -19,6 +19,8 @@ from docopt import docopt
 # from models.fcn_bn import FCNDBnModel
 # from models.fcn_bn_old import FCN_Model
 from models.fcn_6 import FCN_6_Model
+# from models.fcn_skip import FCN_Skip
+# from models.fcn_concat import FCN_Concat
 
 from train import train
 from utils.config import Config

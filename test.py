@@ -1,15 +1,3 @@
-"""Evaluation script.
-
-Usage:
-    eval.py (--cfg-path=<p>) [--debug]
-    eval.py -h | --help
-
-Options:
-    -h --help       Show this screen.
-    --cfg-path=<p>  Config path.
-    --debug         Run in debug mode.
-
-"""
 import numpy as np
 import tensorflow as tf
 
