@@ -29,7 +29,7 @@ class FCN_Concat(FCN_Model):
             # drop1 = tf.nn.dropout(pool1, self.dropout_placeholder)
 
             # print(conv1.get_shape())
-            print(pool1.get_shape())
+            print('pool1 shape is:',pool1.get_shape())
 
         with tf.variable_scope('conv2'):
             conv2 = tf.layers.conv3d(inputs=pool1,
@@ -50,7 +50,7 @@ class FCN_Concat(FCN_Model):
                                             strides=(2, 2, 2), padding='VALID')
             # drop2 = tf.nn.dropout(pool2, self.dropout_placeholder)
             # print(conv.get_shape())
-            # print(pool2.get_shape())
+            print('pool2 shape is:', pool2.get_shape())
 
         with tf.variable_scope('conv3'):
             conv3 = tf.layers.conv3d(inputs=pool2,
@@ -72,7 +72,7 @@ class FCN_Concat(FCN_Model):
             drop3 = tf.nn.dropout(pool3, self.dropout_placeholder)
 
             # print(conv.get_shape())
-            # print(pool3.get_shape())
+            print('drop3 shape is:', drop3.get_shape())
 
         with tf.variable_scope('deconv4'):
             deconv4 = tf.layers.conv3d_transpose(inputs=drop3,
@@ -81,10 +81,13 @@ class FCN_Concat(FCN_Model):
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
-                                                 use_bias=True,
+                                                 use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
-
+                                                 bias_initializer=tf.zeros_initializer())
+            print('deconv4 shape is:', deconv4.get_shape())
+            bias = tf.get_variable('biases', [20],
+                                   initializer=tf.zeros_initializer())
+            deconv4 = deconv4 + bias
             # shape = (patch/4, patch/4, patch/4)
             bn4 = tf.layers.batch_normalization(deconv4, axis=-1)
             bn4 = tf.concat([bn4, pool2], axis=-1)
@@ -99,10 +102,12 @@ class FCN_Concat(FCN_Model):
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
-                                                 use_bias=True,
+                                                 use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                                  bias_initializer=tf.constant_initializer(0.0))
-
+            bias = tf.get_variable('biases', [10],
+                                   initializer=tf.zeros_initializer())
+            deconv5 = deconv5 + bias
             # shape = (patch/2, patch/2, patch/2)
             bn5 = tf.layers.batch_normalization(deconv5, axis=-1)
             bn5 = tf.concat([bn5, pool1], axis=-1)
@@ -120,11 +125,13 @@ class FCN_Concat(FCN_Model):
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
-                                                 use_bias=True,
+                                                 use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                                  bias_initializer=tf.constant_initializer(0.0))
 
             # print(deconv6.get_shape())
+            bias = tf.get_variable('biases', [2],
+                                   initializer=tf.zeros_initializer()) 
             self.score = deconv6 + bias
 
     def add_loss_op(self):
@@ -132,19 +139,19 @@ class FCN_Concat(FCN_Model):
         labels = tf.reshape(self.label_placeholder, [-1])
 
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
-
+        
         with tf.variable_scope('conv1', reuse=True):
-            w1 = tf.get_variable('conv3d/kernel:0')
+            w1 = tf.get_variable('conv3d/kernel')
         with tf.variable_scope('conv2', reuse=True):
-            w2 = tf.get_variable('conv3d/kernel:0')
+            w2 = tf.get_variable('conv3d/kernel')
         with tf.variable_scope('conv3', reuse=True):
-            w3 = tf.get_variable('conv3d/kernel:0')
+            w3 = tf.get_variable('conv3d/kernel')
         with tf.variable_scope('deconv4', reuse=True):
-            w4 = tf.get_variable('conv3d_transpose/kernel:0')
+            w4 = tf.get_variable('conv3d_transpose/kernel')
         with tf.variable_scope('deconv5', reuse=True):
-            w5 = tf.get_variable('conv3d_transpose/kernel:0')
+            w5 = tf.get_variable('conv3d_transpose/kernel')
         with tf.variable_scope('deconv6', reuse=True):
-            w6 = tf.get_variable('conv3d_transpose/kernel:0')
+            w6 = tf.get_variable('conv3d_transpose/kernel')
         reg_loss = self.config.l2 * (tf.nn.l2_loss(w1)
                                      + tf.nn.l2_loss(w2)
                                      + tf.nn.l2_loss(w3)
