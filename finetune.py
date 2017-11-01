@@ -9,7 +9,8 @@ def finetune_all_layers(sess, model, train_ex_paths, lr):
     ex_bdices = []
     ex_losses = []
     prog = Progbar(target=len(train_ex_paths))
-    for _, ex_path in enumerate(train_ex_paths):
+    for ex, ex_path in enumerate(train_ex_paths):
+        print(ex, '----',ex_path)
         losses, bdices = model._train(ex_path, sess, lr)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))
@@ -21,7 +22,7 @@ def finetune_last_layers(sess, model, train_ex_paths, lr):
     ex_bdices = []
     ex_losses = []
     prog = Progbar(target=len(train_ex_paths))
-    for _, ex_path in enumerate(train_ex_paths):
+    for ex, ex_path in enumerate(train_ex_paths):
         losses, bdices = model._train_last_layers(ex_path, sess, lr)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))

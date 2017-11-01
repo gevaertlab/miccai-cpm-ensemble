@@ -18,9 +18,9 @@ from docopt import docopt
 # from models.fcn_dropout import FCNDropoutModel
 # from models.fcn_bn import FCNDBnModel
 # from models.fcn_bn_old import FCN_Model
-from models.fcn_6 import FCN_6_Model
+# from models.fcn_6 import FCN_6_Model
 # from models.fcn_skip import FCN_Skip
-# from models.fcn_concat import FCN_Concat
+from models.fcn_concat import FCN_Concat
 
 from finetune import finetune
 from utils.config import Config
@@ -31,5 +31,5 @@ if __name__ == '__main__':
     debug = arguments['--debug']
 
     config = Config(cfg_path)
-    model = FCN_6_Model(config)
+    model = FCN_Concat(config)
     finetune(model, debug)
