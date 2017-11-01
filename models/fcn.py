@@ -221,8 +221,6 @@ class FCN_Model(Model):
                     self.dropout_placeholder: 1.0}
 
             pred = sess.run(self.pred, feed_dict=feed)
-            # print(type(y), type(pred))
-            # sys.exit()
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
