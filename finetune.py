@@ -38,7 +38,7 @@ def finetune_no_layers(sess, model, train_ex_paths):
     return ex_bdices, ex_losses
 
 
-def finetune(model, debug):
+def finetune(model, debug, detailed=False):
     config = model.config
     finetuning_method = config.finetuning_method
 
@@ -90,7 +90,7 @@ def finetune(model, debug):
             best_fdice = np.mean(ex_fdices)
             saver.save(sess, config.fine_tune_ckpt_path)
 
-        for epoch in range(1, config.num_epochs+2):
+        for epoch in range(1, config.num_epochs + 1):
             print('epoch {}'.format(epoch))
             if finetuning_method == "all_layers":
                 ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
@@ -118,8 +118,28 @@ def finetune(model, debug):
                 print('test')
                 ex_fdices = []
                 for _, ex_path in enumerate(val_ex_paths):
-                    _, _, _, fdice = model._segment(ex_path, sess)
+                    fy, fpred, fprob, fdice = model._segment(ex_path, sess)
                     ex_fdices.append(fdice)
+
+                    if detailed and epoch == config.num_epochs:
+                        fy = np.array(fy)
+                        fpred = np.array(fpred)
+                        fprob = np.array(fprob)
+                        fdice = np.array(fdice)
+
+                        ##########  example id for rembrandt
+                        ex_id = ex_path[-7:-1]
+                        ##########  example id for brats
+                        # ex_id = ex_path.split('_')[-2] + '_' + ex_path.split('_')[-1]
+
+                        ex_result_path = res_path + ex_id + '.npz'
+                        print('saving test result to %s' %(ex_result_path))
+                        np.savez(ex_result_path,
+                                 y=fy,
+                                 pred=fpred,
+                                 prob=fprob,
+                                 dice=fdice)
+
                 val_fdices.append(np.mean(ex_fdices))
                 print('******************** Epoch %d: Test dice score %5f' %(epoch, np.mean(ex_fdices)))
 

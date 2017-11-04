@@ -27,7 +27,8 @@ if __name__ == '__main__':
     arguments = docopt(__doc__)
     cfg_path = arguments['--cfg-path']
     debug = arguments['--debug']
+    detailed = arguments['--detailed']
 
     config = Config(cfg_path)
     model = FCN_Model(config)
-    test(model, debug)
+    test(model, debug, detailed)
