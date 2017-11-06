@@ -19,7 +19,7 @@ class FCN_Concat(FCN_Model):
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
 
-            bn1 = tf.layers.batch_normalization(conv1, axis=-1)
+            bn1 = tf.layers.batch_normalization(conv1, axis=-1, training=self.is_training)
             relu1 = tf.nn.relu(bn1)
 
             # shape = (patch/2, patch/2, patch/2)
@@ -42,7 +42,7 @@ class FCN_Concat(FCN_Model):
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
 
-            bn2 = tf.layers.batch_normalization(conv2, axis=-1)
+            bn2 = tf.layers.batch_normalization(conv2, axis=-1, training=self.is_training)
             relu2 = tf.nn.relu(bn2)
 
             # shape = (patch/4, patch/4, patch/4)
@@ -63,7 +63,7 @@ class FCN_Concat(FCN_Model):
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
 
-            bn3 = tf.layers.batch_normalization(conv3, axis=-1)
+            bn3 = tf.layers.batch_normalization(conv3, axis=-1, training=self.is_training)
             relu3 = tf.nn.relu(bn3)
 
             # shape = (patch/8, patch/8, patch/8)
@@ -89,7 +89,7 @@ class FCN_Concat(FCN_Model):
                                    initializer=tf.zeros_initializer())
             deconv4 = deconv4 + bias
             # shape = (patch/4, patch/4, patch/4)
-            bn4 = tf.layers.batch_normalization(deconv4, axis=-1)
+            bn4 = tf.layers.batch_normalization(deconv4, axis=-1, training=self.is_training)
             bn4 = tf.concat([bn4, pool2], axis=-1)
             relu4 = tf.nn.relu(bn4)
 
@@ -109,7 +109,7 @@ class FCN_Concat(FCN_Model):
                                    initializer=tf.zeros_initializer())
             deconv5 = deconv5 + bias
             # shape = (patch/2, patch/2, patch/2)
-            bn5 = tf.layers.batch_normalization(deconv5, axis=-1)
+            bn5 = tf.layers.batch_normalization(deconv5, axis=-1, training=self.is_training)
             bn5 = tf.concat([bn5, pool1], axis=-1)
             relu5 = tf.nn.relu(bn5)
 
@@ -160,3 +160,9 @@ class FCN_Concat(FCN_Model):
                                      + tf.nn.l2_loss(w6))
 
         self.loss = ce_loss + reg_loss
+
+    def add_train_op(self):
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(update_ops):
+            self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss)   
+

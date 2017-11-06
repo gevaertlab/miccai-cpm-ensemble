@@ -30,10 +30,9 @@ class FCN_Model(Model):
                                                 shape=[None, self.patch, self.patch, self.patch, 4])
         self.label_placeholder = tf.placeholder(tf.int32,
                                                 shape=[None, self.patch, self.patch, self.patch])
-        self.dropout_placeholder = tf.placeholder(tf.float32,
-                                                  shape=[])
-        self.lr_placeholder = tf.placeholder(tf.float32,
-                                             shape=[])
+        self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
+        self.lr_placeholder = tf.placeholder(tf.float32, shape=[])
+        self.is_training = tf.placeholder(tf.bool, shape = [])
 
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
@@ -174,7 +173,8 @@ class FCN_Model(Model):
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
                     self.dropout_placeholder: self.config.dropout,
-                    self.lr_placeholder: lr}
+                    self.lr_placeholder: lr,
+                    self.is_training: True}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
 
@@ -197,7 +197,8 @@ class FCN_Model(Model):
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
                     self.dropout_placeholder: self.config.dropout,
-                    self.lr_placeholder: lr}
+                    self.lr_placeholder: lr,
+                    self.is_training: True}
 
             pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
 
@@ -218,7 +219,8 @@ class FCN_Model(Model):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
-                    self.dropout_placeholder: 1.0}
+                    self.dropout_placeholder: 1.0,
+                    self.is_training: False}
 
             pred = sess.run(self.pred, feed_dict=feed)
             bdice = dice_score(y, pred)
@@ -237,7 +239,8 @@ class FCN_Model(Model):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
-                    self.dropout_placeholder: 1.0}
+                    self.dropout_placeholder: 1.0,
+                    self.is_training:False}
 
             pred, prob = sess.run([self.pred, self.prob], feed_dict=feed)
 
