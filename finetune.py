@@ -132,7 +132,7 @@ def finetune(model, debug, detailed=False):
                         ##########  example id for brats
                         # ex_id = ex_path.split('_')[-2] + '_' + ex_path.split('_')[-1]
 
-                        ex_result_path = res_path + ex_id + '.npz'
+                        ex_result_path = ex_path + '/pred.npz'
                         print('saving test result to %s' %(ex_result_path))
                         np.savez(ex_result_path,
                                  y=fy,

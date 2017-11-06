@@ -1,13 +1,14 @@
 """Training script.
 
 Usage:
-    fcn_finetune.py (--cfg-path=<p>) [--debug]
+    fcn_finetune.py (--cfg-path=<p>) [--debug] [--detailed]
     fcn_finetune.py -h | --help
 
 Options:
     -h --help       Show this screen.
     --cfg-path=<p>  Config path.
     --debug         Run in debug mode.
+    --detailed      Save predictions for each image of the test set
 
 """
 from docopt import docopt

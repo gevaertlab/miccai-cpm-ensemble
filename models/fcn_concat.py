@@ -29,7 +29,6 @@ class FCN_Concat(FCN_Model):
             # drop1 = tf.nn.dropout(pool1, self.dropout_placeholder)
 
             # print(conv1.get_shape())
-            print('pool1 shape is:',pool1.get_shape())
 
         with tf.variable_scope('conv2'):
             conv2 = tf.layers.conv3d(inputs=pool1,
@@ -50,7 +49,6 @@ class FCN_Concat(FCN_Model):
                                             strides=(2, 2, 2), padding='VALID')
             # drop2 = tf.nn.dropout(pool2, self.dropout_placeholder)
             # print(conv.get_shape())
-            print('pool2 shape is:', pool2.get_shape())
 
         with tf.variable_scope('conv3'):
             conv3 = tf.layers.conv3d(inputs=pool2,
@@ -72,7 +70,6 @@ class FCN_Concat(FCN_Model):
             drop3 = tf.nn.dropout(pool3, self.dropout_placeholder)
 
             # print(conv.get_shape())
-            print('drop3 shape is:', drop3.get_shape())
 
         with tf.variable_scope('deconv4'):
             deconv4 = tf.layers.conv3d_transpose(inputs=drop3,
@@ -84,7 +81,7 @@ class FCN_Concat(FCN_Model):
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                                  bias_initializer=tf.zeros_initializer())
-            print('deconv4 shape is:', deconv4.get_shape())
+
             bias = tf.get_variable('biases', [20],
                                    initializer=tf.zeros_initializer())
             deconv4 = deconv4 + bias
