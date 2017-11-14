@@ -152,16 +152,16 @@ class FCN_Model(Model):
         # self.loss = dice_score_loss
 
     def get_variables_to_restore(self, level=3):
-        var_names_to_train = []
+        var_names_to_restore = []
         if level > 1:
-            var_names_to_train += ['deconv4/weights',
-                                  'deconv4/biases']
+            var_names_to_restore += ['conv1/weights',
+                                     'conv1/biases']
         if level > 2:
-            var_names_to_train += ['deconv3/weights',
-                                  'deconv3/biases']
+            var_names_to_restore += ['con2/weights',
+                                     'conv2/biases']
 
-        var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_train)
-        var_to_train = tf.contrib.framework.get_variables_to_restore(include=var_names_to_train)
+        var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
+        var_to_train = tf.contrib.framework.get_variables_to_restore(include=var_names_to_restore)
         return var_to_train, var_to_restore
 
     def add_train_op(self):

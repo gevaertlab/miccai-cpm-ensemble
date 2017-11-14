@@ -159,19 +159,24 @@ class FCN_Concat(FCN_Model):
         self.loss = ce_loss + reg_loss
 
     def get_variables_to_restore(self, level=4):
-        var_names_to_train = []
+        var_names_to_restore = ['conv1/conv3d/kernel:0',
+                                'conv1/biases:0',
+                                'conv2/conv3d/kernel:0',
+                                'conv2/biases:0',
+                                'conv3/conv3d/kernel:0',
+                                'conv3/biases:0']
         if level > 1:
-            var_names_to_train += ['deconv6/conv3d_transpose/kernel:0',
-                                  'deconv6/biases:0']
+            var_names_to_restore += ['deconv4/conv3d_transpose/kernel:0',
+                                     'deconv4/biases:0']
         if level > 2:
-            var_names_to_train += ['deconv5/conv3d_transpose/kernel:0',
-                                  'deconv5/biases:0']
+            var_names_to_restore += ['deconv5/conv3d_transpose/kernel:0',
+                                     'deconv5/biases:0']
         if level > 3:
-            var_names_to_train += ['deconv4/conv3d_transpose/kernel:0',
-                                  'deconv4/biases:0']
+            var_names_to_restore += ['deconv6/conv3d_transpose/kernel:0',
+                                     'deconv6/biases:0']
 
-        var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_train)
-        var_to_train = tf.contrib.framework.get_variables_to_restore(include=var_names_to_train)
+        var_to_restore = tf.contrib.framework.get_variables_to_restore(include=var_names_to_restore)
+        var_to_train = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
         print('*' * 20 + 'variables to retrain' + '*' * 50)
         print([var.name for var in var_to_train])
         return var_to_train, var_to_restore
