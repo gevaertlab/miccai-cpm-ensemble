@@ -14,7 +14,7 @@ class FCN_Model(Model):
         self.config = config
         self.patch = config.patch_size
 
-        self.load_data()
+        # self.load_data()
         self.add_placeholders()
         self.add_model()
         self.add_pred_op()
@@ -151,17 +151,30 @@ class FCN_Model(Model):
         # self.loss = ce_loss + reg_loss
         # self.loss = dice_score_loss
 
+    def get_variable_to_restore(self, level=3):
+        var_names_to_train = []
+        if level > 1:
+            var_names_to_train += ['deconv4/weights',
+                                  'deconv4/biases']
+        if level > 2:
+            var_names_to_train += ['deconv3/weights',
+                                  'deconv3/biases']
+
+        var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_train)
+        var_to_train = tf.contrib.framework.get_variables_to_restore(include=var_names_to_train)
+        return var_to_train, var_to_restore
+
     def add_train_op(self):
-        self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss)
+        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+        with tf.control_dependencies(update_ops):
+            self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
+                                 .minimize(self.loss)
 
-    def add_train_last_layers_op(self):
-        train_vars = []
-        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv3')
-        train_vars += tf.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES, scope='deconv4')
-        self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).\
-                                             minimize(self.loss, var_list=train_vars)
+            var_to_train, _ = self.get_variables_to_restore(self.config.finetuning_level)
+            self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
+                                             .minimize(self.loss, var_list=var_to_train)
 
-    def _train(self, ex_path, sess, lr):
+    def _train(self, ex_path, sess, lr, finetune=False):
         losses = []
         bdices = []
 
@@ -175,32 +188,10 @@ class FCN_Model(Model):
                     self.dropout_placeholder: self.config.dropout,
                     self.lr_placeholder: lr,
                     self.is_training: True}
-
-            pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
-
-            losses.append(loss)
-
-            bdice = dice_score(y, pred)
-            bdices.append(bdice)
-
-        return losses, bdices
-
-    def _train_last_layers(self, ex_path, sess, lr):
-        losses = []
-        bdices = []
-
-        bs = self.config.batch_size
-        nb = self.config.num_train_batches
-
-        for _, (x, y) in enumerate(fcn_data_iter(ex_path, 'fgbg', bs, nb, self.patch)):
-
-            feed = {self.image_placeholder: x,
-                    self.label_placeholder: y,
-                    self.dropout_placeholder: self.config.dropout,
-                    self.lr_placeholder: lr,
-                    self.is_training: True}
-
-            pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
+            if finetune:
+                pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
+            else:
+                pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
 
             losses.append(loss)
 

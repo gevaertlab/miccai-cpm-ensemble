@@ -18,7 +18,7 @@ if __name__ == '__main__':
     in_path_val_dir = 'data/rembrandt/val/'
     out_path_train_dir = 'data/rembrandt/resized_x3/train/'
     out_path_val_dir = 'data/rembrandt/resized_x3/val/'
-    
+
     files_to_resize = ['flair', 't1', 't1c', 't2', 'tumor']
 
     if not os.path.exists(out_path_train_dir):
@@ -51,4 +51,3 @@ if __name__ == '__main__':
                 im_path = os.path.join(in_im_dir_path, im_name)
                 out_path = os.path.join(out_im_dir_path, im_name)
                 resize_image(im_path, out_path)
-

@@ -16,8 +16,8 @@ class Config:
         self.lr_init = float(param_dict.get('lr_init', 1e-4))
         self.lr_min = float(param_dict.get('lr_min', 1e-6))
         self.start_decay = float(param_dict.get('start_decay', 10))  # id of epoch to start decay
-        self.decay_rate = float(param_dict.get('decay_rate', 0.8))  # id of epoch to end decay
-        self.end_decay = float(param_dict.get('end_decay', 30))
+        self.decay_rate = float(param_dict.get('decay_rate', 0.8))
+        self.end_decay = float(param_dict.get('end_decay', 30))  # id of epoch to end decay
         self.lr_warm = float(param_dict.get('lr_warm', 5e-5))
         self.end_warm = float(param_dict.get('end_warm', 3))
 
@@ -33,3 +33,5 @@ class Config:
 
         self.fine_tune_ckpt_path = param_dict.get('fine_tune_ckpt_path')
         self.finetuning_method = param_dict.get('finetuning_method', 'all_layers')
+        self.finetuning_level = int(param_dict.get('finetuning_level', 4))
+        self.end_finetune = int(param_dict.get('end_finetune', 10))

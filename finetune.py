@@ -22,7 +22,7 @@ def finetune_last_layers(sess, model, train_ex_paths, lr):
     ex_losses = []
     prog = Progbar(target=len(train_ex_paths))
     for ex, ex_path in enumerate(train_ex_paths):
-        losses, bdices = model._train_last_layers(ex_path, sess, lr)
+        losses, bdices = model._train(ex_path, sess, lr, finetune=True)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))
         prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr)])
@@ -95,7 +95,11 @@ def finetune(model, debug, detailed=False):
             if finetuning_method == "all_layers":
                 ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
             elif finetuning_method == "last_layers":
-                ex_bdices, ex_losses = finetune_last_layers(sess, model, train_ex_paths, lr_schedule.lr)
+                if epoch < config.end_finetune:
+                    ex_bdices, ex_losses = finetune_last_layers(sess, model, train_ex_paths, config.lr_finetune)
+                else:
+                    ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths,
+                                                               lr_schedule_finetune.lr)
             elif finetuning_method == "no_layers":
                 ex_bdices, ex_losses = finetune_no_layers(sess, model, train_ex_paths)
             else:

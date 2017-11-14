@@ -158,8 +158,20 @@ class FCN_Concat(FCN_Model):
 
         self.loss = ce_loss + reg_loss
 
-    def add_train_op(self):
-        update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
-        with tf.control_dependencies(update_ops):
-            self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder).minimize(self.loss)   
+    def get_variable_to_restore(self, level=4):
+        var_names_to_train = []
+        if level > 1:
+            var_names_to_train += ['deconv6/conv3d_transpose/kernel:0',
+                                  'deconv6/biases:0']
+        if level > 2:
+            var_names_to_train += ['deconv5/conv3d_transpose/kernel:0',
+                                  'deconv5/biases:0']
+        if level > 3:
+            var_names_to_train += ['deconv4/conv3d_transpose/kernel:0',
+                                  'deconv4/biases:0']
 
+        var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_train)
+        var_to_train = tf.contrib.framework.get_variables_to_restore(include=var_names_to_train)
+        print('*' * 20 + 'variables to retrain' + '*' * 50)
+        print([var.name for var in var_to_train])
+        return var_to_train, var_to_restore
