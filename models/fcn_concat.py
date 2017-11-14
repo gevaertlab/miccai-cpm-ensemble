@@ -160,11 +160,11 @@ class FCN_Concat(FCN_Model):
 
     def get_variables_to_restore(self, level=4):
         var_names_to_restore = ['conv1/conv3d/kernel:0',
-                                'conv1/biases:0',
+                                'conv1/conv3d/bias:0',
                                 'conv2/conv3d/kernel:0',
-                                'conv2/biases:0',
+                                'conv2/conv3d/bias:0',
                                 'conv3/conv3d/kernel:0',
-                                'conv3/biases:0']
+                                'conv3/conv3d/bias:0']
         if level > 1:
             var_names_to_restore += ['deconv4/conv3d_transpose/kernel:0',
                                      'deconv4/biases:0']
