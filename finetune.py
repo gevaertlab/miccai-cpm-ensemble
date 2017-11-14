@@ -98,8 +98,7 @@ def finetune(model, debug, detailed=False):
                 if epoch < config.end_finetune:
                     ex_bdices, ex_losses = finetune_last_layers(sess, model, train_ex_paths, config.lr_finetune)
                 else:
-                    ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths,
-                                                               lr_schedule_finetune.lr)
+                    ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
             elif finetuning_method == "no_layers":
                 ex_bdices, ex_losses = finetune_no_layers(sess, model, train_ex_paths)
             else:

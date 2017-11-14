@@ -35,3 +35,4 @@ class Config:
         self.finetuning_method = param_dict.get('finetuning_method', 'all_layers')
         self.finetuning_level = int(param_dict.get('finetuning_level', 4))
         self.end_finetune = int(param_dict.get('end_finetune', 10))
+        self.lr_finetune = float(param_dict.get('lr_finetune', 1e-5))

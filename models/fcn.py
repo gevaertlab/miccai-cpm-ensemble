@@ -14,7 +14,7 @@ class FCN_Model(Model):
         self.config = config
         self.patch = config.patch_size
 
-        # self.load_data()
+        self.load_data()
         self.add_placeholders()
         self.add_model()
         self.add_pred_op()
@@ -151,7 +151,7 @@ class FCN_Model(Model):
         # self.loss = ce_loss + reg_loss
         # self.loss = dice_score_loss
 
-    def get_variable_to_restore(self, level=3):
+    def get_variables_to_restore(self, level=3):
         var_names_to_train = []
         if level > 1:
             var_names_to_train += ['deconv4/weights',

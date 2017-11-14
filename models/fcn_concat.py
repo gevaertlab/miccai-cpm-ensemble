@@ -158,7 +158,7 @@ class FCN_Concat(FCN_Model):
 
         self.loss = ce_loss + reg_loss
 
-    def get_variable_to_restore(self, level=4):
+    def get_variables_to_restore(self, level=4):
         var_names_to_train = []
         if level > 1:
             var_names_to_train += ['deconv6/conv3d_transpose/kernel:0',
