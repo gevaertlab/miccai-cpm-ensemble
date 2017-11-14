@@ -29,15 +29,6 @@ def finetune_last_layers(sess, model, train_ex_paths, lr):
     return ex_bdices, ex_losses
 
 
-def finetune_no_layers(sess, model, train_ex_paths):
-    ex_bdices = []
-    ex_losses = []
-    for _, ex_path in enumerate(train_ex_paths):
-        bdices = model._validate(ex_path, sess)
-        ex_bdices.append(np.mean(bdices))
-    return ex_bdices, ex_losses
-
-
 def finetune(model, debug, detailed=False):
     config = model.config
     finetuning_method = config.finetuning_method
@@ -61,7 +52,20 @@ def finetune(model, debug, detailed=False):
 
     with tf.Session() as sess:
 
-        saver.restore(sess, ckpt_path)
+        print('Restoring parameters ...')
+        if finetuning_method == "all_layers":
+            saver.restore(sess, ckpt_path)
+        elif finetuning_method == "last_layers":
+            var_to_train, var_to_restore = model.get_variables_to_restore(config.finetuning_level)
+            init_restore = tf.contrib.framework.assign_from_checkpoint_fn(ckpt_path, var_to_restore)
+            init_other = tf.variables_initializer(var_to_init)
+            init_restore(sess)
+            sess.run(init_other)
+        elif finetuning_method == "no_layers":
+            sess.run(tf.global_variables_initializer())
+        else:
+            print("Finetuning method not supported")
+            raise NotImplementedError
 
         train_losses = []
         train_bdices = []
@@ -100,7 +104,7 @@ def finetune(model, debug, detailed=False):
                 else:
                     ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
             elif finetuning_method == "no_layers":
-                ex_bdices, ex_losses = finetune_no_layers(sess, model, train_ex_paths)
+                ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
             else:
                 print("Finetuning method not supported")
                 raise NotImplementedError
