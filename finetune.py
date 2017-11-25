@@ -58,7 +58,7 @@ def finetune(model, debug, detailed=False):
         elif finetuning_method == "last_layers":
             var_to_train, var_to_restore = model.get_variables_to_restore(config.finetuning_level)
             init_restore = tf.contrib.framework.assign_from_checkpoint_fn(ckpt_path, var_to_restore)
-            init_other = tf.variables_initializer(var_to_init)
+            init_other = tf.variables_initializer(var_to_train)
             init_restore(sess)
             sess.run(init_other)
         elif finetuning_method == "no_layers":
@@ -155,11 +155,11 @@ def finetune(model, debug, detailed=False):
                     saver.save(sess, config.fine_tune_ckpt_path)
                     print('Saving checkpoint to %s ......' %(config.fine_tune_ckpt_path))
 
-        np.savez(res_path,
-                 train_losses=train_losses,
-                 train_bdices=train_bdices,
-                 val_bdices=val_bdices,
-                 val_fdices=val_fdices,
-                 train_ex_paths=train_ex_paths,
-                 val_ex_paths=val_ex_paths,
-                 config=config.__dict__)
+                np.savez(res_path,
+                         train_losses=train_losses,
+                         train_bdices=train_bdices,
+                         val_bdices=val_bdices,
+                         val_fdices=val_fdices,
+                         train_ex_paths=train_ex_paths,
+                         val_ex_paths=val_ex_paths,
+                         config=config.__dict__)

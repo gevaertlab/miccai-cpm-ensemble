@@ -179,4 +179,6 @@ class FCN_Concat(FCN_Model):
         var_to_train = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
         print('*' * 20 + 'variables to retrain' + '*' * 50)
         print([var.name for var in var_to_train])
+        print('*' * 20 + 'variables to restore' + '*' * 50)
+        print([var.name for var in var_to_restore])
         return var_to_train, var_to_restore
