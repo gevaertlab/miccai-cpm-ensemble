@@ -89,6 +89,8 @@ def finetune(model, debug, detailed=False):
             ex_fdices.append(fdice)
         val_fdices.append(np.mean(ex_fdices))
         print('******************** Initialization: Test dice score %5f' %np.mean(ex_fdices))
+        # initialize score in lr schedule with test dice score
+        lr_schedule.score = np.mean(ex_fdices)
 
         if np.mean(ex_fdices) >= best_fdice:
             best_fdice = np.mean(ex_fdices)
@@ -149,6 +151,7 @@ def finetune(model, debug, detailed=False):
 
                 val_fdices.append(np.mean(ex_fdices))
                 print('******************** Epoch %d: Test dice score %5f' %(epoch, np.mean(ex_fdices)))
+                lr_schedule.update(score=np.mean(ex_fdices))
 
                 if np.mean(ex_fdices) >= best_fdice:
                     best_fdice = np.mean(ex_fdices)

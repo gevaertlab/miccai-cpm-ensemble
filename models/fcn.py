@@ -157,7 +157,7 @@ class FCN_Model(Model):
             var_names_to_restore += ['conv1/weights',
                                      'conv1/biases']
         if level > 2:
-            var_names_to_restore += ['con2/weights',
+            var_names_to_restore += ['conv2/weights',
                                      'conv2/biases']
 
         var_to_restore = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
@@ -170,9 +170,10 @@ class FCN_Model(Model):
             self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
                                  .minimize(self.loss)
 
-            var_to_train, _ = self.get_variables_to_restore(self.config.finetuning_level)
-            self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
-                                             .minimize(self.loss, var_list=var_to_train)
+            if self.config.finetuning_method == 'last_layers':
+                var_to_train, _ = self.get_variables_to_restore(self.config.finetuning_level)
+                self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
+                                                 .minimize(self.loss, var_list=var_to_train)
 
     def _train(self, ex_path, sess, lr, finetune=False):
         losses = []
