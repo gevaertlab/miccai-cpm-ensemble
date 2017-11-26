@@ -5,15 +5,16 @@ from utils.general import Progbar
 from utils.lr_schedule import LRSchedule
 
 
-def finetune_all_layers(sess, model, train_ex_paths, lr):
+def finetune_all_layers(sess, model, train_ex_paths, lr_schedule):
     ex_bdices = []
     ex_losses = []
+    lr = lr_schedule.lr
     prog = Progbar(target=len(train_ex_paths))
     for ex, ex_path in enumerate(train_ex_paths):
         losses, bdices = model._train(ex_path, sess, lr)
         ex_losses.extend(losses)
         ex_bdices.append(np.mean(bdices))
-        prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr)])
+        prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr), ('score', lr_schedule.score)])
     return ex_bdices, ex_losses
 
 
@@ -99,14 +100,14 @@ def finetune(model, debug, detailed=False):
         for epoch in range(1, config.num_epochs + 1):
             print('epoch {}'.format(epoch))
             if finetuning_method == "all_layers":
-                ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
+                ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule)
             elif finetuning_method == "last_layers":
                 if epoch < config.end_finetune:
                     ex_bdices, ex_losses = finetune_last_layers(sess, model, train_ex_paths, config.lr_finetune)
                 else:
-                    ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
+                    ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule)
             elif finetuning_method == "no_layers":
-                ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule.lr)
+                ex_bdices, ex_losses = finetune_all_layers(sess, model, train_ex_paths, lr_schedule)
             else:
                 print("Finetuning method not supported")
                 raise NotImplementedError
