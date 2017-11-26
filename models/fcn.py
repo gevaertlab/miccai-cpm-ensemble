@@ -188,7 +188,7 @@ class FCN_Model(Model):
                     self.label_placeholder: y,
                     self.dropout_placeholder: self.config.dropout,
                     self.lr_placeholder: lr,
-                    self.is_training: True}
+                    self.is_training: self.config.use_batch_norm}
             if finetune:
                 pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
             else:

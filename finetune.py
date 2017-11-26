@@ -48,7 +48,7 @@ def finetune(model, debug, detailed=False):
     lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                              start_decay=config.start_decay * len(train_ex_paths),
                              end_decay=config.end_decay * len(train_ex_paths),
-                             lr_warm=config.lr_warm,
+                             lr_warm=config.lr_warm, decay_rate=config.decay_rate,
                              end_warm=config.end_warm * len(train_ex_paths))
 
     with tf.Session() as sess:
@@ -116,7 +116,7 @@ def finetune(model, debug, detailed=False):
             train_bdices.append(np.mean(ex_bdices))
             train_losses += ex_losses
 
-            if epoch % 3 == 0:
+            if epoch % 2 == 0:
                 print('validate')
                 ex_bdices = []
                 for _, ex_path in enumerate(val_ex_paths):

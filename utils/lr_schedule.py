@@ -46,7 +46,7 @@ class LRSchedule(object):
         # update based on performance
         if self.decay_rate is not None:
             if score is not None and self.score is not None:
-                # assume lower is better
+                # assume greater is better
                 if score < self.score:
                     self.lr *= self.decay_rate
 

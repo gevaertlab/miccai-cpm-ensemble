@@ -23,6 +23,7 @@ class Config:
 
         self.l2 = float(param_dict.get('l2', 1e-4))
         self.dropout = float(param_dict.get('dropout', 0.5))
+        self.use_batch_norm = param_dict.get('use_batch_norm', 'False') == True
 
         self.patch_size = int(param_dict.get('patch_size', 24))
 
