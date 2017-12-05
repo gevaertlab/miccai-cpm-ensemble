@@ -3,11 +3,14 @@ import os
 import numpy as np
 import SimpleITK as sitk
 
+
 def im_path_to_arr(im_path):
     return sitk.GetArrayFromImage(sitk.ReadImage(im_path))
 
+
 def arr_to_im_path(arr, im_path):
     sitk.WriteImage(sitk.GetImageFromArray(arr), im_path)
+
 
 def get_ex_paths(path):
     ex_paths = []
@@ -17,6 +20,7 @@ def get_ex_paths(path):
             ex_paths.append(ex_path)
     return ex_paths
 
+
 def get_shape(ex_path):
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
@@ -25,6 +29,7 @@ def get_shape(ex_path):
             labels = im_path_to_arr(im_path)
     return labels.shape
 
+
 def get_shape_hb(ex_path):
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
@@ -32,3 +37,21 @@ def get_shape_hb(ex_path):
         if im_type == 'seg':
             labels = im_path_to_arr(im_path)
     return labels.shape
+
+
+# generalize this later
+def get_patch_centers(im_size):
+    quotient = (im_size - 16) // 9
+    remainder = (im_size - 16) % 9
+    start = remainder // 2 + 12
+    end = start + (quotient - 1) * 9 + 1
+    return range(start, end, 9)
+
+
+def normalize_image(image, label=False):
+    if not label:
+        brain = np.where(image != 0)
+        mu = np.mean(image[brain])
+        sigma = np.std(image[brain])
+        image[brain] = (image[brain] - mu) / sigma
+    return image
