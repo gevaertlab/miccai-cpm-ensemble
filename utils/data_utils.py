@@ -48,10 +48,14 @@ def get_patch_centers(im_size):
     return range(start, end, 9)
 
 
-def normalize_image(image, label=False):
-    if not label:
-        brain = np.where(image != 0)
-        mu = np.mean(image[brain])
-        sigma = np.std(image[brain])
-        image[brain] = (image[brain] - mu) / sigma
+def normalize_image(image):
+    brain = np.where(image != 0)
+    mu = np.mean(image[brain])
+    sigma = np.std(image[brain])
+    image[brain] = (image[brain] - mu) / sigma
     return image
+
+
+def preprocess_labels(labels):
+    labels[labels == 4] = 3
+    return labels

@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from models.model import Model
 
-from utils.data_iterator import fcn_data_iter
+from utils.data_iterator import fcn_data_iter_v2
 from utils.data_utils import get_ex_paths, get_shape
 from utils.dice_score import dice_score
 
@@ -13,6 +13,7 @@ class FCN_Model(Model):
     def __init__(self, config):
         self.config = config
         self.patch = config.patch_size
+        self.nb_classes = config.nb_classes
 
         self.load_data()
         self.add_placeholders()
@@ -84,13 +85,13 @@ class FCN_Model(Model):
 
         with tf.variable_scope('deconv4'):
 
-            kernel = tf.get_variable('weights', [5, 5, 5, 2, 10],
+            kernel = tf.get_variable('weights', [5, 5, 5, self.nb_classes, 10],
                                      initializer=tf.contrib.layers.xavier_initializer())
             bias = tf.get_variable('biases', [2],
                                    initializer=tf.constant_initializer(0.0))
 
             deconv4 = tf.nn.conv3d_transpose(drop3, filter=kernel,
-                                             output_shape=[batch_size, 24, 24, 24, 2],
+                                             output_shape=[batch_size, 24, 24, 24, self.nb_classes],
                                              strides=[1, 2, 2, 2, 1], padding='SAME')
             relu4 = tf.nn.relu(deconv4 + bias)
 
@@ -100,14 +101,14 @@ class FCN_Model(Model):
         self.score = relu4
 
     def add_pred_op(self):
-        probs = tf.nn.softmax(tf.reshape(self.score, [-1, 2]))
+        probs = tf.nn.softmax(tf.reshape(self.score, [-1, self.nb_classes]))
         reshape_probs = tf.reshape(probs, tf.shape(self.score))
 
         self.pred = tf.argmax(reshape_probs, 4)
         self.prob = reshape_probs
 
     def add_loss_op(self):
-        logits = tf.reshape(self.score, [-1, 2])
+        logits = tf.reshape(self.score, [-1, self.nb_classes])
         labels = tf.reshape(self.label_placeholder, [-1])
         print(logits.shape)
         print(labels.shape)
@@ -182,7 +183,7 @@ class FCN_Model(Model):
         bs = self.config.batch_size
         nb = self.config.num_train_batches
 
-        for _, (x, y) in enumerate(fcn_data_iter(ex_path, 'fgbg', bs, nb, self.patch)):
+        for _, (x, y) in enumerate(fcn_data_iter_v2(ex_path, 'fgbg', bs, nb, self.patch)):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
@@ -207,7 +208,7 @@ class FCN_Model(Model):
         bs = self.config.batch_size
         nb = self.config.num_val_batches
 
-        for _, (x, y) in enumerate(fcn_data_iter(ex_path, 'fgbg', bs, nb, self.patch)):
+        for _, (x, y) in enumerate(fcn_data_iter_v2(ex_path, 'fgbg', bs, nb, self.patch)):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
@@ -227,7 +228,7 @@ class FCN_Model(Model):
 
         bs = self.config.batch_size
 
-        for _, (i, j, k, x, y) in enumerate(fcn_data_iter(ex_path, 'full', bs, None, self.patch)):
+        for _, (i, j, k, x, y) in enumerate(fcn_data_iter_v2(ex_path, 'full', bs, None, self.patch)):
 
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,

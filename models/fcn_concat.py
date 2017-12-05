@@ -117,7 +117,7 @@ class FCN_Concat(FCN_Model):
 
         with tf.variable_scope('deconv6'):
             deconv6 = tf.layers.conv3d_transpose(inputs=drop5,
-                                                 filters=2,
+                                                 filters=self.nb_classes,
                                                  kernel_size=5,
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
@@ -127,12 +127,12 @@ class FCN_Concat(FCN_Model):
                                                  bias_initializer=tf.constant_initializer(0.0))
 
             # print(deconv6.get_shape())
-            bias = tf.get_variable('biases', [2],
+            bias = tf.get_variable('biases', [self.nb_classes],
                                    initializer=tf.zeros_initializer()) 
             self.score = deconv6 + bias
 
     def add_loss_op(self):
-        logits = tf.reshape(self.score, [-1, 2])
+        logits = tf.reshape(self.score, [-1, self.nb_classes])
         labels = tf.reshape(self.label_placeholder, [-1])
 
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))

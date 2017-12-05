@@ -5,6 +5,7 @@ import numpy as np
 from utils.data_utils import im_path_to_arr
 from utils.data_utils import get_patch_centers
 from utils.data_utils import normalize_image
+from utils.data_utils import preprocess_labels
 
 
 def data_iter(ex_path, samp_mode, batch_size, num_batches):
@@ -303,18 +304,18 @@ def fcn_data_iter_v2(ex_path, samp_mode, batch_size, num_batches, patch_size):
 
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
-        im_type = im_name.split('.')[0]
+        im_type = im_name.split('.')[0].split('_')[-1]
         image = im_path_to_arr(im_path)
         if im_type == 't1':
-            data[0] = normalize_image(image, label=False)
-        if im_type == 't1c':
-            data[1] = normalize_image(image, label=False)
+            data[0] = normalize_image(image)
+        if im_type == 't1c' or im_type == 't1ce':
+            data[1] = normalize_image(image)
         if im_type == 't2':
-            data[2] = normalize_image(image, label=False)
+            data[2] = normalize_image(image)
         if im_type == 'flair' or im_type == 'fla':
-            data[3] = normalize_image(image, label=False)
-        if im_type == 'tumor':
-            labels = normalize_image(image, label=True)
+            data[3] = normalize_image(image)
+        if im_type == 'tumor' or im_type == 'seg':
+            labels = preprocess_labels(image)
 
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
