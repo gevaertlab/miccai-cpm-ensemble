@@ -4,7 +4,7 @@ import tensorflow as tf
 from models.model import Model
 
 from utils.data_iterator import fcn_data_iter_v2
-from utils.data_utils import get_ex_paths, get_shape
+from utils.data_utils import get_ex_paths, get_shape_v2
 from utils.dice_score import dice_score
 
 
@@ -222,9 +222,9 @@ class FCN_Model(Model):
         return bdices
 
     def _segment(self, ex_path, sess):
-        fpred = np.zeros(get_shape(ex_path))
-        fy = np.zeros(get_shape(ex_path))
-        fprob = np.zeros(get_shape(ex_path) + (2,))
+        fpred = np.zeros(get_shape_v2(ex_path))
+        fy = np.zeros(get_shape_v2(ex_path))
+        fprob = np.zeros(get_shape_v2(ex_path) + (2,))
 
         bs = self.config.batch_size
 

@@ -30,6 +30,15 @@ def get_shape(ex_path):
     return labels.shape
 
 
+def get_shape_v2(ex_path):
+    for im_name in os.listdir(ex_path):
+        im_path = os.path.join(ex_path, im_name)
+        im_type = im_name.split('.')[0].split('_')[-1]
+        if im_type == 'seg':
+            labels = im_path_to_arr(im_path)
+    return labels.shape
+
+
 def get_shape_hb(ex_path):
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
