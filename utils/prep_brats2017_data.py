@@ -6,9 +6,9 @@ from random import shuffle
 
 
 if __name__ == '__main__':
-    all_data_path = 'brats2017/HGG'
-    train_path = 'brats2017/train'
-    val_path = 'brats2017/val'
+    all_data_path = 'data/brats2017/HGG'
+    train_path = 'data/brats2017/train'
+    val_path = 'data/brats2017/val'
 
     all_files = []
 
@@ -17,7 +17,7 @@ if __name__ == '__main__':
         all_files.append((patient_path, patient_name))
         for modality in os.listdir(patient_path):
             modality_path = os.path.join(patient_path, modality)
-            out_path = modality_path[:-3].lower()
+            out_path = modality_path[:-3]
             with gzip.open(modality_path, 'rb') as fgz:
                 with open(out_path, 'wb') as f:
                     f.write(fgz.read())
