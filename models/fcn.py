@@ -224,7 +224,7 @@ class FCN_Model(Model):
     def _segment(self, ex_path, sess):
         fpred = np.zeros(get_shape_v2(ex_path))
         fy = np.zeros(get_shape_v2(ex_path))
-        fprob = np.zeros(get_shape_v2(ex_path) + (2,))
+        fprob = np.zeros(get_shape_v2(ex_path) + (self.nb_classes,))
 
         bs = self.config.batch_size
 

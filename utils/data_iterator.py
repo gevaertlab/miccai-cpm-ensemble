@@ -331,7 +331,7 @@ def fcn_data_iter_v2(ex_path, samp_mode, batch_size, num_batches, patch_size):
         # print(trimmed_data.shape)
 
         bg = np.where((trimmed_labels == 0) & (trimmed_data[..., 0] != 0))
-        fg = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
+        fg = np.where((trimmed_labels > 0) & (trimmed_data[..., 0] != 0))
 
         num_bg = len(bg[0])
         num_fg = len(fg[0])
