@@ -29,13 +29,12 @@ class FCN_Model(Model):
     def add_dataset(self):
         batch_size = self.config.batch_size
 
-        image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch,
-                                                              self.patch, self.nb_classes])
+        image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch, self.patch, 4])
         label_batch_input = tf.placeholder(tf.int32, shape=[batch_size, self.patch, self.patch, self.patch])
 
         queue = tf.FIFOQueue(100, [tf.float32, tf.int32],
-                                  shapes=[[batch_size, self.patch, self.patch, self.patch, self.nb_classes],
-                                          [batch_size, self.patch, self.patch, self.patch]])
+                             shapes=[[batch_size, self.patch, self.patch, self.patch, 4],
+                                     [batch_size, self.patch, self.patch, self.patch]])
 
         self.enqueue_op = queue.enqueue_many([image_batch_input, label_batch_input])
         self.image_batch, self.label_batch = queue.dequeue_many(batch_size)
@@ -54,23 +53,21 @@ class FCN_Model(Model):
 
         with tf.variable_scope('conv1'):
 
-            # conv1 = tf.layers.conv3d(inputs=self.image_placeholder, filters=10,
-            #                          kernel_size=[5, 5, 5], padding="SAME",
-            #                          use_bias=True, activation=tf.nn.relu,
-            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
-            #                          bias_initializer=tf.constant_initializer(0.0))
-
-            conv1 = tf.layers.conv3d(inputs=self.image_batch, filters=10,
+            conv1 = tf.layers.conv3d(inputs=self.image_placeholder, filters=10,
                                      kernel_size=[5, 5, 5], padding="SAME",
                                      use_bias=True, activation=tf.nn.relu,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
+
+            # TODO: uncomment to use queues
+            # conv1 = tf.layers.conv3d(inputs=self.image_batch, filters=10,
+            #                          kernel_size=[5, 5, 5], padding="SAME",
+            #                          use_bias=True, activation=tf.nn.relu,
+            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
+            #                          bias_initializer=tf.constant_initializer(0.0))
             # drop1 = tf.nn.dropout(conv1, self.dropout_placeholder)
             pool1 = tf.layers.max_pooling3d(inputs=conv1, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
-
-            print(conv1.get_shape())
-            print(pool1.get_shape())
 
         with tf.variable_scope('conv2'):
 
@@ -82,9 +79,6 @@ class FCN_Model(Model):
             # drop2 = tf.nn.dropout(conv2, self.dropout_placeholder)
             pool2 = tf.layers.max_pooling3d(inputs=conv2, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
-
-            print(conv2.get_shape())
-            print(pool2.get_shape())
 
         with tf.variable_scope('deconv3'):
 
@@ -129,8 +123,9 @@ class FCN_Model(Model):
 
     def add_loss_op(self):
         logits = tf.reshape(self.score, [-1, self.nb_classes])
-        # labels = tf.reshape(self.label_placeholder, [-1])
-        labels = tf.reshape(self.label_batch, [-1])
+        labels = tf.reshape(self.label_placeholder, [-1])
+        # TODO: uncomment to use queues
+        # labels = tf.reshape(self.label_batch, [-1])
         print(logits.shape)
         print(labels.shape)
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
