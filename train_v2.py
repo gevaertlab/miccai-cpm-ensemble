@@ -1,9 +1,18 @@
+import threading
+
 import numpy as np
 import tensorflow as tf
 
 from utils.general import Progbar
 from utils.lr_schedule import LRSchedule
 
+
+def load_and_enqueue(sess, enqueue_op, all_paths, bs, nb, patch_size, coord):
+    while not coord.should_stop():
+        for ex_path in all_paths:
+            for x, y in fcn_data_iter_v2(ex_path, 'fgbg', bs, nb, patch_size):
+                sess.run(enqueue_op, feed_dict={image_batch_input: x,
+                                                label_batch_input: y})
 
 def train(model, debug):
 
@@ -18,13 +27,19 @@ def train(model, debug):
         train_ex_paths = train_ex_paths[:2]
         val_ex_paths = val_ex_paths[:2]
 
+    batch_size = config.batch_size
+    num_train_batches = config.num_train_batches
+    nb_batch_per_epoch = len(train_ex_paths) * num_train_batches
+    patch_size = config.patch_size
+
     lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
-                             start_decay=config.start_decay * len(train_ex_paths),
-                             end_decay=config.end_decay * len(train_ex_paths),
+                             start_decay=config.start_decay * nb_batch_per_epoch,
+                             end_decay=config.end_decay * nb_batch_per_epoch,
                              lr_warm=config.lr_warm,
-                             end_warm=config.end_warm * len(train_ex_paths))
+                             end_warm=config.end_warm * nb_batch_per_epoch)
 
     saver = tf.train.Saver()
+    coord = tf.train.Coordinator()
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
@@ -34,6 +49,12 @@ def train(model, debug):
         val_bdices = []
         val_fdices = []
         best_fdice = 0
+
+        print('run the queue for preprocessing of training data ...')
+        t = threading.Thread(target=load_and_enqueue, args=(sess, model.enqueue_op,
+                                                            batch_size, num_train_batches,
+                                                            patch_size, coord))
+        t.start()
 
         print('Initialization......')
         print('validate')
@@ -68,16 +89,15 @@ def train(model, debug):
             print('\nepoch {}'.format(epoch))
             print('train')
 
-            prog = Progbar(target=len(train_ex_paths))
+            prog = Progbar(target=nb_batch_per_epoch)
             ex_bdices = []
-            for ex, ex_path in enumerate(train_ex_paths):
-                # print(ex_path)
-                losses, bdices = model._train(ex_path, sess, lr_schedule.lr)
-                train_losses.extend(losses)
-                ex_bdices.append(np.mean(bdices))
-                lr_schedule.update(batch_no=epoch * len(train_ex_paths) + ex)
-                prog.update(ex + 1, values=[('loss', np.mean(losses))], exact=[("lr", lr_schedule.lr)])
-                # print('******* Epoch %d Example %d: Training loss %5f' %(epoch, ex, np.mean(losses)))
+
+            for batch_no in range(nb_batch_per_epoch):
+                loss, bdice = model._train_v2(sess, lr_schedule.lr)
+                train_losses.append(loss)
+                ex_bdices.append(bdice)
+                lr_schedule.update(batch_no=epoch * nb_batch_per_epoch + batches_no)
+                prog.update(batch_no, values=[('loss', np.mean(losses))], exact=[("lr", lr_schedule.lr)])
             train_bdices.append(np.mean(ex_bdices))
             print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))
 
@@ -116,3 +136,7 @@ def train(model, debug):
              	  	train_ex_paths=train_ex_paths,
              	  	val_ex_paths=val_ex_paths,
              	  	config_file=config.__dict__)
+
+        # stop queue
+        coord.request_stop()
+        coord.join([t])

@@ -18,10 +18,14 @@ def test(model, debug, detailed=False):
         saver.restore(sess, ckpt_path)
 
         print('Test')
-        fdices = []
+        fdices_whole = []
+        fdices_core = []
+        fdices_enhancing = []
         for _, ex_path in enumerate(val_ex_paths):
-            fy, fpred, fprob, fdice = model._segment(ex_path, sess)
-            fdices.append(fdice)
+            fy, fpred, fprob, dice_whole, dice_core, dice_enhancing = model._segment(ex_path, sess)
+            fdices_whole.append(dice_whole)
+            fdices_core.append(dice_core)
+            fdices_enhancing.append(dice_enhancing)
 
             if detailed:
                 fy = np.array(fy)
@@ -43,6 +47,8 @@ def test(model, debug, detailed=False):
                          dice=fdice)
 
         np.savez(res_path,
-                 val_fdices=np.array(fdices),
+                 fdices_whole=np.array(fdices_whole),
+                 fdices_core=np.array(fdices_core),
+                 fdices_enhancing=np.array(fdices_enhancing),
                  val_ex_paths=val_ex_paths,
                  config_file=config.__dict__)

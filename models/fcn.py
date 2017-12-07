@@ -26,6 +26,20 @@ class FCN_Model(Model):
         self.train_ex_paths = get_ex_paths(self.config.train_path)
         self.val_ex_paths = get_ex_paths(self.config.val_path)
 
+    def add_dataset(self):
+        batch_size = self.config.batch_size
+
+        image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch,
+                                                              self.patch, self.nb_classes])
+        label_batch_input = tf.placeholder(tf.int32, shape=[batch_size, self.patch, self.patch, self.patch])
+
+        queue = tf.FIFOQueue(100, [tf.float32, tf.int32],
+                                  shapes=[[batch_size, self.patch, self.patch, self.patch, self.nb_classes],
+                                          [batch_size, self.patch, self.patch, self.patch]])
+
+        self.enqueue_op = queue.enqueue_many([image_batch_input, label_batch_input])
+        self.image_batch, self.label_batch = queue.dequeue_many(batch_size)
+
     def add_placeholders(self):
         self.image_placeholder = tf.placeholder(tf.float32,
                                                 shape=[None, self.patch, self.patch, self.patch, 4])
@@ -40,7 +54,13 @@ class FCN_Model(Model):
 
         with tf.variable_scope('conv1'):
 
-            conv1 = tf.layers.conv3d(inputs=self.image_placeholder, filters=10,
+            # conv1 = tf.layers.conv3d(inputs=self.image_placeholder, filters=10,
+            #                          kernel_size=[5, 5, 5], padding="SAME",
+            #                          use_bias=True, activation=tf.nn.relu,
+            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
+            #                          bias_initializer=tf.constant_initializer(0.0))
+
+            conv1 = tf.layers.conv3d(inputs=self.image_batch, filters=10,
                                      kernel_size=[5, 5, 5], padding="SAME",
                                      use_bias=True, activation=tf.nn.relu,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
@@ -109,7 +129,8 @@ class FCN_Model(Model):
 
     def add_loss_op(self):
         logits = tf.reshape(self.score, [-1, self.nb_classes])
-        labels = tf.reshape(self.label_placeholder, [-1])
+        # labels = tf.reshape(self.label_placeholder, [-1])
+        labels = tf.reshape(self.label_batch, [-1])
         print(logits.shape)
         print(labels.shape)
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits,
@@ -128,8 +149,6 @@ class FCN_Model(Model):
                                      + tf.nn.l2_loss(w4))
 
         self.loss = ce_loss + reg_loss
-
-        # print(self.loss.get_shape())
 
 ######### use dice score as loss function
         # preds = tf.reshape(self.pred, [-1])
@@ -202,6 +221,20 @@ class FCN_Model(Model):
 
         return losses, bdices
 
+    def _train_v2(self, sess, lr, finetune=False):
+        feed = {self.dropout_placeholder: self.config.dropout,
+                self.lr_placeholder: lr,
+                self.is_training: self.config.use_batch_norm}
+
+        if finetune:
+            pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
+        else:
+            pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
+
+        bdice = dice_score(y, pred)
+
+        return bdice, return loss
+
     def _validate(self, ex_path, sess):
         bdices = []
 
@@ -248,6 +281,19 @@ class FCN_Model(Model):
                       j[idx]:j[idx] + self.patch,
                       k[idx]:k[idx] + self.patch, :] = prob[idx, :, :, :, :]
 
-        fdice = dice_score(fy, fpred)
+        # dice score for the Whole Tumor
+        dice_whole = dice_score(fy, fpred)
 
-        return fy, fpred, fprob, fdice
+        if self.nb_classes > 2:
+            # dice score for Tumor Core
+            fpred_core = (fpred == 1) + (fpred == 3)
+            fy_core = (fy == 1) + (fy == 3)
+            dice_core = dice_score(fy_core, fpred_core) 
+
+            # dice score for Enhancing Tumor
+            fpred_enhancing = fpred == 3
+            fy_enhancing = fpred == 3
+            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+            return fy, fpred, fprob, dice_whole, dice_core, dice_enhancing
+
+        return fy, fpred, fprob, dice_whole
