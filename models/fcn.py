@@ -250,6 +250,9 @@ class FCN_Model(Model):
 
         return bdices
 
+    def _validate_v2(self, ex_path, sess):
+        pass
+
     def _segment(self, ex_path, sess):
         fpred = np.zeros(get_shape_v2(ex_path))
         fy = np.zeros(get_shape_v2(ex_path))
