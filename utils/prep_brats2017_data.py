@@ -6,9 +6,9 @@ from random import shuffle
 
 
 if __name__ == '__main__':
-    all_data_path = 'data/brats2017/HGG_and_LGG/LGG'
-    train_path = 'data/brats2017/HGG_and_LGG/train'
-    val_path = 'data/brats2017/HGG_and_LGG/val'
+    all_data_path = 'data/brats2017/HGG'
+    train_path = 'data/brats2017/HGG/train'
+    val_path = 'data/brats2017/HGG/val'
 
     all_files = []
 

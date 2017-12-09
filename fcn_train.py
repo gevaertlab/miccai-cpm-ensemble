@@ -23,6 +23,7 @@ from docopt import docopt
 from models.fcn_concat import FCN_Concat
 
 from train import train
+from train_v2 import train_v2
 from utils.config import Config
 
 if __name__ == '__main__':
@@ -32,4 +33,4 @@ if __name__ == '__main__':
 
     config = Config(cfg_path)
     model = FCN_Concat(config)
-    train(model, debug)
+    train_v2(model, debug)

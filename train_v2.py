@@ -5,16 +5,20 @@ import tensorflow as tf
 
 from utils.general import Progbar
 from utils.lr_schedule import LRSchedule
+from utils.data_iterator import fcn_data_iter_v2
 
-
-def load_and_enqueue(sess, enqueue_op, all_paths, bs, nb, patch_size, coord):
+def load_and_enqueue(sess, model, coord):
+    bs = model.config.batch_size
+    nb = model.config.num_train_batches
+    patch_size = model.patch
+    all_paths = model.train_ex_paths
     while not coord.should_stop():
         for ex_path in all_paths:
             for x, y in fcn_data_iter_v2(ex_path, 'fgbg', bs, nb, patch_size):
-                sess.run(enqueue_op, feed_dict={image_batch_input: x,
-                                                label_batch_input: y})
+                sess.run(model.enqueue_op, feed_dict={model.image_batch_input: x,
+                                                      model.label_batch_input: y})
 
-def train(model, debug):
+def train_v2(model, debug):
 
     config = model.config
 
@@ -35,7 +39,7 @@ def train(model, debug):
     lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                              start_decay=config.start_decay * nb_batch_per_epoch,
                              end_decay=config.end_decay * nb_batch_per_epoch,
-                             lr_warm=config.lr_warm,
+                             lr_warm=config.lr_warm, decay_rate=config.decay_rate,
                              end_warm=config.end_warm * nb_batch_per_epoch)
 
     saver = tf.train.Saver()
@@ -51,9 +55,7 @@ def train(model, debug):
         best_fdice = 0
 
         print('run the queue for preprocessing of training data ...')
-        t = threading.Thread(target=load_and_enqueue, args=(sess, model.enqueue_op,
-                                                            batch_size, num_train_batches,
-                                                            patch_size, coord))
+        t = threading.Thread(target=load_and_enqueue, args=(sess, model, coord))
         t.start()
 
         print('Initialization......')
@@ -96,12 +98,12 @@ def train(model, debug):
                 loss, bdice = model._train_v2(sess, lr_schedule.lr)
                 train_losses.append(loss)
                 ex_bdices.append(bdice)
-                lr_schedule.update(batch_no=epoch * nb_batch_per_epoch + batches_no)
-                prog.update(batch_no, values=[('loss', np.mean(losses))], exact=[("lr", lr_schedule.lr)])
+                lr_schedule.update(batch_no=epoch * nb_batch_per_epoch + batch_no)
+                prog.update(batch_no, values=[('loss', loss)], exact=[("lr", lr_schedule.lr)])
             train_bdices.append(np.mean(ex_bdices))
             print('******************** Epoch %d: Training dice score %5f' %(epoch, np.mean(ex_bdices)))
 
-            if epoch % 3 == 0:
+            if epoch % 2 == 0:
                 print('validate')
                 ex_bdices = []
                 for ex, ex_path in enumerate(val_ex_paths):
@@ -121,6 +123,7 @@ def train(model, debug):
                     # print('******* Epoch %d Example %d: Test accuracy %5f' %(epoch, ex, fdice))
                 val_fdices.append(np.mean(ex_fdices))
                 print('******************** Epoch %d: Test dice score %5f' %(epoch, np.mean(ex_fdices)))
+                lr_schedule.update(score=np.mean(ex_fdices))
 
                 if np.mean(ex_fdices) >= best_fdice:
                     best_fdice = np.mean(ex_fdices)

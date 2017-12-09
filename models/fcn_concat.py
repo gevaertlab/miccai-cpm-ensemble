@@ -9,7 +9,17 @@ class FCN_Concat(FCN_Model):
         # TODO: try activations before batch norm
 
         with tf.variable_scope('conv1'):
-            conv1 = tf.layers.conv3d(inputs=self.image_placeholder,
+           #  conv1 = tf.layers.conv3d(inputs=self.image_placeholder,
+           #                           filters=10,
+           #                           kernel_size=5,
+           #                           strides=(1, 1, 1),
+           #                           padding='SAME',
+           #                           activation=None,
+           #                           use_bias=True,
+           #                           kernel_initializer=tf.contrib.layers.xavier_initializer(),
+           #                           bias_initializer=tf.constant_initializer(0.0))
+            # TODO: uncomment to use queues
+            conv1 = tf.layers.conv3d(inputs=self.image_batch,
                                      filters=10,
                                      kernel_size=5,
                                      strides=(1, 1, 1),
@@ -18,16 +28,6 @@ class FCN_Concat(FCN_Model):
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
-            # TODO: uncomment to use queues
-            # conv1 = tf.layers.conv3d(inputs=self.image_batch,
-            #                          filters=10,
-            #                          kernel_size=5,
-            #                          strides=(1, 1, 1),
-            #                          padding='SAME',
-            #                          activation=None,
-            #                          use_bias=True,
-            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
-            #                          bias_initializer=tf.constant_initializer(0.0))
 
             bn1 = tf.layers.batch_normalization(conv1, axis=-1, training=self.is_training)
             relu1 = tf.nn.relu(bn1)
@@ -143,8 +143,8 @@ class FCN_Concat(FCN_Model):
 
     def add_loss_op(self):
         logits = tf.reshape(self.score, [-1, self.nb_classes])
-        labels = tf.reshape(self.label_placeholder, [-1])
-        # labels = tf.reshape(self.label_batch, [-1])
+        # labels = tf.reshape(self.label_placeholder, [-1])
+        labels = tf.reshape(self.label_batch, [-1])
 
         ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
         

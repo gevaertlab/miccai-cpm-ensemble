@@ -16,6 +16,7 @@ class FCN_Model(Model):
         self.nb_classes = config.nb_classes
 
         self.load_data()
+        self.add_dataset()
         self.add_placeholders()
         self.add_model()
         self.add_pred_op()
@@ -29,14 +30,14 @@ class FCN_Model(Model):
     def add_dataset(self):
         batch_size = self.config.batch_size
 
-        image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch, self.patch, 4])
-        label_batch_input = tf.placeholder(tf.int32, shape=[batch_size, self.patch, self.patch, self.patch])
+        self.image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch, self.patch, 4])
+        self.label_batch_input = tf.placeholder(tf.int32, shape=[batch_size, self.patch, self.patch, self.patch])
 
         queue = tf.FIFOQueue(100, [tf.float32, tf.int32],
-                             shapes=[[batch_size, self.patch, self.patch, self.patch, 4],
-                                     [batch_size, self.patch, self.patch, self.patch]])
+                             shapes=[[self.patch, self.patch, self.patch, 4],
+                                     [self.patch, self.patch, self.patch]])
 
-        self.enqueue_op = queue.enqueue_many([image_batch_input, label_batch_input])
+        self.enqueue_op = queue.enqueue_many([self.image_batch_input, self.label_batch_input])
         self.image_batch, self.label_batch = queue.dequeue_many(batch_size)
 
     def add_placeholders(self):
@@ -222,13 +223,13 @@ class FCN_Model(Model):
                 self.is_training: self.config.use_batch_norm}
 
         if finetune:
-            pred, loss, _ = sess.run([self.pred, self.loss, self.train_last_layers], feed_dict=feed)
+            pred, loss, y, _ = sess.run([self.pred, self.loss, self.label_batch, self.train_last_layers], feed_dict=feed)
         else:
-            pred, loss, _ = sess.run([self.pred, self.loss, self.train], feed_dict=feed)
+            pred, loss, y, _ = sess.run([self.pred, self.loss, self.label_batch, self.train], feed_dict=feed)
 
         bdice = dice_score(y, pred)
 
-        return bdice, return loss
+        return loss, bdice
 
     def _validate(self, ex_path, sess):
         bdices = []
@@ -287,7 +288,7 @@ class FCN_Model(Model):
 
             # dice score for Enhancing Tumor
             fpred_enhancing = fpred == 3
-            fy_enhancing = fpred == 3
+            fy_enhancing = fy == 3
             dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
             return fy, fpred, fprob, dice_whole, dice_core, dice_enhancing
 
