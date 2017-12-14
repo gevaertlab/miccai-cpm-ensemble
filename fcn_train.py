@@ -33,4 +33,4 @@ if __name__ == '__main__':
 
     config = Config(cfg_path)
     model = FCN_Concat(config)
-    train_v2(model, debug)
+    train(model, debug)
