@@ -385,9 +385,42 @@ def fcn_data_iter_v2(ex_path, samp_mode, batch_size, num_batches, patch_size):
         j_rem = j_len % patch_size
         k_rem = k_len % patch_size
 
-        for i in range(i_rem // 2, i_len, patch_size):
-            for j in range(j_rem // 2, j_len, patch_size):
-                for k in range(k_rem // 2, k_len, patch_size):
+        # for i in range(i_rem // 2, i_len, patch_size):
+        #     for j in range(j_rem // 2, j_len, patch_size):
+        #         for k in range(k_rem // 2, k_len, patch_size):
+
+        #             if (i + patch_size) <= i_len and (j + patch_size) <= j_len and (k + patch_size) <= k_len:
+
+        #                 x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+        #                 y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
+
+        #                 i_batch.append(i)
+        #                 j_batch.append(j)
+        #                 k_batch.append(k)
+        #                 x_batch.append(x)
+        #                 y_batch.append(y)
+
+        #                 batch_count += 1
+
+        #                 if batch_count == batch_size:
+        #                     x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch])
+        #                     y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch])
+        #                     yield i_batch, j_batch, k_batch, x_batch, y_batch
+
+        #                     i_batch = []
+        #                     j_batch = []
+        #                     k_batch = []
+        #                     x_batch = []
+        #                     y_batch = []
+
+        #                     batch_count = 0
+
+        #             else:
+        #                 continue
+
+        for i in range(i_rem // 2, i_len, 10):
+            for j in range(j_rem // 2, j_len, 10):
+                for k in range(k_rem // 2, k_len, 10):
 
                     if (i + patch_size) <= i_len and (j + patch_size) <= j_len and (k + patch_size) <= k_len:
 

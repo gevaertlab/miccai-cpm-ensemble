@@ -250,10 +250,51 @@ class FCN_Model(Model):
 
         return bdices
 
-    def _validate_v2(self, ex_path, sess):
-        pass
-
     def _segment(self, ex_path, sess):
+        fpred = np.zeros(get_shape_v2(ex_path))
+        fy = np.zeros(get_shape_v2(ex_path))
+        fprob = np.zeros(get_shape_v2(ex_path) + (self.nb_classes,))
+
+        bs = self.config.batch_size
+
+        for _, (i, j, k, x, y) in enumerate(fcn_data_iter_v2(ex_path, 'full', bs, None, self.patch)):
+
+            feed = {self.image_placeholder: x,
+                    self.label_placeholder: y,
+                    self.dropout_placeholder: 1.0,
+                    self.is_training:False}
+
+            pred, prob = sess.run([self.pred, self.prob], feed_dict=feed)
+
+            for idx, _ in enumerate(i):
+                fy[i[idx]:i[idx] + self.patch,
+                   j[idx]:j[idx] + self.patch,
+                   k[idx]:k[idx] + self.patch] = y[idx, :, :, :]
+                fpred[i[idx]:i[idx] + self.patch,
+                      j[idx]:j[idx] + self.patch,
+                      k[idx]:k[idx] + self.patch] = pred[idx, :, :, :]
+                fprob[i[idx]:i[idx] + self.patch,
+                      j[idx]:j[idx] + self.patch,
+                      k[idx]:k[idx] + self.patch, :] = prob[idx, :, :, :, :]
+
+        # dice score for the Whole Tumor
+        dice_whole = dice_score(fy, fpred)
+
+        if self.nb_classes > 2:
+            # dice score for Tumor Core
+            fpred_core = (fpred == 1) + (fpred == 3)
+            fy_core = (fy == 1) + (fy == 3)
+            dice_core = dice_score(fy_core, fpred_core) 
+
+            # dice score for Enhancing Tumor
+            fpred_enhancing = fpred == 3
+            fy_enhancing = fy == 3
+            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+            return fy, fpred, fprob, dice_whole, dice_core, dice_enhancing
+
+        return fy, fpred, fprob, dice_whole
+
+    def _segment_v2(self, ex_path, sess):
         fpred = np.zeros(get_shape_v2(ex_path))
         fy = np.zeros(get_shape_v2(ex_path))
         fprob = np.zeros(get_shape_v2(ex_path) + (self.nb_classes,))
