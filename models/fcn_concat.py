@@ -3,14 +3,15 @@ import tensorflow as tf
 
 from models.fcn import FCN_Model
 from utils.dataset import get_dataset
+from utils.dice_score import dice_score
 
 
 class FCN_Concat(FCN_Model):
 
-    def add_dataset():
-        train_dataset = get_dataset(self.train_ex_paths, False, self.config.batch_size, self.patch)
-        val_dataset = get_dataset(self.val_ex_paths, False, self.config.batch_size, self.patch)
-        test_dataset = get_dataset(self.val_ex_paths, True, self.config.batch_size, self.patch)
+    def add_dataset(self):
+        train_dataset = get_dataset(self.config.train_path, False, self.config.batch_size, self.patch)
+        val_dataset = get_dataset(self.config.val_path, False, self.config.batch_size, self.patch)
+        test_dataset = get_dataset(self.config.val_path, True, self.config.batch_size, self.patch)
 
         # iterator just needs to know the output types and shapes of the datasets
         iterator = tf.contrib.data.Iterator.from_structure(train_dataset.output_types,
@@ -22,6 +23,7 @@ class FCN_Concat(FCN_Model):
         self.test_init_op = iterator.make_initializer(test_dataset)
 
     def add_model(self):
+        self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
         with tf.variable_scope('conv1'):
             conv1 = tf.layers.conv3d(inputs=self.image,
                                      filters=10,
@@ -259,7 +261,7 @@ class FCN_Concat(FCN_Model):
         return np.mean(bdices)
 
     def run_test(self, sess):
-        # hardcoded for BraTS: they are 5292 patch per volume
+        # hardcoded for BraTS: they are 5292 patches per volume
         nbatches = int(len(self.val_ex_paths) * 5292 / 50) + 1
         sess.run(self.test_init_op)
         current_patient = ""
@@ -277,26 +279,27 @@ class FCN_Concat(FCN_Model):
 
             for idx, _ in enumerate(i):
                 if patients[idx] != current_patient:
-                    # compute dice scores for different classes
-                    # dice score for the Whole Tumor
-                    dice_whole = dice_score(fy, fpred)
-                    all_dices_whole.append(dice_whole)
-                    print('dice score of whole of patient %s is %d'%(current_patient, dice_whole))
+                    if current_patient != "":
+                        # compute dice scores for different classes
+                        # dice score for the Whole Tumor
+                        dice_whole = dice_score(fy, fpred)
+                        all_dices_whole.append(dice_whole)
+                        print('dice score of whole of patient %s is %d'%(current_patient, dice_whole))
 
-                    if self.nb_classes > 2:
-                        # dice score for Tumor Core
-                        fpred_core = (fpred == 1) + (fpred == 3)
-                        fy_core = (fy == 1) + (fy == 3)
-                        dice_core = dice_score(fy_core, fpred_core)
-                        all_dices_core.append(dice_core)
-                        print('dice score of core of patient %s is %d'%(current_patient, dice_core))
+                        if self.nb_classes > 2:
+                            # dice score for Tumor Core
+                            fpred_core = (fpred == 1) + (fpred == 3)
+                            fy_core = (fy == 1) + (fy == 3)
+                            dice_core = dice_score(fy_core, fpred_core)
+                            all_dices_core.append(dice_core)
+                            print('dice score of core of patient %s is %d'%(current_patient, dice_core))
 
-                        # dice score for Enhancing Tumor
-                        fpred_enhancing = fpred == 3
-                        fy_enhancing = fy == 3
-                        dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-                        all_dices_enhancing.append(dice_enhancing)
-                        print('dice score of enhancing of patient %s is %d'%(current_patient, dice_enhancing))
+                            # dice score for Enhancing Tumor
+                            fpred_enhancing = fpred == 3
+                            fy_enhancing = fy == 3
+                            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+                            all_dices_enhancing.append(dice_enhancing)
+                            print('dice score of enhancing of patient %s is %d'%(current_patient, dice_enhancing))
 
                     #hardcoded for BraTS
                     fpred = np.zeros((155, 240, 240))
