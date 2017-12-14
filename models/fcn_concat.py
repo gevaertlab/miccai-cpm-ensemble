@@ -24,10 +24,13 @@ class FCN_Concat(FCN_Model):
 
     def add_model(self):
         self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
+        nb_filters = self.config.nb_filters
+        k_size = self.config.kernel_size
+
         with tf.variable_scope('conv1'):
             conv1 = tf.layers.conv3d(inputs=self.image,
-                                     filters=10,
-                                     kernel_size=5,
+                                     filters=nb_filters,
+                                     kernel_size=k_size,
                                      strides=(1, 1, 1),
                                      padding='SAME',
                                      activation=None,
@@ -37,7 +40,7 @@ class FCN_Concat(FCN_Model):
             # TODO: uncomment to use queues
             # conv1 = tf.layers.conv3d(inputs=self.image_batch,
             #                          filters=10,
-            #                          kernel_size=5,
+            #                          kernel_size=k_size,
             #                          strides=(1, 1, 1),
             #                          padding='SAME',
             #                          activation=None,
@@ -58,8 +61,8 @@ class FCN_Concat(FCN_Model):
 
         with tf.variable_scope('conv2'):
             conv2 = tf.layers.conv3d(inputs=pool1,
-                                     filters=20,
-                                     kernel_size=5,
+                                     filters=2 * nb_filters,
+                                     kernel_size=k_size,
                                      strides=(1, 1, 1),
                                      padding='SAME',
                                      activation=None,
@@ -78,8 +81,8 @@ class FCN_Concat(FCN_Model):
 
         with tf.variable_scope('conv3'):
             conv3 = tf.layers.conv3d(inputs=pool2,
-                                     filters=40,
-                                     kernel_size=5,
+                                     filters=4 * nb_filters,
+                                     kernel_size=k_size,
                                      strides=(1, 1, 1),
                                      padding='SAME',
                                      activation=None,
@@ -99,8 +102,8 @@ class FCN_Concat(FCN_Model):
 
         with tf.variable_scope('deconv4'):
             deconv4 = tf.layers.conv3d_transpose(inputs=drop3,
-                                                 filters=20,
-                                                 kernel_size=5,
+                                                 filters=2 * nb_filters,
+                                                 kernel_size=k_size,
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
@@ -120,8 +123,8 @@ class FCN_Concat(FCN_Model):
 
         with tf.variable_scope('deconv5'):
             deconv5 = tf.layers.conv3d_transpose(inputs=drop4,
-                                                 filters=10,
-                                                 kernel_size=5,
+                                                 filters=nb_filters,
+                                                 kernel_size=k_size,
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
@@ -144,7 +147,7 @@ class FCN_Concat(FCN_Model):
         with tf.variable_scope('deconv6'):
             deconv6 = tf.layers.conv3d_transpose(inputs=drop5,
                                                  filters=self.nb_classes,
-                                                 kernel_size=5,
+                                                 kernel_size=k_size,
                                                  strides=(2, 2, 2),
                                                  padding='SAME',
                                                  activation=None,
@@ -352,7 +355,7 @@ class FCN_Concat(FCN_Model):
                         # dice score for the Whole Tumor
                         dice_whole = dice_score(fy, fpred)
                         all_dices_whole.append(dice_whole)
-                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+                        print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
 
                         if self.nb_classes > 2:
                             # dice score for Tumor Core
@@ -392,7 +395,7 @@ class FCN_Concat(FCN_Model):
 
         for epoch in range(self.config.nb_epochs):
             _, train_dice = self.run_epoch(sess, lr_schedule)
-            if epoch % 2 == 0:
+            if epoch % 3 == 0:
                 val_dice = self.run_evaluate(self, sess)
                 test_dice = self.run_test(self.sess)
                 lr_schedule.update(batch_no=epoch * nbatches, score=test_dice)

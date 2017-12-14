@@ -60,15 +60,15 @@ def train_data_iter(patient_path, batch_size, patch_size):
             i = bg[0][idx]
             j = bg[1][idx]
             k = bg[2][idx]
-            x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
-            y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
+            x = data[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch, :]
+            y = labels[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch]
         else:
             idx = np.random.randint(num_fg)
             i = fg[0][idx]
             j = fg[1][idx]
             k = fg[2][idx]
-            x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
-            y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
+            x = data[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch, :]
+            y = labels[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch]
 
         i_batch.append(i)
         j_batch.append(j)
@@ -218,8 +218,8 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         dataset = tf.contrib.data.Dataset.from_generator(generator=gen,
                                                          output_types=(tf.string, tf.int32, tf.int32,\
                                                                        tf.int32, tf.float32, tf.int32))
-        # dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter_v2,
-        #                                                        [x, patch_size, 10],
+        # dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter,
+        #                                                        [x, patch_size],
         #                                                        [tf.string, tf.int32, tf.int32,\
         #                                                         tf.int32, tf.float32, tf.int32])),
         #                       num_threads=num_workers,

@@ -11,7 +11,10 @@ class Config:
         
         self.train_path = param_dict.get('train_path')
         self.val_path = param_dict.get('val_path')
+
+        self.kernel_size = int(param_dict.get('kernel_size', 5))
         self.nb_classes = int(param_dict.get('nb_classes', 2))
+        self.nb_filters = int(param_dict.get('nb_filters', 10))
 
         # learning rate schedule parameters
         self.lr_init = float(param_dict.get('lr_init', 1e-4))
