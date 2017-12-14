@@ -6,6 +6,7 @@ import tensorflow as tf
 from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels 
+from utils.data_utils import get_patch_centers_fcn 
 
 
 def load_data_brats(patient_path):
@@ -87,7 +88,7 @@ def train_data_iter(patient_path, batch_size, patch_size):
     return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def test_data_iter(patient_path, data_path, patch_size):
+def test_data_iter(patient_path, patch_size):
     data, labels = load_data_brats(patient_path)
 
     i_batch = []
@@ -127,6 +128,45 @@ def test_data_iter(patient_path, data_path, patch_size):
     return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
+def test_data_iter_v2(patient_path, patch_size, center_size):
+    data, labels = load_data_brats(patient_path)
+    i_len, j_len, k_len = labels.shape
+
+    half_patch = patch_size // 2
+    half_center = center_size // 2
+    i_batch = []
+    j_batch = []
+    k_batch = []
+    x_batch = []
+    y_batch = []
+
+    for i in get_patch_centers_fcn(i_len, patch_size, center_size):
+        for j in get_patch_centers_fcn(j_len, patch_size, center_size):
+            for k in get_patch_centers_fcn(k_len, patch_size, center_size):
+
+                x = data[i - half_patch:i + half_patch,\
+                         j - half_patch:j + half_patch,\
+                         k - half_patch:k + half_patch, :]
+                y = labels[i - half_center:i + half_center,\
+                           j - half_center:j + half_center,\
+                           k - half_center:k + half_center]
+
+                i_batch.append(i)
+                j_batch.append(j)
+                k_batch.append(k)
+                x_batch.append(x)
+                y_batch.append(y)
+
+    path_batch = np.array([patient_path] * len(i_batch))
+    i_batch = np.array(i_batch).astype(np.int32)
+    j_batch = np.array(j_batch).astype(np.int32)
+    k_batch = np.array(k_batch).astype(np.int32)
+    x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+    y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
+    
+    return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+
+
 def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
@@ -145,8 +185,8 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         dataset = dataset.unbatch()
         dataset = dataset.shuffle(buffer_size=5000)
     else:
-        dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter,
-                                                               [x, batch_size, patch_size],
+        dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter_v2,
+                                                               [x, patch_size],
                                                                [tf.string, tf.int32, tf.int32,\
                                                                 tf.int32, tf.float32, tf.int32])),
                               num_threads=num_workers,

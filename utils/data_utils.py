@@ -57,6 +57,20 @@ def get_patch_centers(im_size):
     return range(start, end, 9)
 
 
+# hardcoded for BraTS
+def get_patch_centers_fcn(im_size, patch_size, center):
+    half = patch_size // 2
+    im_to_patch = im_size - 2 * half
+    im_rem = im_to_patch % center
+    if im_rem == 0:
+        start = half
+        end = start + im_to_patch + center
+    else:
+        start = half + im_rem // 2
+        end = half + im_to_patch
+    return range(start, end, center)
+
+
 def normalize_image(image):
     brain = np.where(image != 0)
     mu = np.mean(image[brain])

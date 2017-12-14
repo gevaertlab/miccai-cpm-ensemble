@@ -261,8 +261,8 @@ class FCN_Concat(FCN_Model):
         return np.mean(bdices)
 
     def run_test(self, sess):
-        # hardcoded for BraTS: they are 5292 patches per volume
-        nbatches = int(len(self.val_ex_paths) * 5292 / 50) + 1
+        # hardcoded for BraTS: they are 196 patches per volume
+        # nbatches = int(len(self.val_ex_paths) * 196 / 50) + 1
         sess.run(self.test_init_op)
         current_patient = ""
 
@@ -270,12 +270,16 @@ class FCN_Concat(FCN_Model):
         all_dices_core = []
         all_dices_enhancing = []
 
-        for _ in range(nbatches):
-            feed = {self.dropout_placeholder: 1.0,
-                    self.is_training:False}
-            patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
-                                                        self.k, self.label, self.pred, self.prob],
-                                                        feed_dict=feed)
+        # for _ in range(nbatches):
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1.0,
+                        self.is_training:False}
+                patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
+                                                            self.k, self.label, self.pred, self.prob],
+                                                            feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
 
             for idx, _ in enumerate(i):
                 if patients[idx] != current_patient:
@@ -284,7 +288,7 @@ class FCN_Concat(FCN_Model):
                         # dice score for the Whole Tumor
                         dice_whole = dice_score(fy, fpred)
                         all_dices_whole.append(dice_whole)
-                        print('dice score of whole of patient %s is %d'%(current_patient, dice_whole))
+                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
 
                         if self.nb_classes > 2:
                             # dice score for Tumor Core
@@ -292,19 +296,19 @@ class FCN_Concat(FCN_Model):
                             fy_core = (fy == 1) + (fy == 3)
                             dice_core = dice_score(fy_core, fpred_core)
                             all_dices_core.append(dice_core)
-                            print('dice score of core of patient %s is %d'%(current_patient, dice_core))
+                            # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
 
                             # dice score for Enhancing Tumor
                             fpred_enhancing = fpred == 3
                             fy_enhancing = fy == 3
                             dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
                             all_dices_enhancing.append(dice_enhancing)
-                            print('dice score of enhancing of patient %s is %d'%(current_patient, dice_enhancing))
+                            # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
                     #hardcoded for BraTS
                     fpred = np.zeros((155, 240, 240))
                     fy = np.zeros((155, 240, 240))
-                    fprob = np.zeros((155, 240, 240, 2))
+                    fprob = np.zeros((155, 240, 240, 4))
                     current_patient = patients[idx]
 
                 fy[i[idx]:i[idx] + self.patch,
@@ -317,7 +321,71 @@ class FCN_Concat(FCN_Model):
                       j[idx]:j[idx] + self.patch,
                       k[idx]:k[idx] + self.patch, :] = prob[idx, :, :, :, :]
 
-        return all_dices_whole
+        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
+
+    def run_test_v2(self, sess):
+        sess.run(self.test_init_op)
+        current_patient = ""
+
+        all_dices_whole = []
+        all_dices_core = []
+        all_dices_enhancing = []
+
+        center = 10
+        half_center = 5
+
+        # for _ in range(nbatches):
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1.0,
+                        self.is_training:False}
+                patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
+                                                            self.k, self.label, self.pred, self.prob],
+                                                            feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
+
+            for idx, _ in enumerate(i):
+                if patients[idx] != current_patient:
+                    if current_patient != "":
+                        # compute dice scores for different classes
+                        # dice score for the Whole Tumor
+                        dice_whole = dice_score(fy, fpred)
+                        all_dices_whole.append(dice_whole)
+                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+
+                        if self.nb_classes > 2:
+                            # dice score for Tumor Core
+                            fpred_core = (fpred == 1) + (fpred == 3)
+                            fy_core = (fy == 1) + (fy == 3)
+                            dice_core = dice_score(fy_core, fpred_core)
+                            all_dices_core.append(dice_core)
+                            # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
+
+                            # dice score for Enhancing Tumor
+                            fpred_enhancing = fpred == 3
+                            fy_enhancing = fy == 3
+                            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+                            all_dices_enhancing.append(dice_enhancing)
+                            # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
+
+                    #hardcoded for BraTS
+                    fpred = np.zeros((155, 240, 240))
+                    fy = np.zeros((155, 240, 240))
+                    fprob = np.zeros((155, 240, 240, 4))
+                    current_patient = patients[idx]
+
+                fy[i[idx] - half_center :i[idx] + half_center,
+                   j[idx] - half_center:j[idx] + half_center,
+                   k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
+                fpred[i[idx] - half_center:i[idx] + half_center,
+                      j[idx] - half_center:j[idx] + half_center,
+                      k[idx] - half_center:k[idx] + half_center] = pred[idx, 12:22, 12:22, 12:22]
+                fprob[i[idx] - half_center:i[idx] + half_center,
+                      j[idx] - half_center:j[idx] + half_center,
+                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, 12:22, 12:22, 12:22, :]
+
+        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
 
     def train(self, sess, lr_schedule):
         nbatches = self.config.batch_size * self.config.num_train_batches
@@ -326,7 +394,9 @@ class FCN_Concat(FCN_Model):
             _, train_dice = self.run_epoch(sess, lr_schedule)
             if epoch % 2 == 0:
                 val_dice = self.run_evaluate(self, sess)
-                # TODO: compute test_dice score and update score of lr_schedule with test_dice
-                lr_schedule.update(batch_no=epoch * nbatches, score=val_dice)
+                test_dice = self.run_test(self.sess)
+                lr_schedule.update(batch_no=epoch * nbatches, score=test_dice)
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
+
+        return test_dice
