@@ -128,9 +128,8 @@ def test_data_iter(patient_path, patch_size):
     return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def test_data_iter_v2(patient_path, patch_size, center_size):
-    data, labels = load_data_brats(patient_path)
-    i_len, j_len, k_len = labels.shape
+def test_data_iter_v2(all_patients, patch_size, center_size, batch_size):
+    batch_count = 0
 
     half_patch = patch_size // 2
     half_center = center_size // 2
@@ -139,43 +138,71 @@ def test_data_iter_v2(patient_path, patch_size, center_size):
     k_batch = []
     x_batch = []
     y_batch = []
+    path_batch = []
 
-    for i in get_patch_centers_fcn(i_len, patch_size, center_size):
-        for j in get_patch_centers_fcn(j_len, patch_size, center_size):
-            for k in get_patch_centers_fcn(k_len, patch_size, center_size):
+    for patient_path in all_patients:
 
-                x = data[i - half_patch:i + half_patch,\
-                         j - half_patch:j + half_patch,\
-                         k - half_patch:k + half_patch, :]
-                y = labels[i - half_center:i + half_center,\
-                           j - half_center:j + half_center,\
-                           k - half_center:k + half_center]
+        data, labels = load_data_brats(patient_path)
+        i_len, j_len, k_len = labels.shape
 
-                i_batch.append(i)
-                j_batch.append(j)
-                k_batch.append(k)
-                x_batch.append(x)
-                y_batch.append(y)
+        for i in get_patch_centers_fcn(i_len, patch_size, center_size):
+            for j in get_patch_centers_fcn(j_len, patch_size, center_size):
+                for k in get_patch_centers_fcn(k_len, patch_size, center_size):
 
-    path_batch = np.array([patient_path] * len(i_batch))
-    i_batch = np.array(i_batch).astype(np.int32)
-    j_batch = np.array(j_batch).astype(np.int32)
-    k_batch = np.array(k_batch).astype(np.int32)
-    x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
-    y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
-    
-    return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+                    x = data[i - half_patch:i + half_patch,\
+                             j - half_patch:j + half_patch,\
+                             k - half_patch:k + half_patch, :]
+                    y = labels[i - half_center:i + half_center,\
+                               j - half_center:j + half_center,\
+                               k - half_center:k + half_center]
+
+                    i_batch.append(i)
+                    j_batch.append(j)
+                    k_batch.append(k)
+                    x_batch.append(x)
+                    y_batch.append(y)
+                    path_batch.append(patient_path)
+
+                    batch_count += 1
+                    if batch_count == batch_size:
+                        path_batch = np.array(path_batch)
+                        i_batch = np.array(i_batch).astype(np.int32)
+                        j_batch = np.array(j_batch).astype(np.int32)
+                        k_batch = np.array(k_batch).astype(np.int32)
+                        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+                        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
+                        
+                        yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+
+                        i_batch = []
+                        j_batch = []
+                        k_batch = []
+                        x_batch = []
+                        y_batch = []
+                        path_batch = []
+
+                        batch_count = 0
+
+    if batch_count != 0:  
+        path_batch = np.array(path_batch)
+        i_batch = np.array(i_batch).astype(np.int32)
+        j_batch = np.array(j_batch).astype(np.int32)
+        k_batch = np.array(k_batch).astype(np.int32)
+        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
+        
+        yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
 def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
-    patient = [pat.encode('utf-8') for pat in patients]
-    patients = tf.constant(patients)
-    dataset = tf.contrib.data.Dataset.from_tensor_slices((patients, patients, patients, patients, patients, patients))
+    patients = [pat.encode('utf-8') for pat in patients]
 
     if not is_test:
+        patients = tf.constant(patients)
+        dataset = tf.contrib.data.Dataset.from_tensor_slices((patients, patients, patients, patients, patients, patients))
         dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(train_data_iter,
                                                                [x, batch_size, patch_size],
                                                                [tf.string, tf.int32, tf.int32,\
@@ -185,12 +212,18 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         dataset = dataset.unbatch()
         dataset = dataset.shuffle(buffer_size=5000)
     else:
-        dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter_v2,
-                                                               [x, patch_size],
-                                                               [tf.string, tf.int32, tf.int32,\
-                                                                tf.int32, tf.float32, tf.int32])),
-                              num_threads=num_workers,
-                              output_buffer_size=batch_size)
+        def gen():
+            return test_data_iter_v2(patients, patch_size, 10, batch_size)
+
+        dataset = tf.contrib.data.Dataset.from_generator(generator=gen,
+                                                         output_types=(tf.string, tf.int32, tf.int32,\
+                                                                       tf.int32, tf.float32, tf.int32))
+        # dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter_v2,
+        #                                                        [x, patch_size, 10],
+        #                                                        [tf.string, tf.int32, tf.int32,\
+        #                                                         tf.int32, tf.float32, tf.int32])),
+        #                       num_threads=num_workers,
+        #                       output_buffer_size=batch_size)
         dataset = dataset.unbatch()
     batched_dataset = dataset.batch(batch_size)
 
