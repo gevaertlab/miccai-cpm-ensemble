@@ -425,22 +425,19 @@ class FCN_Concat(FCN_Model):
 
         # dice score for the Whole Tumor
         dice_whole = dice_score(fy, fpred)
-        all_dices_whole.append(dice_whole)
-        print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+        print('dice score of whole of patient %s is %f'%(patient, dice_whole))
 
         # dice score for Tumor Core
         fpred_core = (fpred == 1) + (fpred == 3)
         fy_core = (fy == 1) + (fy == 3)
         dice_core = dice_score(fy_core, fpred_core)
-        all_dices_core.append(dice_core)
-        print('dice score of core of patient %s is %f'%(current_patient, dice_core))
+        print('dice score of core of patient %s is %f'%(patient, dice_core))
 
         # dice score for Enhancing Tumor
         fpred_enhancing = fpred == 3
         fy_enhancing = fy == 3
         dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-        all_dices_enhancing.append(dice_enhancing)
-        print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
+        print('dice score of enhancing of patient %s is %f'%(patient, dice_enhancing))
 
         return fpred
 

@@ -224,7 +224,7 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         #                                                         tf.int32, tf.float32, tf.int32])),
         #                       num_threads=num_workers,
         #                       output_buffer_size=batch_size)
-        dataset = dataset.unbatch()
+        dataset = dataset.apply(tf.contrib.data.unbatch())
     batched_dataset = dataset.batch(batch_size)
 
     return batched_dataset
@@ -236,6 +236,6 @@ def get_dataset_single_patient(patient, batch_size, patch_size):
     dataset = tf.data.Dataset.from_generator(generator=gen,
                                              output_types=(tf.string, tf.int32, tf.int32,\
                                                            tf.int32, tf.float32, tf.int32))
-    dataset = dataset.unbatch()
+    dataset = dataset.apply(tf.contrib.data.unbatch())
     dataset = dataset.batch(batch_size)
     return dataset

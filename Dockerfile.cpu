@@ -68,8 +68,8 @@ RUN pip --no-cache-dir install \
 EXPOSE 6006 8888
 
 # Copy code of model
-RUN mkdir /gevaert_model
-COPY . /gevaert_model 
+RUN mkdir /gevaertlab
+COPY . /gevaertlab 
 
 WORKDIR "/root"
 CMD ["/bin/bash"]
