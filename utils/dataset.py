@@ -215,7 +215,7 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         def gen():
             return test_data_iter_v2(patients, patch_size, 10, batch_size)
 
-        dataset = tf.contrib.data.Dataset.from_generator(generator=gen,
+        dataset = tf.data.Dataset.from_generator(generator=gen,
                                                          output_types=(tf.string, tf.int32, tf.int32,\
                                                                        tf.int32, tf.float32, tf.int32))
         # dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(test_data_iter,
@@ -228,3 +228,14 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
     batched_dataset = dataset.batch(batch_size)
 
     return batched_dataset
+
+
+def get_dataset_single_patient(patient, batch_size, patch_size):
+    def gen():
+            return test_data_iter_v2([patient], patch_size, 10, batch_size)
+    dataset = tf.data.Dataset.from_generator(generator=gen,
+                                             output_types=(tf.string, tf.int32, tf.int32,\
+                                                           tf.int32, tf.float32, tf.int32))
+    dataset = dataset.unbatch()
+    dataset = dataset.batch(batch_size)
+    return dataset

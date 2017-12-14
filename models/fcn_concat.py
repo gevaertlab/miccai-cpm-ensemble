@@ -3,6 +3,7 @@ import tensorflow as tf
 
 from models.fcn import FCN_Model
 from utils.dataset import get_dataset
+from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
 
 
@@ -14,13 +15,13 @@ class FCN_Concat(FCN_Model):
         test_dataset = get_dataset(self.config.val_path, True, self.config.batch_size, self.patch)
 
         # iterator just needs to know the output types and shapes of the datasets
-        iterator = tf.contrib.data.Iterator.from_structure(train_dataset.output_types,
+        self.iterator = tf.contrib.data.Iterator.from_structure(train_dataset.output_types,
                                                            train_dataset.output_shapes)
-        self.pat_path, self.i, self.j, self.k, self.image, self.label = iterator.get_next()
+        self.pat_path, self.i, self.j, self.k, self.image, self.label = self.iterator.get_next()
 
-        self.train_init_op = iterator.make_initializer(train_dataset)
-        self.val_init_op = iterator.make_initializer(val_dataset)
-        self.test_init_op = iterator.make_initializer(test_dataset)
+        self.train_init_op = self.iterator.make_initializer(train_dataset)
+        self.val_init_op = self.iterator.make_initializer(val_dataset)
+        self.test_init_op = self.iterator.make_initializer(test_dataset)
 
     def add_model(self):
         self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
@@ -389,6 +390,59 @@ class FCN_Concat(FCN_Model):
                       k[idx] - half_center:k[idx] + half_center, :] = prob[idx, 12:22, 12:22, 12:22, :]
 
         return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
+
+    def run_test_single_example(self, sess, patient):
+        dataset = get_dataset_single_patient(patient, self.config.batch_size, self.patch)
+        init_op = self.iterator.make_initializer(dataset)
+        sess.run(init_op)
+
+
+        #hardcoded for BraTS
+        half_center = 5
+        fpred = np.zeros((155, 240, 240))
+        fy = np.zeros((155, 240, 240))
+        fprob = np.zeros((155, 240, 240, 4))
+
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1.0,
+                        self.is_training:False}
+                i, j, k, y, pred, prob = sess.run([self.i, self.j, self.k, self.label, self.pred, self.prob],
+                                                  feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
+
+            for idx, _ in enumerate(i):
+                fy[i[idx] - half_center :i[idx] + half_center,
+                   j[idx] - half_center:j[idx] + half_center,
+                   k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
+                fpred[i[idx] - half_center:i[idx] + half_center,
+                      j[idx] - half_center:j[idx] + half_center,
+                      k[idx] - half_center:k[idx] + half_center] = pred[idx, 12:22, 12:22, 12:22]
+                fprob[i[idx] - half_center:i[idx] + half_center,
+                      j[idx] - half_center:j[idx] + half_center,
+                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, 12:22, 12:22, 12:22, :]
+
+        # dice score for the Whole Tumor
+        dice_whole = dice_score(fy, fpred)
+        all_dices_whole.append(dice_whole)
+        print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+
+        # dice score for Tumor Core
+        fpred_core = (fpred == 1) + (fpred == 3)
+        fy_core = (fy == 1) + (fy == 3)
+        dice_core = dice_score(fy_core, fpred_core)
+        all_dices_core.append(dice_core)
+        print('dice score of core of patient %s is %f'%(current_patient, dice_core))
+
+        # dice score for Enhancing Tumor
+        fpred_enhancing = fpred == 3
+        fy_enhancing = fy == 3
+        dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+        all_dices_enhancing.append(dice_enhancing)
+        print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
+
+        return fpred
 
     def train(self, sess, lr_schedule):
         nbatches = self.config.batch_size * self.config.num_train_batches
