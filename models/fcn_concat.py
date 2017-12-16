@@ -5,6 +5,7 @@ from models.fcn import FCN_Model
 from utils.dataset import get_dataset
 from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
+from utils.lr_schedule import LRSchedule
 
 
 class FCN_Concat(FCN_Model):
@@ -221,9 +222,8 @@ class FCN_Concat(FCN_Model):
         losses = []
         bdices = []
 
-        bs = self.config.batch_size
         nb = self.config.num_train_batches
-        nbatches = nb * bs
+        nbatches = nb * len(self.train_ex_paths)
 
         prog = Progbar(target=nbatches)
 
@@ -248,9 +248,8 @@ class FCN_Concat(FCN_Model):
         return losses, np.mean(bdices)
     
     def run_evaluate(self, sess):
-        bs = self.config.batch_size
         nb = self.config.num_val_batches
-        nbatches = nb * bs
+        nbatches = nb * self.val_ex_paths
 
         bdices = []
 
@@ -359,7 +358,7 @@ class FCN_Concat(FCN_Model):
                         # dice score for the Whole Tumor
                         dice_whole = dice_score(fy, fpred)
                         all_dices_whole.append(dice_whole)
-                        print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
 
                         if self.nb_classes > 2:
                             # dice score for Tumor Core
@@ -444,16 +443,61 @@ class FCN_Concat(FCN_Model):
 
         return fpred
 
-    def train(self, sess, lr_schedule):
-        nbatches = self.config.batch_size * self.config.num_train_batches
+    def train(self, sess):
+        config = self.config
 
-        for epoch in range(self.config.nb_epochs):
-            _, train_dice = self.run_epoch(sess, lr_schedule)
+        nbatches = config.batch_size * config.num_train_batches
+        ckpt_path = config.ckpt_path
+        res_path = config.res_path
+
+        lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
+                                 start_decay=config.start_decay * len(self.train_ex_paths),
+                                 end_decay=config.end_decay * len(self.train_ex_paths),
+                                 lr_warm=config.lr_warm,
+                                 end_warm=config.end_warm * len(self.train_ex_paths))
+
+        saver = tf.train.Saver()
+
+        train_losses = []
+        train_bdices = []
+        val_bdices = []
+        test_whole_dices = []
+        test_core_dices = []
+        test_enhancing_dices = []
+        best_fdice = 0
+
+        for epoch in range(1, self.config.nb_epochs + 1):
+            losses, train_dice = self.run_epoch(sess, lr_schedule)
+            train_losses.extend(losses)
+            train_bdices.append(train_bdices)
+
             if epoch % 3 == 0:
                 val_dice = self.run_evaluate(self, sess)
-                test_dice = self.run_test(self.sess)
-                lr_schedule.update(batch_no=epoch * nbatches, score=test_dice)
+                test_whole, test_core, test_enhancing = self.run_test_v2(self.sess)
+                # logging
+                val_bdices.append(val_dice)
+                test_whole_dices.append(test_whole)
+                test_core_dices.append(test_core)
+                test_enhancing_dices.append(test_enhancing)
+                lr_schedule.update(batch_no=epoch * nbatches, score=test_whole)
+
+                if test_whole >= best_fdice:
+                    best_fdice = test_whole
+                    saver.save(sess, ckpt_path)
+                    print('Saving checkpoint to %s ......' %(ckpt_path))
+
+                np.savez(res_path,
+                         train_losses=train_losses,
+                         train_bdices=train_bdices,
+                         val_bdices=val_bdices,
+                         test_whole_dices=test_whole_dices,
+                         test_core_dices=test_core_dices,
+                         test_enhancing_dices=test_enhancing_dices,
+                         train_ex_paths=self.train_ex_paths,
+                         val_ex_paths=self.val_ex_paths,
+                         config_file=config.__dict__)
+
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
 
-        return test_dice
+        return test_whole
