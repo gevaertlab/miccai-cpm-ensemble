@@ -6,6 +6,7 @@ from utils.dataset import get_dataset
 from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
 from utils.lr_schedule import LRSchedule
+from utils.general import Progbar
 
 
 class FCN_Concat(FCN_Model):
@@ -121,6 +122,8 @@ class FCN_Concat(FCN_Model):
             deconv4 = deconv4 + bias
             # shape = (patch/4, patch/4, patch/4)
             bn4 = tf.layers.batch_normalization(deconv4, axis=-1, training=self.is_training)
+            print('Shape of bn4 is:', bn4.get_shape())
+            print('shape of pool2 is:', pool2.get_shape())
             bn4 = tf.concat([bn4, pool2], axis=-1)
             relu4 = tf.nn.relu(bn4)
 
@@ -141,6 +144,9 @@ class FCN_Concat(FCN_Model):
             deconv5 = deconv5 + bias
             # shape = (patch/2, patch/2, patch/2)
             bn5 = tf.layers.batch_normalization(deconv5, axis=-1, training=self.is_training)
+            print('Shape of bn5 is:', bn5.get_shape())
+            print('shape of pool1 is:', pool1.get_shape())
+            
             bn5 = tf.concat([bn5, pool1], axis=-1)
             relu5 = tf.nn.relu(bn5)
 
@@ -226,9 +232,8 @@ class FCN_Concat(FCN_Model):
         nbatches = nb * len(self.train_ex_paths)
 
         prog = Progbar(target=nbatches)
-
-        sess.run(self.train_init_op)
-
+        sess.run(self.train_init_op) 
+        
         for batch in range(nbatches):
             feed = {self.dropout_placeholder: self.config.dropout,
                     self.lr_placeholder: lr_schedule.lr,
@@ -237,13 +242,13 @@ class FCN_Concat(FCN_Model):
                 pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train_last_layers], feed_dict=feed)
             else:
                 pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train], feed_dict=feed)
-
+                print('after pred and train')
             losses.append(loss)
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
             # logging
-            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr)])
+            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr, ('score', lr_schedule.score))])
 
         return losses, np.mean(bdices)
     
@@ -443,7 +448,7 @@ class FCN_Concat(FCN_Model):
 
         return fpred
 
-    def train(self, sess):
+    def full_train(self, sess):
         config = self.config
 
         nbatches = config.batch_size * config.num_train_batches
@@ -466,7 +471,9 @@ class FCN_Concat(FCN_Model):
         test_enhancing_dices = []
         best_fdice = 0
 
-        for epoch in range(1, self.config.nb_epochs + 1):
+        print('Start training ....')
+        for epoch in range(1, config.num_epochs + 1):
+            print('Epoch %d ...'%epoch)
             losses, train_dice = self.run_epoch(sess, lr_schedule)
             train_losses.extend(losses)
             train_bdices.append(train_bdices)

@@ -29,8 +29,11 @@ def load_data_brats(patient_path):
             data[3] = normalize_image(image)
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
-
-    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+    try:
+        data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+    except:
+        print('data cannot be concat for patient:', patient_path)
+        assert(False)
     return data, labels
 
 
@@ -98,14 +101,15 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
 
     bg = np.where((trimmed_labels == 0) & (trimmed_data[..., 0] != 0))
     enhanced = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
-    necrotic = np.where((trimmed_labels == 4) & (trimmed_data[..., 0] != 0))
+    necrotic = np.where((trimmed_labels == 3) & (trimmed_data[..., 0] != 0))
     edema = np.where((trimmed_labels == 2) & (trimmed_data[..., 0] != 0))
+    fg = np.where((trimmed_labels > 0) & (trimmed_data[..., 0] != 0))
 
     num_bg = len(bg[0])
     num_enhanced = len(enhanced[0])
     num_necrotic = len(necrotic[0])
     num_edema = len(edema[0])
-
+    num_fg = len(fg[0])
     i_batch = []
     j_batch = []
     k_batch = []
@@ -119,35 +123,34 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
         - 10% necoritc
         - 20% edema
     """
-    non_tumorous = 0.5
-    enhanced = 0.7
-    necrotic = 0.8
-    edema = 1.0
+    ratio_non_tumorous = 0.5
+    ratio_enhanced = 0.7
+    ratio_necrotic = 0.8
+    ratio_edema = 1.0
     for _ in range(batch_size):
         epsilon = np.random.rand()
-        if epsilon <= non_tumorous:
+        if epsilon <= ratio_non_tumorous:
             idx = np.random.randint(num_bg)
             i = bg[0][idx]
             j = bg[1][idx]
             k = bg[2][idx]
-        elif epsilon <= enhanced:
+        elif epsilon <= ratio_enhanced:
             idx = np.random.randint(num_enhanced)
             i = enhanced[0][idx]
             j = enhanced[1][idx]
             k = enhanced[2][idx]
-        elif epsilon <= necrotic:
+        elif epsilon <= ratio_necrotic and num_necrotic > 0:
             idx = np.random.randint(num_necrotic)
             i = necrotic[0][idx]
             j = necrotic[1][idx]
             k = necrotic[2][idx]
         else:
-            idx = np.random.randint(num edema)
+            idx = np.random.randint(num_edema)
             i = edema[0][idx]
             j = edema[1][idx]
             k = edema[2][idx]
-        x = data[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch, :]
-        y = labels[i - half_patch:i + half_patch, j - half_patch:j + half_patch, k - half_patch:k + half_patch]
-
+        x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+        y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
         i_batch.append(i)
         j_batch.append(j)
         k_batch.append(k)
@@ -160,7 +163,7 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
     k_batch = np.array(k_batch).astype(np.int32)
     x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
     y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
-
+    
     # because we use the same iterator for both train and test, we need to have the same outputs
     # we create i_batch, j_batch and k_batch for training, even if we don't use it
     return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
@@ -281,12 +284,11 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
     if not is_test:
         patients = tf.constant(patients)
         dataset = tf.data.Dataset.from_tensor_slices((patients, patients, patients, patients, patients, patients))
-        dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(train_data_iter,
+        dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(train_data_iter_v2,
                                                                [x, batch_size, patch_size],
                                                                [tf.string, tf.int32, tf.int32,\
                                                                 tf.int32, tf.float32, tf.int32])),
-                              num_threads=num_workers,
-                              output_buffer_size=batch_size)
+                              num_parallel_calls=num_workers)
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=5000)
     else:
