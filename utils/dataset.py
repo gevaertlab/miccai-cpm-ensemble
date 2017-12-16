@@ -135,20 +135,38 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
             j = bg[1][idx]
             k = bg[2][idx]
         elif epsilon <= ratio_enhanced:
-            idx = np.random.randint(num_enhanced)
-            i = enhanced[0][idx]
-            j = enhanced[1][idx]
-            k = enhanced[2][idx]
-        elif epsilon <= ratio_necrotic and num_necrotic > 0:
-            idx = np.random.randint(num_necrotic)
-            i = necrotic[0][idx]
-            j = necrotic[1][idx]
-            k = necrotic[2][idx]
+            if num_enhanced == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_enhanced)
+                i = enhanced[0][idx]
+                j = enhanced[1][idx]
+                k = enhanced[2][idx]
+        elif epsilon <= ratio_necrotic:
+            if num_necrotic == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_necrotic)
+                i = necrotic[0][idx]
+                j = necrotic[1][idx]
+                k = necrotic[2][idx]
         else:
-            idx = np.random.randint(num_edema)
-            i = edema[0][idx]
-            j = edema[1][idx]
-            k = edema[2][idx]
+            if num_edema == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_edema)
+                i = edema[0][idx]
+                j = edema[1][idx]
+                k = edema[2][idx]
         x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
         y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
         i_batch.append(i)
