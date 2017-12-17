@@ -303,12 +303,12 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         patients = tf.constant(patients)
         dataset = tf.data.Dataset.from_tensor_slices((patients, patients, patients, patients, patients, patients))
         dataset = dataset.map(lambda p, i, j, k, x, y: tuple(tf.py_func(train_data_iter_v2,
-                                                               [x, batch_size, patch_size],
+                                                               [x, 10 * batch_size, patch_size],
                                                                [tf.string, tf.int32, tf.int32,\
                                                                 tf.int32, tf.float32, tf.int32])),
                               num_parallel_calls=num_workers)
         dataset = dataset.apply(tf.contrib.data.unbatch())
-        dataset = dataset.shuffle(buffer_size=5000)
+        dataset = dataset.shuffle(buffer_size=2000)
     else:
         def gen():
             return test_data_iter_v2(patients, patch_size, 10, batch_size)

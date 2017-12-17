@@ -25,6 +25,10 @@ if __name__ == '__main__':
     config = Config(cfg_path)
     model = FCN_Concat(config)
 
+    if debug:
+        model.train_ex_paths = model.train_ex_paths[:2]
+        model.val_ex_paths = model.val_ex_paths[:2]
+
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         model.full_train(sess)

@@ -229,7 +229,8 @@ class FCN_Concat(FCN_Model):
         bdices = []
 
         nb = self.config.num_train_batches
-        nbatches = nb * len(self.train_ex_paths)
+        # TODO: so far take only 10 batches per image for memory issue
+        nbatches = 10 * len(self.train_ex_paths)
 
         prog = Progbar(target=nbatches)
         sess.run(self.train_init_op) 
@@ -242,19 +243,19 @@ class FCN_Concat(FCN_Model):
                 pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train_last_layers], feed_dict=feed)
             else:
                 pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train], feed_dict=feed)
-                print('after pred and train')
             losses.append(loss)
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
             # logging
-            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr, ('score', lr_schedule.score))])
+            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr), ('score', lr_schedule.score)])
 
         return losses, np.mean(bdices)
     
     def run_evaluate(self, sess):
         nb = self.config.num_val_batches
-        nbatches = nb * self.val_ex_paths
+        #TODO: same as above
+        nbatches = 10 * len(self.val_ex_paths)
 
         bdices = []
 
@@ -343,7 +344,7 @@ class FCN_Concat(FCN_Model):
         all_dices_enhancing = []
 
         center = 10
-        half_center = 5
+        half_center = center // 2
 
         # for _ in range(nbatches):
         while True:
@@ -479,8 +480,10 @@ class FCN_Concat(FCN_Model):
             train_bdices.append(train_bdices)
 
             if epoch % 3 == 0:
-                val_dice = self.run_evaluate(self, sess)
-                test_whole, test_core, test_enhancing = self.run_test_v2(self.sess)
+                val_dice = self.run_evaluate(sess)
+                print('End of evaluation, validation dice score is:', val_dice)
+                test_whole, test_core, test_enhancing = self.run_test_v2(sess)
+                print('End of test, test dice score is:', test_whole)
                 # logging
                 val_bdices.append(val_dice)
                 test_whole_dices.append(test_whole)
