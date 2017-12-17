@@ -293,7 +293,7 @@ def test_data_iter_v2(all_patients, patch_size, center_size, batch_size):
         yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
+def get_dataset(directory, is_test, batch_size, patch_size, center_size, num_workers=4):
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
@@ -311,7 +311,7 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         dataset = dataset.shuffle(buffer_size=2000)
     else:
         def gen():
-            return test_data_iter_v2(patients, patch_size, 16, batch_size)
+            return test_data_iter_v2(patients, patch_size, center_size, batch_size)
 
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(tf.string, tf.int32, tf.int32,\
@@ -328,9 +328,9 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
     return batched_dataset
 
 
-def get_dataset_single_patient(patient, batch_size, patch_size):
+def get_dataset_single_patient(patient, batch_size, patch_size, center_size):
     def gen():
-        return test_data_iter_v2([patient], patch_size, 10, batch_size)
+        return test_data_iter_v2([patient], patch_size, center_size, batch_size)
     dataset = tf.data.Dataset.from_generator(generator=gen,
                                              output_types=(tf.string, tf.int32, tf.int32,\
                                                            tf.int32, tf.float32, tf.int32))

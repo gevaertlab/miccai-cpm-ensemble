@@ -7,14 +7,18 @@ from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
 from utils.lr_schedule import LRSchedule
 from utils.general import Progbar
+from utils.data_utils import get_number_patches
 
 
 class FCN_Concat(FCN_Model):
 
     def add_dataset(self):
-        train_dataset = get_dataset(self.config.train_path, False, self.config.batch_size, self.patch)
-        val_dataset = get_dataset(self.config.val_path, False, self.config.batch_size, self.patch)
-        test_dataset = get_dataset(self.config.val_path, True, self.config.batch_size, self.patch)
+        train_dataset = get_dataset(self.config.train_path, False, self.config.batch_size,\
+                                    self.patch, self.config.center_patch)
+        val_dataset = get_dataset(self.config.val_path, False, self.config.batch_size,\
+                                  self.patch, self.config.center_patch)
+        test_dataset = get_dataset(self.config.val_path, True, self.config.batch_size,\
+                                   self.patch, self.config.center_patch)
 
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
@@ -270,6 +274,9 @@ class FCN_Concat(FCN_Model):
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
+            prog.update(batch + 1, values=[("dice score", bdice)])
+
+
         return np.mean(bdices)
 
     def run_test(self, sess):
@@ -347,16 +354,15 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
 
-        # for _ in range(nbatches):
-        while True:
-            try:
-                feed = {self.dropout_placeholder: 1.0,
-                        self.is_training:False}
-                patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
-                                                            self.k, self.label, self.pred, self.prob],
-                                                            feed_dict=feed)
-            except tf.errors.OutOfRangeError:
-                break
+        nbatches = get_number_patches((155, 240, 240), self.patch, center)
+        prog = Progbar(target=nbatches)
+
+        for batch in range(nbatches):
+            feed = {self.dropout_placeholder: 1.0,
+                    self.is_training:False}
+            patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
+                                                         self.k, self.label, self.pred, self.prob],
+                                                         feed_dict=feed)
 
             for idx, _ in enumerate(i):
                 if patients[idx] != current_patient:
@@ -400,10 +406,12 @@ class FCN_Concat(FCN_Model):
                       k[idx] - half_center:k[idx] + half_center, :] = prob[idx, lower:lower + center,\
                                                                            lower:lower + center, lower:lower + center, :]
 
+            prog.update(batch + 1)
+
         return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
 
     def run_test_single_example(self, sess, patient):
-        dataset = get_dataset_single_patient(patient, self.config.batch_size, self.patch)
+        dataset = get_dataset_single_patient(patient, self.config.batch_size, self.patch, self.config.center_patch)
         init_op = self.iterator.make_initializer(dataset)
         sess.run(init_op)
 

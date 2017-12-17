@@ -71,6 +71,13 @@ def get_patch_centers_fcn(im_size, patch_size, center):
     return range(start, end, center)
 
 
+def get_number_patches(im_size, patch_size, center_size):
+    num_x = get_patch_centers_fcn(im_size[0], patch_size, center_size)
+    num_y = get_patch_centers_fcn(im_size[1], patch_size, center_size)
+    num_z = get_patch_centers_fcn(im_size[2], patch_size, center_size)
+    return num_x * num_y * num_z
+
+
 def normalize_image(image):
     brain = np.where(image != 0)
     mu = np.mean(image[brain])
