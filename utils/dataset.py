@@ -311,7 +311,7 @@ def get_dataset(directory, is_test, batch_size, patch_size, num_workers=4):
         dataset = dataset.shuffle(buffer_size=2000)
     else:
         def gen():
-            return test_data_iter_v2(patients, patch_size, 10, batch_size)
+            return test_data_iter_v2(patients, patch_size, 16, batch_size)
 
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(tf.string, tf.int32, tf.int32,\
