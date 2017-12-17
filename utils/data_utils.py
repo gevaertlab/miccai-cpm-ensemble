@@ -72,9 +72,9 @@ def get_patch_centers_fcn(im_size, patch_size, center):
 
 
 def get_number_patches(im_size, patch_size, center_size):
-    num_x = get_patch_centers_fcn(im_size[0], patch_size, center_size)
-    num_y = get_patch_centers_fcn(im_size[1], patch_size, center_size)
-    num_z = get_patch_centers_fcn(im_size[2], patch_size, center_size)
+    num_x = len(get_patch_centers_fcn(im_size[0], patch_size, center_size))
+    num_y = len(get_patch_centers_fcn(im_size[1], patch_size, center_size))
+    num_z = len(get_patch_centers_fcn(im_size[2], patch_size, center_size))
     return num_x * num_y * num_z
 
 
