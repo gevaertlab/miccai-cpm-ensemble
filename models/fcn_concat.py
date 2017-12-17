@@ -354,7 +354,7 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
 
-        nbatches = get_number_patches((155, 240, 240), self.patch, center) * len(self.val_ex_paths)
+        nbatches = get_number_patches((155, 240, 240), self.patch, center) * len(self.val_ex_paths) / self.config.batch_size + 1
         prog = Progbar(target=nbatches)
 
         for batch in range(nbatches):
