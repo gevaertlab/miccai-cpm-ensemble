@@ -507,18 +507,18 @@ class FCN_Concat(FCN_Model):
                     saver.save(sess, ckpt_path)
                     print('Saving checkpoint to %s ......' %(ckpt_path))
 
-                np.savez(res_path,
-                         train_losses=train_losses,
-                         train_bdices=train_bdices,
-                         val_bdices=val_bdices,
-                         test_whole_dices=test_whole_dices,
-                         test_core_dices=test_core_dices,
-                         test_enhancing_dices=test_enhancing_dices,
-                         train_ex_paths=self.train_ex_paths,
-                         val_ex_paths=self.val_ex_paths,
-                         config_file=config.__dict__)
-
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
+
+        np.savez(res_path,
+                 train_losses=train_losses,
+                 train_bdices=train_bdices,
+                 val_bdices=val_bdices,
+                 test_whole_dices=test_whole_dices,
+                 test_core_dices=test_core_dices,
+                 test_enhancing_dices=test_enhancing_dices,
+                 train_ex_paths=self.train_ex_paths,
+                 val_ex_paths=self.val_ex_paths,
+                 config_file=config.__dict__)
 
         return test_whole
