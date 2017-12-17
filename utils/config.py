@@ -29,7 +29,8 @@ class Config:
         self.dropout = float(param_dict.get('dropout', 0.5))
         self.use_batch_norm = param_dict.get('use_batch_norm', 'False') == True
 
-        self.patch_size = int(param_dict.get('patch_size', 24))
+        self.patch_size = int(param_dict.get('patch_size', 32))
+        self.center_patch = int(param_dict.get('center_patch', 10))
 
         self.batch_size = int(param_dict.get('batch_size', 50))
         self.num_epochs = int(param_dict.get('num_epochs', 50))

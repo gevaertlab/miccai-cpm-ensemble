@@ -343,8 +343,9 @@ class FCN_Concat(FCN_Model):
         all_dices_core = []
         all_dices_enhancing = []
 
-        center = 10
+        center = self.config.center_patch
         half_center = center // 2
+        lower = self.patch // 2 - half_center
 
         # for _ in range(nbatches):
         while True:
@@ -392,10 +393,12 @@ class FCN_Concat(FCN_Model):
                    k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
                 fpred[i[idx] - half_center:i[idx] + half_center,
                       j[idx] - half_center:j[idx] + half_center,
-                      k[idx] - half_center:k[idx] + half_center] = pred[idx, 12:22, 12:22, 12:22]
+                      k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
+                                                                        lower:lower + center, lower:lower + center]
                 fprob[i[idx] - half_center:i[idx] + half_center,
                       j[idx] - half_center:j[idx] + half_center,
-                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, 12:22, 12:22, 12:22, :]
+                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, lower:lower + center,\
+                                                                           lower:lower + center, lower:lower + center, :]
 
         return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
 
