@@ -179,9 +179,20 @@ class FCN_Concat(FCN_Model):
         logits = tf.reshape(self.score, [-1, self.nb_classes])
         labels = tf.reshape(self.label, [-1])
         # labels = tf.reshape(self.label_batch, [-1])
+        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels)
 
-        ce_loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels))
-        
+        # add mask
+        if self.config.use_mask:
+            mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch), dtype=tf.int32)
+            c_size = self.config.center_patch
+            lower = self.patch // 2 - c_size // 2
+            center = tf.ones(shape=(c_size, c_size, c_size), dtype=tf.int32)
+            mask = tf.assign(mask[lower: lower + c_size, lower: lower + c_size, lower: lower + c_size], center)
+            mask = tf.cast(mask, tf.bool)
+            ce_loss = tf.boolean_mask(ce_loss, mask)
+
+        ce_loss = tf.reduce_mean(ce_loss)
+
         with tf.variable_scope('conv1', reuse=True):
             w1 = tf.get_variable('conv3d/kernel')
         with tf.variable_scope('conv2', reuse=True):
