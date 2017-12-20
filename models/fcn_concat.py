@@ -171,11 +171,11 @@ class FCN_Concat(FCN_Model):
             self.score = deconv6 + bias
 
     def add_loss_op(self):
-        logits = tf.reshape(self.score, [-1, self.nb_classes])
-        labels = tf.reshape(self.label, [-1])
+        # logits = tf.reshape(self.score, [-1, self.nb_classes])
+        # labels = tf.reshape(self.label, [-1])
         # labels = tf.reshape(self.label_batch, [-1])
-        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=logits, labels=labels)
-
+        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
+        
         # add mask
         if self.config.use_mask:
             mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch),
