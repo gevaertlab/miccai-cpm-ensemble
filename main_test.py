@@ -8,7 +8,7 @@ from utils.data_utils import arr_to_im_path
 from models.fcn_concat import FCN_Concat
 
 
-def test(model, patient):
+def run_test(model, patient):
 
     config = model.config
     ckpt_path = config.ckpt_path
@@ -28,8 +28,8 @@ def test(model, patient):
             
 
 if __name__ == '__main__':
-    cfg_path = '/gevaertlab/config_files/fcn_train_concat_2017_v6.cfg'
+    cfg_path = '/gevaertlab/config_files/fcn_train_concat_2017_v10.cfg'
     data_path = b'/data/'
     config = Config(cfg_path)
     model = FCN_Concat(config)
-    test(model, data_path)
+    run_test(model, data_path)

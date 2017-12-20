@@ -424,12 +424,12 @@ class FCN_Concat(FCN_Model):
         init_op = self.iterator.make_initializer(dataset)
         sess.run(init_op)
 
-
         #hardcoded for BraTS
-        half_center = 5
+        center = self.config.center_patch
+        half_center = center // 2
+        lower = self.patch // 2 - half_center
         fpred = np.zeros((155, 240, 240))
         fy = np.zeros((155, 240, 240))
-        fprob = np.zeros((155, 240, 240, 4))
 
         while True:
             try:
@@ -441,15 +441,13 @@ class FCN_Concat(FCN_Model):
                 break
 
             for idx, _ in enumerate(i):
-                fy[i[idx] - half_center :i[idx] + half_center,
+                fy[i[idx] - half_center:i[idx] + half_center,
                    j[idx] - half_center:j[idx] + half_center,
                    k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
                 fpred[i[idx] - half_center:i[idx] + half_center,
                       j[idx] - half_center:j[idx] + half_center,
-                      k[idx] - half_center:k[idx] + half_center] = pred[idx, 12:22, 12:22, 12:22]
-                fprob[i[idx] - half_center:i[idx] + half_center,
-                      j[idx] - half_center:j[idx] + half_center,
-                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, 12:22, 12:22, 12:22, :]
+                      k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
+                                                                        lower:lower + center, lower:lower + center]
 
         # dice score for the Whole Tumor
         dice_whole = dice_score(fy, fpred)
