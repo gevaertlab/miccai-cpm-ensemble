@@ -123,8 +123,8 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
         - 10% necoritc
         - 20% edema
     """
-    ratio_non_tumorous = 0.5
-    ratio_enhanced = 0.7
+    ratio_non_tumorous = 0.4
+    ratio_enhanced = 0.65
     ratio_necrotic = 0.8
     ratio_edema = 1.0
     for _ in range(batch_size):

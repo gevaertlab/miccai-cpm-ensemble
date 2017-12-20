@@ -126,8 +126,6 @@ class FCN_Concat(FCN_Model):
             deconv4 = deconv4 + bias
             # shape = (patch/4, patch/4, patch/4)
             bn4 = tf.layers.batch_normalization(deconv4, axis=-1, training=self.is_training)
-            print('Shape of bn4 is:', bn4.get_shape())
-            print('shape of pool2 is:', pool2.get_shape())
             bn4 = tf.concat([bn4, pool2], axis=-1)
             relu4 = tf.nn.relu(bn4)
 
@@ -148,9 +146,6 @@ class FCN_Concat(FCN_Model):
             deconv5 = deconv5 + bias
             # shape = (patch/2, patch/2, patch/2)
             bn5 = tf.layers.batch_normalization(deconv5, axis=-1, training=self.is_training)
-            print('Shape of bn5 is:', bn5.get_shape())
-            print('shape of pool1 is:', pool1.get_shape())
-            
             bn5 = tf.concat([bn5, pool1], axis=-1)
             relu5 = tf.nn.relu(bn5)
 
@@ -474,15 +469,15 @@ class FCN_Concat(FCN_Model):
     def full_train(self, sess):
         config = self.config
 
-        nbatches = config.batch_size * config.num_train_batches
+        nbatches = len(self.train_ex_paths) * 10
         ckpt_path = config.ckpt_path
         res_path = config.res_path
 
         lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
-                                 start_decay=config.start_decay * len(self.train_ex_paths),
-                                 end_decay=config.end_decay * len(self.train_ex_paths),
-                                 lr_warm=config.lr_warm,
-                                 end_warm=config.end_warm * len(self.train_ex_paths))
+                                 start_decay=config.start_decay * nbatches,
+                                 end_decay=config.end_decay * nbatches,
+                                 lr_warm=config.lr_warm, decay_rate = config.decay_rate,
+                                 end_warm=config.end_warm * nbatches)
 
         saver = tf.train.Saver()
 
@@ -499,13 +494,13 @@ class FCN_Concat(FCN_Model):
             print('Epoch %d ...'%epoch)
             losses, train_dice = self.run_epoch(sess, lr_schedule)
             train_losses.extend(losses)
-            train_bdices.append(train_bdices)
+            train_bdices.append(train_dice)
 
             if epoch % 3 == 0:
                 val_dice = self.run_evaluate(sess)
                 print('End of evaluation, validation dice score is:', val_dice)
                 test_whole, test_core, test_enhancing = self.run_test_v2(sess)
-                print('End of test, test dice score is:', test_whole)
+                print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'%(test_whole, test_core, test_enhancing))
                 # logging
                 val_bdices.append(val_dice)
                 test_whole_dices.append(test_whole)
