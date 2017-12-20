@@ -32,13 +32,3 @@ if __name__ == '__main__':
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
         model.full_train(sess)
-
-        print('Saving losses and scores to %s........' %(res_path))
-        np.savez(res_path,
-                    train_losses=train_losses,
-                    train_bdices=train_bdices,
-                    val_bdices=val_bdices,
-                    val_fdices=val_fdices,
-                    train_ex_paths=train_ex_paths,
-                    val_ex_paths=val_ex_paths,
-                    config_file=config.__dict__)
