@@ -29,11 +29,9 @@ def load_data_brats(patient_path):
             data[3] = normalize_image(image)
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
-    try:
-        data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
-    except:
-        print('data cannot be concat for patient:', patient_path)
-        assert(False)
+
+    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+
     return data, labels
 
 
@@ -100,8 +98,8 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
     trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
 
     bg = np.where((trimmed_labels == 0) & (trimmed_data[..., 0] != 0))
-    enhanced = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
-    necrotic = np.where((trimmed_labels == 3) & (trimmed_data[..., 0] != 0))
+    enhanced = np.where((trimmed_labels == 3) & (trimmed_data[..., 0] != 0))
+    necrotic = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
     edema = np.where((trimmed_labels == 2) & (trimmed_data[..., 0] != 0))
     fg = np.where((trimmed_labels > 0) & (trimmed_data[..., 0] != 0))
 
@@ -328,12 +326,94 @@ def get_dataset(directory, is_test, batch_size, patch_size, center_size, num_wor
     return batched_dataset
 
 
+def data_iter_single_example(patient_path, patch_size, center_size, batch_size):
+    data = [None] * 4
+    patient_path = patient_path.decode('utf-8')
+
+    for im_name in os.listdir(patient_path):
+        im_path = os.path.join(patient_path, im_name)
+        # for Brats2017
+        im_type = im_name.split('.')[0].split('_')[-1]
+        image = im_path_to_arr(im_path)
+        if im_type == 't1':
+            data[0] = normalize_image(image)
+        if im_type == 't1c' or im_type == 't1ce':
+            data[1] = normalize_image(image)
+        if im_type == 't2':
+            data[2] = normalize_image(image)
+        if im_type == 'flair' or im_type == 'fla':
+            data[3] = normalize_image(image)
+
+    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+
+    patient_path = patient_path.encode('utf-8')
+
+    batch_count = 0
+    half_patch = patch_size // 2
+    half_center = center_size // 2
+    i_batch = []
+    j_batch = []
+    k_batch = []
+    x_batch = []
+    y_batch = []
+    path_batch = []
+
+    i_len, j_len, k_len = (155, 240, 240)
+
+    for i in get_patch_centers_fcn(i_len, patch_size, center_size):
+        for j in get_patch_centers_fcn(j_len, patch_size, center_size):
+            for k in get_patch_centers_fcn(k_len, patch_size, center_size):
+
+                x = data[i - half_patch:i + half_patch,\
+                         j - half_patch:j + half_patch,\
+                         k - half_patch:k + half_patch, :]
+                y = np.zeros((patch_size, patch_size, patch_size))
+
+                i_batch.append(i)
+                j_batch.append(j)
+                k_batch.append(k)
+                x_batch.append(x)
+                y_batch.append(y)
+                path_batch.append(patient_path)
+
+                batch_count += 1
+                if batch_count == batch_size:
+                    path_batch = np.array(path_batch)
+                    i_batch = np.array(i_batch).astype(np.int32)
+                    j_batch = np.array(j_batch).astype(np.int32)
+                    k_batch = np.array(k_batch).astype(np.int32)
+                    x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+                    y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
+                    
+                    yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+
+                    i_batch = []
+                    j_batch = []
+                    k_batch = []
+                    x_batch = []
+                    y_batch = []
+                    path_batch = []
+
+                    batch_count = 0
+
+    if batch_count != 0:  
+        path_batch = np.array(path_batch)
+        i_batch = np.array(i_batch).astype(np.int32)
+        j_batch = np.array(j_batch).astype(np.int32)
+        k_batch = np.array(k_batch).astype(np.int32)
+        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
+        
+        yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+
+
 def get_dataset_single_patient(patient, batch_size, patch_size, center_size):
     def gen():
-        return test_data_iter_v2([patient], patch_size, center_size, batch_size)
+        return data_iter_single_example(patient, patch_size, center_size, batch_size)
     dataset = tf.data.Dataset.from_generator(generator=gen,
                                              output_types=(tf.string, tf.int32, tf.int32,\
                                                            tf.int32, tf.float32, tf.int32))
     dataset = dataset.apply(tf.contrib.data.unbatch())
     dataset = dataset.batch(batch_size)
     return dataset
+

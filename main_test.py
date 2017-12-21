@@ -9,21 +9,19 @@ from models.fcn_concat import FCN_Concat
 
 
 def run_test(model, patient):
-
     config = model.config
-    ckpt_path = config.ckpt_path
+    ckpt_path = '/gevaertlab/' + config.ckpt_path
 
     saver = tf.train.Saver()
 
     with tf.Session() as sess:
         saver.restore(sess, ckpt_path)
-
         fpred = model.run_test_single_example(sess, patient)
         fpred[fpred == 3] = 4
         out_path = patient.decode('utf-8') + 'results/'
         if not os.path.exists(out_path):
             os.makedirs(out_path)
-        out_path += 'tumor_gevaertmodel_class.nii'
+        out_path += 'tumor_gevaertlab_class.nii'
         arr_to_im_path(fpred, out_path)
             
 
