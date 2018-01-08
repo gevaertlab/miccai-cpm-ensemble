@@ -121,8 +121,8 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
         - 10% necoritc
         - 20% edema
     """
-    ratio_non_tumorous = 0.4
-    ratio_enhanced = 0.65
+    ratio_non_tumorous = 0.35
+    ratio_enhanced = 0.60
     ratio_necrotic = 0.8
     ratio_edema = 1.0
     for _ in range(batch_size):
@@ -334,14 +334,17 @@ def data_iter_single_example(patient_path, patch_size, center_size, batch_size):
         im_path = os.path.join(patient_path, im_name)
         # for Brats2017
         im_type = im_name.split('.')[0].split('_')[-1]
-        image = im_path_to_arr(im_path)
         if im_type == 't1':
+            image = im_path_to_arr(im_path)
             data[0] = normalize_image(image)
         if im_type == 't1c' or im_type == 't1ce':
+            image = im_path_to_arr(im_path)
             data[1] = normalize_image(image)
         if im_type == 't2':
+            image = im_path_to_arr(im_path)
             data[2] = normalize_image(image)
         if im_type == 'flair' or im_type == 'fla':
+            image = im_path_to_arr(im_path)
             data[3] = normalize_image(image)
 
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
