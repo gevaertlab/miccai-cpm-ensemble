@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 import tensorflow as tf
 
@@ -22,7 +24,7 @@ class FCN_Concat(FCN_Model):
 
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
-            output_types=(tf.string, tf.int32, tf.int32,tf.int32, tf.float32, tf.int32),
+            output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
             output_shapes=([None], [None], [None], [None],\
                            [None, self.patch, self.patch, self.patch, 4],\
                            [None, self.patch, self.patch, self.patch]))
@@ -167,7 +169,7 @@ class FCN_Concat(FCN_Model):
 
             # print(deconv6.get_shape())
             bias = tf.get_variable('biases', [self.nb_classes],
-                                   initializer=tf.zeros_initializer()) 
+                                   initializer=tf.zeros_initializer())
             self.score = deconv6 + bias
 
     def add_loss_op(self):
@@ -175,7 +177,7 @@ class FCN_Concat(FCN_Model):
         # labels = tf.reshape(self.label, [-1])
         # labels = tf.reshape(self.label_batch, [-1])
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
-        
+
         # add mask
         if self.config.use_mask:
             mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch),
@@ -246,8 +248,8 @@ class FCN_Concat(FCN_Model):
         nbatches = 10 * len(self.train_ex_paths)
 
         prog = Progbar(target=nbatches)
-        sess.run(self.train_init_op) 
-        
+        sess.run(self.train_init_op)
+
         for batch in range(nbatches):
             feed = {self.dropout_placeholder: self.config.dropout,
                     self.lr_placeholder: lr_schedule.lr,
@@ -264,7 +266,7 @@ class FCN_Concat(FCN_Model):
             prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr), ('score', lr_schedule.score)])
 
         return losses, np.mean(bdices)
-    
+
     def run_evaluate(self, sess):
         nb = self.config.num_val_batches
         #TODO: same as above
@@ -302,7 +304,7 @@ class FCN_Concat(FCN_Model):
         while True:
             try:
                 feed = {self.dropout_placeholder: 1.0,
-                        self.is_training:False}
+                        self.is_training: False}
                 patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
                                                             self.k, self.label, self.pred, self.prob],
                                                             feed_dict=feed)
@@ -359,6 +361,17 @@ class FCN_Concat(FCN_Model):
         all_dices_core = []
         all_dices_enhancing = []
 
+        HGG_patients = os.listdir('data/brats2017/HGG/val')
+        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/val', pat) for pat in HGG_patients]
+
+        HGG_dices_whole = []
+        HGG_dices_core = []
+        HGG_dices_enhancing = []
+
+        LGG_dices_whole = []
+        LGG_dices_core = []
+        LGG_dices_enhancing = []
+
         center = self.config.center_patch
         half_center = center // 2
         lower = self.patch // 2 - half_center
@@ -368,10 +381,10 @@ class FCN_Concat(FCN_Model):
 
         for batch in range(nbatches):
             feed = {self.dropout_placeholder: 1.0,
-                    self.is_training:False}
+                    self.is_training: False}
             patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
                                                          self.k, self.label, self.pred, self.prob],
-                                                         feed_dict=feed)
+                                                        feed_dict=feed)
 
             for idx, _ in enumerate(i):
                 if patients[idx] != current_patient:
@@ -380,6 +393,10 @@ class FCN_Concat(FCN_Model):
                         # dice score for the Whole Tumor
                         dice_whole = dice_score(fy, fpred)
                         all_dices_whole.append(dice_whole)
+                        if current_patient in HGG_patients:
+                            HGG_dices_whole.append(dice_whole)
+                        else:
+                            LGG_dices_whole.append(dice_whole)
                         # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
 
                         if self.nb_classes > 2:
@@ -388,6 +405,10 @@ class FCN_Concat(FCN_Model):
                             fy_core = (fy == 1) + (fy == 3)
                             dice_core = dice_score(fy_core, fpred_core)
                             all_dices_core.append(dice_core)
+                            if current_patient in HGG_patients:
+                                HGG_dices_core.append(dice_core)
+                            else:
+                                LGG_dices_core.append(dice_core)
                             # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
 
                             # dice score for Enhancing Tumor
@@ -395,6 +416,10 @@ class FCN_Concat(FCN_Model):
                             fy_enhancing = fy == 3
                             dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
                             all_dices_enhancing.append(dice_enhancing)
+                            if current_patient in HGG_patients:
+                                HGG_dices_enhancing.append(dice_enhancing)
+                            else:
+                                LGG_dices_enhancing.append(dice_enhancing)
                             # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
                     #hardcoded for BraTS
@@ -417,7 +442,9 @@ class FCN_Concat(FCN_Model):
 
             prog.update(batch + 1)
 
-        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing)
+        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),
+               np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),
+               np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
 
     def run_test_single_example(self, sess, patient):
         dataset = get_dataset_single_patient(patient, self.config.batch_size, self.patch, self.config.center_patch)
@@ -434,9 +461,9 @@ class FCN_Concat(FCN_Model):
         while True:
             try:
                 feed = {self.dropout_placeholder: 1.0,
-                        self.is_training:False}
-                i, j, k, y, pred, prob = sess.run([self.i, self.j, self.k, self.label, self.pred, self.prob],
-                                                  feed_dict=feed)
+                        self.is_training: False}
+                i, j, k, y, pred = sess.run([self.i, self.j, self.k, self.label, self.pred],
+                                            feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
 
@@ -477,7 +504,7 @@ class FCN_Concat(FCN_Model):
         lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                                  start_decay=config.start_decay * nbatches,
                                  end_decay=config.end_decay * nbatches,
-                                 lr_warm=config.lr_warm, decay_rate = config.decay_rate,
+                                 lr_warm=config.lr_warm, decay_rate=config.decay_rate,
                                  end_warm=config.end_warm * nbatches)
 
         saver = tf.train.Saver()
