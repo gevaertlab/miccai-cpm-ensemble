@@ -442,8 +442,8 @@ class FCN_Concat(FCN_Model):
 
             prog.update(batch + 1)
 
-        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),
-               np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),
+        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),\
+               np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),\
                np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
 
     def run_test_single_example(self, sess, patient):
