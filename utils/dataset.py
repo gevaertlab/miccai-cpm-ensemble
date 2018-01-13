@@ -3,6 +3,8 @@ import os
 import numpy as np
 import tensorflow as tf
 
+from random import shuffle
+
 from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels 
@@ -308,6 +310,15 @@ def get_dataset(directory, is_test, batch_size, patch_size, center_size, num_wor
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=2000)
     else:
+        # Hardcoded for now ...
+        # double number of LGG patients (oversampling)
+        HGG_patients = os.listdir('data/brats2017/HGG/val')
+        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/val', pat) for pat in HGG_patients]
+        HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
+        LGG_patients = [pat for pat in patients if pat not in HGG_patients]
+        patients = HGG_patients + 2 * LGG_patients
+        shuffle(patients)
+        
         def gen():
             return test_data_iter_v2(patients, patch_size, center_size, batch_size)
 

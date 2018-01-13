@@ -363,6 +363,7 @@ class FCN_Concat(FCN_Model):
 
         HGG_patients = os.listdir('data/brats2017/HGG/val')
         HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/val', pat) for pat in HGG_patients]
+        HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
 
         HGG_dices_whole = []
         HGG_dices_core = []
