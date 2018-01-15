@@ -15,13 +15,12 @@ from utils.data_utils import get_number_patches
 class FCN_Concat(FCN_Model):
 
     def add_dataset(self):
-        train_dataset = get_dataset(self.config.train_path, False, self.config.batch_size,\
-                                    self.patch, self.config.center_patch)
-        val_dataset = get_dataset(self.config.val_path, False, self.config.batch_size,\
-                                  self.patch, self.config.center_patch)
-        test_dataset = get_dataset(self.config.val_path, True, self.config.batch_size,\
-                                   self.patch, self.config.center_patch)
-
+        train_dataset = get_dataset(self.config.train_path, False, self.patch,\
+                                    self.config.batch_size, nb_batches=self.config.num_train_batches)
+        val_dataset = get_dataset(self.config.val_path, False, self.patch,\
+                                  self.config.batch_size, nb_batches=self.config.num_val_batches)
+        test_dataset = get_dataset(self.config.val_path, True, self.patch,\
+                                   self.config.batch_size, center_size=self.config.center_patch)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
             output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
@@ -49,17 +48,6 @@ class FCN_Concat(FCN_Model):
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
-            # TODO: uncomment to use queues
-            # conv1 = tf.layers.conv3d(inputs=self.image_batch,
-            #                          filters=10,
-            #                          kernel_size=k_size,
-            #                          strides=(1, 1, 1),
-            #                          padding='SAME',
-            #                          activation=None,
-            #                          use_bias=True,
-            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
-            #                          bias_initializer=tf.constant_initializer(0.0))
-
             bn1 = tf.layers.batch_normalization(conv1, axis=-1, training=self.is_training)
             relu1 = tf.nn.relu(bn1)
 
@@ -68,8 +56,6 @@ class FCN_Concat(FCN_Model):
                                             strides=(2, 2, 2), padding='VALID')
 
             # drop1 = tf.nn.dropout(pool1, self.dropout_placeholder)
-
-            # print(conv1.get_shape())
 
         with tf.variable_scope('conv2'):
             conv2 = tf.layers.conv3d(inputs=pool1,
@@ -89,7 +75,6 @@ class FCN_Concat(FCN_Model):
             pool2 = tf.layers.max_pooling3d(inputs=relu2, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
             # drop2 = tf.nn.dropout(pool2, self.dropout_placeholder)
-            # print(conv.get_shape())
 
         with tf.variable_scope('conv3'):
             conv3 = tf.layers.conv3d(inputs=pool2,
@@ -173,9 +158,6 @@ class FCN_Concat(FCN_Model):
             self.score = deconv6 + bias
 
     def add_loss_op(self):
-        # logits = tf.reshape(self.score, [-1, self.nb_classes])
-        # labels = tf.reshape(self.label, [-1])
-        # labels = tf.reshape(self.label_batch, [-1])
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
 
         # add mask
@@ -242,51 +224,62 @@ class FCN_Concat(FCN_Model):
     def run_epoch(self, sess, lr_schedule, finetune=False):
         losses = []
         bdices = []
+        batch = 0
 
-        nb = self.config.num_train_batches
-        # TODO: so far take only 10 batches per image for memory issue
-        nbatches = 10 * len(self.train_ex_paths)
-
+        nbatches = len(self.train_ex_paths) * self.config.num_train_batches
         prog = Progbar(target=nbatches)
+
         sess.run(self.train_init_op)
 
-        for batch in range(nbatches):
-            feed = {self.dropout_placeholder: self.config.dropout,
-                    self.lr_placeholder: lr_schedule.lr,
-                    self.is_training: self.config.use_batch_norm}
-            if finetune:
-                pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train_last_layers], feed_dict=feed)
-            else:
-                pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train], feed_dict=feed)
+        while True:
+            try:
+                feed = {self.dropout_placeholder: self.config.dropout,
+                        self.lr_placeholder: lr_schedule.lr,
+                        self.is_training: self.config.use_batch_norm}
+
+                if finetune:
+                    pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train_last_layers],\
+                                                feed_dict=feed)
+                else:
+                    pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train],\
+                                                feed_dict=feed)
+                batch += 1
+            except tf.errors.OutOfRangeError:
+                break
+
             losses.append(loss)
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
             # logging
-            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr), ('score', lr_schedule.score)])
+            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
+                                                                   ('score', lr_schedule.score)])
 
         return losses, np.mean(bdices)
 
     def run_evaluate(self, sess):
-        nb = self.config.num_val_batches
-        #TODO: same as above
-        nbatches = 10 * len(self.val_ex_paths)
-
         bdices = []
+        batch = 0
 
+        nbatches = len(self.val_ex_paths) * self.config.num_val_batches
         prog = Progbar(target=nbatches)
 
         sess.run(self.val_init_op)
 
-        for batch in range(nbatches):
-            feed = {self.dropout_placeholder: 1,
-                    self.is_training: False}
-            pred, y = sess.run([self.pred, self.label], feed_dict=feed)
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1,
+                        self.is_training: False}
+                pred, y = sess.run([self.pred, self.label], feed_dict=feed)
+
+                batch += 1
+            except tf.errors.OutOfRangeError:
+                break
+
             bdice = dice_score(y, pred)
             bdices.append(bdice)
 
             prog.update(batch + 1, values=[("dice score", bdice)])
-
 
         return np.mean(bdices)
 
@@ -498,10 +491,7 @@ class FCN_Concat(FCN_Model):
     def full_train(self, sess):
         config = self.config
 
-        nbatches = len(self.train_ex_paths) * 10
-        ckpt_path = config.ckpt_path
-        res_path = config.res_path
-
+        nbatches = len(self.train_ex_paths) * config.num_train_batches
         lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                                  start_decay=config.start_decay * nbatches,
                                  end_decay=config.end_decay * nbatches,
@@ -528,8 +518,9 @@ class FCN_Concat(FCN_Model):
             if epoch % 3 == 0:
                 val_dice = self.run_evaluate(sess)
                 print('End of evaluation, validation dice score is:', val_dice)
-                test_whole, test_core, test_enhancing = self.run_test_v2(sess)
-                print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'%(test_whole, test_core, test_enhancing))
+                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
+                print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
+                      %(test_whole, test_core, test_enhancing))
                 # logging
                 val_bdices.append(val_dice)
                 test_whole_dices.append(test_whole)
@@ -539,21 +530,23 @@ class FCN_Concat(FCN_Model):
 
                 if test_whole >= best_fdice:
                     best_fdice = test_whole
-                    saver.save(sess, ckpt_path)
-                    print('Saving checkpoint to %s ......' %(ckpt_path))
+
+                    print('Saving checkpoint to %s ......' %(config.ckpt_path))
+                    saver.save(sess, config.ckpt_path)
+
+                    print('Saving results to %s ......'%(config.res_path))
+                    np.savez(config.res_path,
+                             train_losses=train_losses,
+                             train_bdices=train_bdices,
+                             val_bdices=val_bdices,
+                             test_whole_dices=test_whole_dices,
+                             test_core_dices=test_core_dices,
+                             test_enhancing_dices=test_enhancing_dices,
+                             train_ex_paths=self.train_ex_paths,
+                             val_ex_paths=self.val_ex_paths,
+                             config_file=config.__dict__)
 
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
-
-        np.savez(res_path,
-                 train_losses=train_losses,
-                 train_bdices=train_bdices,
-                 val_bdices=val_bdices,
-                 test_whole_dices=test_whole_dices,
-                 test_core_dices=test_core_dices,
-                 test_enhancing_dices=test_enhancing_dices,
-                 train_ex_paths=self.train_ex_paths,
-                 val_ex_paths=self.val_ex_paths,
-                 config_file=config.__dict__)
 
         return test_whole
