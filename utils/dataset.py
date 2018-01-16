@@ -320,6 +320,7 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size):
 
 
 def get_dataset(directory, is_test, patch_size, batch_size, nb_batches=20, center_size=20):
+    # TODO: clean code for 'patients' list
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
@@ -328,8 +329,8 @@ def get_dataset(directory, is_test, patch_size, batch_size, nb_batches=20, cente
     if not is_test:
         # Hardcoded for now ...
         # double number of LGG patients (oversampling)
-        HGG_patients = os.listdir('data/brats2017/HGG/val')
-        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/val', pat) for pat in HGG_patients]
+        HGG_patients = os.listdir('data/brats2017/HGG/train')
+        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/train', pat) for pat in HGG_patients]
         HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
         LGG_patients = [pat for pat in patients if pat not in HGG_patients]
         patients = HGG_patients + 2 * LGG_patients

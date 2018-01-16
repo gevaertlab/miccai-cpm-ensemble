@@ -17,8 +17,6 @@ class FCN_Concat(FCN_Model):
     def add_dataset(self):
         train_dataset = get_dataset(self.config.train_path, False, self.patch,\
                                     self.config.batch_size, nb_batches=self.config.num_train_batches)
-        val_dataset = get_dataset(self.config.val_path, False, self.patch,\
-                                  self.config.batch_size, nb_batches=self.config.num_val_batches)
         test_dataset = get_dataset(self.config.val_path, True, self.patch,\
                                    self.config.batch_size, center_size=self.config.center_patch)
         # iterator just needs to know the output types and shapes of the datasets
@@ -30,7 +28,6 @@ class FCN_Concat(FCN_Model):
         self.pat_path, self.i, self.j, self.k, self.image, self.label = self.iterator.get_next()
 
         self.train_init_op = self.iterator.make_initializer(train_dataset)
-        self.val_init_op = self.iterator.make_initializer(val_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
     def add_model(self):
@@ -257,32 +254,6 @@ class FCN_Concat(FCN_Model):
 
         return losses, np.mean(bdices)
 
-    def run_evaluate(self, sess):
-        bdices = []
-        batch = 0
-
-        nbatches = len(self.val_ex_paths) * self.config.num_val_batches
-        prog = Progbar(target=nbatches)
-
-        sess.run(self.val_init_op)
-
-        while True:
-            try:
-                feed = {self.dropout_placeholder: 1,
-                        self.is_training: False}
-                pred, y = sess.run([self.pred, self.label], feed_dict=feed)
-
-                batch += 1
-            except tf.errors.OutOfRangeError:
-                break
-
-            bdice = dice_score(y, pred)
-            bdices.append(bdice)
-
-            prog.update(batch + 1, values=[("dice score", bdice)])
-
-        return np.mean(bdices)
-
     def run_test(self, sess):
         # hardcoded for BraTS: they are 196 patches per volume
         # nbatches = int(len(self.val_ex_paths) * 196 / 50) + 1
@@ -502,7 +473,6 @@ class FCN_Concat(FCN_Model):
 
         train_losses = []
         train_bdices = []
-        val_bdices = []
         test_whole_dices = []
         test_core_dices = []
         test_enhancing_dices = []
@@ -516,13 +486,10 @@ class FCN_Concat(FCN_Model):
             train_bdices.append(train_dice)
 
             if epoch % 3 == 0:
-                val_dice = self.run_evaluate(sess)
-                print('End of evaluation, validation dice score is:', val_dice)
                 test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
                 print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
                       %(test_whole, test_core, test_enhancing))
                 # logging
-                val_bdices.append(val_dice)
                 test_whole_dices.append(test_whole)
                 test_core_dices.append(test_core)
                 test_enhancing_dices.append(test_enhancing)
@@ -538,7 +505,6 @@ class FCN_Concat(FCN_Model):
                     np.savez(config.res_path,
                              train_losses=train_losses,
                              train_bdices=train_bdices,
-                             val_bdices=val_bdices,
                              test_whole_dices=test_whole_dices,
                              test_core_dices=test_core_dices,
                              test_enhancing_dices=test_enhancing_dices,

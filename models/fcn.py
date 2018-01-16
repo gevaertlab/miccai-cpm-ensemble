@@ -28,17 +28,7 @@ class FCN_Model(Model):
         self.val_ex_paths = get_ex_paths(self.config.val_path)
 
     def add_dataset(self):
-        batch_size = self.config.batch_size
-
-        self.image_batch_input = tf.placeholder(tf.float32, shape=[batch_size, self.patch, self.patch, self.patch, 4])
-        self.label_batch_input = tf.placeholder(tf.int32, shape=[batch_size, self.patch, self.patch, self.patch])
-
-        queue = tf.FIFOQueue(100, [tf.float32, tf.int32],
-                             shapes=[[self.patch, self.patch, self.patch, 4],
-                                     [self.patch, self.patch, self.patch]])
-
-        self.enqueue_op = queue.enqueue_many([self.image_batch_input, self.label_batch_input])
-        self.image_batch, self.label_batch = queue.dequeue_many(batch_size)
+        raise NotImplementedError
 
     def add_placeholders(self):
         self.image_placeholder = tf.placeholder(tf.float32,
@@ -60,13 +50,6 @@ class FCN_Model(Model):
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                      bias_initializer=tf.constant_initializer(0.0))
 
-            # TODO: uncomment to use queues
-            # conv1 = tf.layers.conv3d(inputs=self.image_batch, filters=10,
-            #                          kernel_size=[5, 5, 5], padding="SAME",
-            #                          use_bias=True, activation=tf.nn.relu,
-            #                          kernel_initializer=tf.contrib.layers.xavier_initializer(),
-            #                          bias_initializer=tf.constant_initializer(0.0))
-            # drop1 = tf.nn.dropout(conv1, self.dropout_placeholder)
             pool1 = tf.layers.max_pooling3d(inputs=conv1, pool_size=(2, 2, 2),
                                             strides=(2, 2, 2), padding='VALID')
 
