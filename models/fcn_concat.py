@@ -359,41 +359,20 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
         fpred = np.zeros((155, 240, 240))
-        fy = np.zeros((155, 240, 240))
 
         while True:
             try:
                 feed = {self.dropout_placeholder: 1.0,
                         self.is_training: False}
-                i, j, k, y, pred = sess.run([self.i, self.j, self.k, self.label, self.pred],
-                                            feed_dict=feed)
+                i, j, k, pred = sess.run([self.i, self.j, self.k, self.pred], feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
 
             for idx, _ in enumerate(i):
-                fy[i[idx] - half_center:i[idx] + half_center,
-                   j[idx] - half_center:j[idx] + half_center,
-                   k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
                 fpred[i[idx] - half_center:i[idx] + half_center,
                       j[idx] - half_center:j[idx] + half_center,
                       k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
                                                                         lower:lower + center, lower:lower + center]
-
-        # dice score for the Whole Tumor
-        dice_whole = dice_score(fy, fpred)
-        print('dice score of whole of patient %s is %f'%(patient, dice_whole))
-
-        # dice score for Tumor Core
-        fpred_core = (fpred == 1) + (fpred == 3)
-        fy_core = (fy == 1) + (fy == 3)
-        dice_core = dice_score(fy_core, fpred_core)
-        print('dice score of core of patient %s is %f'%(patient, dice_core))
-
-        # dice score for Enhancing Tumor
-        fpred_enhancing = fpred == 3
-        fy_enhancing = fy == 3
-        dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-        print('dice score of enhancing of patient %s is %f'%(patient, dice_enhancing))
 
         return fpred
 
