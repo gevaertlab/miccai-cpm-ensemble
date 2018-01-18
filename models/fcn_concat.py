@@ -315,14 +315,15 @@ class FCN_Concat(FCN_Model):
                             # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
 
                             # dice score for Enhancing Tumor
-                            fpred_enhancing = fpred == 3
-                            fy_enhancing = fy == 3
-                            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-                            all_dices_enhancing.append(dice_enhancing)
-                            if current_patient in HGG_patients:
-                                HGG_dices_enhancing.append(dice_enhancing)
-                            else:
-                                LGG_dices_enhancing.append(dice_enhancing)
+                            if np.sum(fpred == 3) > 0:
+                                fpred_enhancing = fpred == 3
+                                fy_enhancing = fy == 3
+                                dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+                                all_dices_enhancing.append(dice_enhancing)
+                                if current_patient in HGG_patients:
+                                    HGG_dices_enhancing.append(dice_enhancing)
+                                else:
+                                    LGG_dices_enhancing.append(dice_enhancing)
                             # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
                     #hardcoded for BraTS
