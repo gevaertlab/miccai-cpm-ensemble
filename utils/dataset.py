@@ -68,8 +68,8 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
         - 20% necoritc
         - 20% edema
     """
-    ratio_non_tumorous = 0.35
-    ratio_enhanced = 0.60
+    ratio_non_tumorous = 0.4
+    ratio_enhanced = 0.65
     ratio_necrotic = 0.8
 
     for _ in range(batch_size):
@@ -168,8 +168,8 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches):
             - 20% necoritc
             - 20% edema
         """
-        ratio_non_tumorous = 0.35
-        ratio_enhanced = 0.60
+        ratio_non_tumorous = 0.4
+        ratio_enhanced = 0.65
         ratio_necrotic = 0.8
 
         for _ in range(nb_batches):
@@ -333,7 +333,7 @@ def get_dataset(directory, is_test, patch_size, batch_size, nb_batches=20, cente
         HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/train', pat) for pat in HGG_patients]
         HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
         LGG_patients = [pat for pat in patients if pat not in HGG_patients]
-        patients = HGG_patients + 2 * LGG_patients
+        patients = HGG_patients + LGG_patients
         shuffle(patients)
 
         def gen():

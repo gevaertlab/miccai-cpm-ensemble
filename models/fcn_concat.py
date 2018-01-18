@@ -224,7 +224,7 @@ class FCN_Concat(FCN_Model):
         batch = 0
 
         # Hardcoded: 168 HGG + 2 * 60 LGG
-        nbatches = (168 + 2 * 60) * self.config.num_train_batches
+        nbatches = (168 +  60) * self.config.num_train_batches
         prog = Progbar(target=nbatches)
 
         sess.run(self.train_init_op)
@@ -423,7 +423,7 @@ class FCN_Concat(FCN_Model):
             train_losses.extend(losses)
             train_bdices.append(train_dice)
 
-            if epoch % 3 == 0:
+            if epoch % 2 == 0:
                 test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test(sess)
                 print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
                       %(test_whole, test_core, test_enhancing))
@@ -431,7 +431,7 @@ class FCN_Concat(FCN_Model):
                 test_whole_dices.append(test_whole)
                 test_core_dices.append(test_core)
                 test_enhancing_dices.append(test_enhancing)
-                lr_schedule.update(batch_no=epoch * nbatches, score=test_whole)
+                lr_schedule.update(batch_no=epoch * nbatches, score=test_core + test_enhancing)
 
                 if test_whole >= best_fdice:
                     best_fdice = test_whole
