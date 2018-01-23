@@ -15,10 +15,8 @@ from utils.data_utils import get_number_patches
 class FCN_Concat(FCN_Model):
 
     def add_dataset(self):
-        train_dataset = get_dataset(self.config.train_path, False, self.patch,\
-                                    self.config.batch_size, nb_batches=self.config.num_train_batches)
-        test_dataset = get_dataset(self.config.val_path, True, self.patch,\
-                                   self.config.batch_size, center_size=self.config.center_patch)
+        train_dataset = get_dataset(self.config.train_path, False, self.config)
+        test_dataset = get_dataset(self.config.val_path, True, self.config)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
             output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),

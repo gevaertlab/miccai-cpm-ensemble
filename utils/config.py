@@ -32,6 +32,7 @@ class Config:
         self.patch_size = int(param_dict.get('patch_size', 32))
         self.center_patch = int(param_dict.get('center_patch', 10))
         self.use_mask = param_dict.get('use_mask', 'False') == 'True'
+        self.ratio = [float(x) for x in param_dict.get('sampling_ratio', '0.25 0.25 0.25').strip().split()]
 
         self.batch_size = int(param_dict.get('batch_size', 50))
         self.num_epochs = int(param_dict.get('num_epochs', 50))

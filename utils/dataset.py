@@ -132,7 +132,7 @@ def train_data_iter_v2(patient_path, batch_size, patch_size):
     return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def train_data_iter(all_patients, patch_size, batch_size, nb_batches):
+def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio):
     batch_count = 0
     half_patch = patch_size // 2
     i_batch = []
@@ -168,9 +168,9 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches):
             - 20% necoritc
             - 20% edema
         """
-        ratio_non_tumorous = 0.4
-        ratio_enhanced = 0.65
-        ratio_necrotic = 0.8
+        ratio_non_tumorous = ratio[0]
+        ratio_enhanced = ratio[1]
+        ratio_necrotic = ratio[2]
 
         for _ in range(nb_batches):
             for _ in range(batch_size):
@@ -319,14 +319,19 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size):
         yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset(directory, is_test, patch_size, batch_size, nb_batches=20, center_size=20):
+def get_dataset(directory, is_test, config):
     # TODO: clean code for 'patients' list
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
     patients = [pat.encode('utf-8') for pat in patients]
 
+    patch_size = config.patch_size
+    batch_size = config.batch_size
+    ratio = config.ratio
+
     if not is_test:
+        nb_batches = config.num_train_batches
         # Hardcoded for now ...
         # double number of LGG patients (oversampling)
         HGG_patients = os.listdir('data/brats2017/HGG/train')
@@ -337,13 +342,14 @@ def get_dataset(directory, is_test, patch_size, batch_size, nb_batches=20, cente
         shuffle(patients)
 
         def gen():
-            return train_data_iter(patients, patch_size, batch_size, nb_batches)
+            return train_data_iter(patients, patch_size, batch_size, nb_batches, ratio)
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=3000)
     else:
+        center_size = config.center_patch
         def gen():
             return test_data_iter(patients, patch_size, center_size, batch_size)
 
