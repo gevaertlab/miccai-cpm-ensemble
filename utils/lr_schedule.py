@@ -14,7 +14,7 @@ class LRSchedule(object):
         self.end_warm    = end_warm # optional: if provided, warm start
 
         if self.end_decay is not None:
-            self.exp_decay = np.power(lr_min/lr_init, 1/float(end_decay - start_decay))
+            self.exp_decay = np.power(lr_min / lr_init, 1 / float(end_decay - start_decay))
 
         # initialize learning rate and score on eval
         self.score = 0

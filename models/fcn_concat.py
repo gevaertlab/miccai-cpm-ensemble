@@ -221,8 +221,7 @@ class FCN_Concat(FCN_Model):
         bdices = []
         batch = 0
 
-        # Hardcoded: 168 HGG + 2 * 60 LGG
-        nbatches = (168 +  60) * self.config.num_train_batches
+        nbatches = len(self.train_ex_paths) * self.config.num_train_batches
         prog = Progbar(target=nbatches)
 
         sess.run(self.train_init_op)
@@ -249,7 +248,8 @@ class FCN_Concat(FCN_Model):
 
             # logging
             prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
-                                                                   ('score', lr_schedule.score)])
+                                                                   ('score', lr_schedule.score),\
+                                                                   ('start_decay', lr_schedule.start_decay)])
 
         return losses, np.mean(bdices)
 
@@ -430,5 +430,7 @@ class FCN_Concat(FCN_Model):
 
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
+
+            print('current batch number is:', epoch * nbatches)
 
         return test_whole

@@ -33,6 +33,14 @@ def load_data_brats(patient_path):
 
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
+    # random flip around sagittal view
+    # do not use it so far
+    # flip = np.random.random()
+    flip = 1
+    if flip < 0.5:
+        data = data[:, ::-1, :, :]
+        labels = labels[:, ::-1, :]
+
     return data, labels
 
 
