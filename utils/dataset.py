@@ -168,6 +168,8 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio):
             - 20% necoritc
             - 20% edema
         """
+        assert(len(ratio) == 4), 'oyu should provide 4 values of ratio for the 4 parts of the tumor'
+        assert(np.sum(ratio) == 1), 'the sum of the ratios should be 1'
         ratio_non_tumorous = ratio[0]
         ratio_enhanced = ratio[1]
         ratio_necrotic = ratio[2]
