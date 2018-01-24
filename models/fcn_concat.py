@@ -247,9 +247,9 @@ class FCN_Concat(FCN_Model):
             bdices.append(bdice)
 
             # logging
-            prog.update(batch + 1, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
-                                                                   ('score', lr_schedule.score),\
-                                                                   ('start_decay', lr_schedule.start_decay)])
+            prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
+                                                               ('score', lr_schedule.score),\
+                                                               ('exp_decay', lr_schedule.exp_decay)])
 
         return losses, np.mean(bdices)
 
@@ -430,7 +430,5 @@ class FCN_Concat(FCN_Model):
 
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
-
-            print('current batch number is:', epoch * nbatches)
 
         return test_whole

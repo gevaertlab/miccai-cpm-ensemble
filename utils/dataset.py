@@ -344,12 +344,12 @@ def get_dataset(directory, is_test, config):
         nb_batches = config.num_train_batches
         # Hardcoded for now ...
         # double number of LGG patients (oversampling)
-        HGG_patients = os.listdir('data/brats2017/HGG/train')
-        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/train', pat) for pat in HGG_patients]
-        HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
-        LGG_patients = [pat for pat in patients if pat not in HGG_patients]
-        patients = HGG_patients + LGG_patients
-        shuffle(patients)
+        # HGG_patients = os.listdir('data/brats2017/HGG/train')
+        # HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/train', pat) for pat in HGG_patients]
+        # HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
+        # LGG_patients = [pat for pat in patients if pat not in HGG_patients]
+        # patients = HGG_patients + LGG_patients
+        # shuffle(patients)
 
         def gen():
             return train_data_iter(patients, patch_size, batch_size, nb_batches, ratio)
@@ -357,7 +357,7 @@ def get_dataset(directory, is_test, config):
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
-        dataset = dataset.shuffle(buffer_size=3000)
+        dataset = dataset.shuffle(buffer_size=500)
     else:
         center_size = config.center_patch
         def gen():
