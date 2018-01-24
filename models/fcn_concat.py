@@ -379,11 +379,13 @@ class FCN_Concat(FCN_Model):
         config = self.config
 
         nbatches = len(self.train_ex_paths) * config.num_train_batches
+        exp_decay = np.power(config.lr_min / config.lr_init,\
+                             1 / float(config.end_decay - config.start_decay))
         lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                                  start_decay=config.start_decay * nbatches,
                                  end_decay=config.end_decay * nbatches,
                                  lr_warm=config.lr_warm, decay_rate=config.decay_rate,
-                                 end_warm=config.end_warm * nbatches)
+                                 end_warm=config.end_warm * nbatches, exp_decay=exp_decay)
 
         saver = tf.train.Saver()
 

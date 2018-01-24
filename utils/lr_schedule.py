@@ -3,7 +3,7 @@ import numpy as np
 
 class LRSchedule(object):
     def __init__(self, lr_init=1e-3, lr_min=1e-4, start_decay=0, decay_rate=None, end_decay=None,
-        lr_warm=1e-4, end_warm=None):
+        lr_warm=1e-4, end_warm=None, exp_decay=0.8):
         # store parameters
         self.lr_init     = lr_init
         self.lr_min      = lr_min
@@ -12,9 +12,7 @@ class LRSchedule(object):
         self.end_decay   = end_decay # optional: if provided, exp decay
         self.lr_warm     = lr_warm
         self.end_warm    = end_warm # optional: if provided, warm start
-
-        if self.end_decay is not None:
-            self.exp_decay = np.power(lr_min / lr_init, 1 / float(end_decay - start_decay))
+        self.exp_decay = exp_decay
 
         # initialize learning rate and score on eval
         self.score = 0
