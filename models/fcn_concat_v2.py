@@ -3,8 +3,8 @@ import tensorflow as tf
 from models.fcn_concat import FCN_Concat
 
 class FCN_Concat_v2(FCN_Concat):
-	def add_model(self):
-		self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
+    def add_model(self):
+        self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
         nb_filters = self.config.nb_filters
         k_size = self.config.kernel_size
 
@@ -17,7 +17,8 @@ class FCN_Concat_v2(FCN_Concat):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
             bn1 = tf.layers.batch_normalization(conv1, axis=-1, training=self.is_training)
             relu1 = tf.nn.relu(bn1)
 
@@ -36,7 +37,8 @@ class FCN_Concat_v2(FCN_Concat):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
 
             bn2 = tf.layers.batch_normalization(conv2, axis=-1, training=self.is_training)
             relu2 = tf.nn.relu(bn2)
@@ -55,7 +57,8 @@ class FCN_Concat_v2(FCN_Concat):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
 
             bn3 = tf.layers.batch_normalization(conv3, axis=-1, training=self.is_training)
             relu3 = tf.nn.relu(bn3)
@@ -76,7 +79,8 @@ class FCN_Concat_v2(FCN_Concat):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
 
             bn4 = tf.layers.batch_normalization(conv4, axis=-1, training=self.is_training)
             relu4 = tf.nn.relu(bn4)
@@ -94,7 +98,8 @@ class FCN_Concat_v2(FCN_Concat):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.zeros_initializer())
+                                                 bias_initializer=tf.zeros_initializer(),
+                                                 kernel_regularizer=tf.nn.l2_loss)
 
             bias = tf.get_variable('biases', [4 * nb_filters],
                                    initializer=tf.zeros_initializer())
@@ -114,7 +119,8 @@ class FCN_Concat_v2(FCN_Concat):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
+                                                 bias_initializer=tf.constant_initializer(0.0),
+                                                 kernel_regularizer=tf.nn.l2_loss)
             bias = tf.get_variable('biases', [2 * nb_filters],
                                    initializer=tf.zeros_initializer())
             deconv6 = deconv6 + bias
@@ -137,7 +143,8 @@ class FCN_Concat_v2(FCN_Concat):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
+                                                 bias_initializer=tf.constant_initializer(0.0),
+                                                 kernel_regularizer=tf.nn.l2_loss)
             bias = tf.get_variable('biases', [nb_filters],
                                    initializer=tf.zeros_initializer())
             deconv7 = deconv7 + bias
@@ -157,9 +164,30 @@ class FCN_Concat_v2(FCN_Concat):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
+                                                 bias_initializer=tf.constant_initializer(0.0),
+                                                 kernel_regularizer=tf.nn.l2_loss)
 
             # print(deconv6.get_shape())
             bias = tf.get_variable('biases', [self.nb_classes],
                                    initializer=tf.zeros_initializer())
             self.score = deconv8 + bias
+
+    def add_loss_op(self):
+        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
+
+        # add mask
+        if self.config.use_mask:
+            mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch),
+                                   dtype=tf.int32, initializer=tf.zeros_initializer())
+            c_size = self.config.center_patch
+            lower = self.patch // 2 - c_size // 2
+            center = tf.ones(shape=(c_size, c_size, c_size), dtype=tf.int32)
+            mask = tf.assign(mask[lower: lower + c_size, lower: lower + c_size, lower: lower + c_size], center)
+            mask = tf.cast(mask, tf.bool)
+            mask = tf.expand_dims(mask, axis=0)
+            mask = tf.tile(mask, multiples=[tf.shape(ce_loss)[0], 1, 1, 1])
+            ce_loss = tf.boolean_mask(ce_loss, mask)
+
+        ce_loss = tf.reduce_mean(ce_loss)
+        reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
+        self.loss = ce_loss + reg_loss
