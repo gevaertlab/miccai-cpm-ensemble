@@ -15,6 +15,7 @@ from docopt import docopt
 import tensorflow as tf
 
 from models.fcn_concat import FCN_Concat
+from models.fcn_concat_v2 import FCN_Concat_v2
 from utils.config import Config
 
 if __name__ == '__main__':
@@ -23,7 +24,8 @@ if __name__ == '__main__':
     debug = arguments['--debug']
 
     config = Config(cfg_path)
-    model = FCN_Concat(config)
+    # model = FCN_Concat(config)
+    model = FCN_Concat_v2(config)
 
     if debug:
         model.train_ex_paths = model.train_ex_paths[:2]
