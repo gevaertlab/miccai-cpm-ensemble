@@ -103,7 +103,7 @@ class FCN_Concat(FCN_Model):
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                                  bias_initializer=tf.zeros_initializer())
 
-            bias = tf.get_variable('biases', [20],
+            bias = tf.get_variable('biases', [2 * nb_filters],
                                    initializer=tf.zeros_initializer())
             deconv4 = deconv4 + bias
             # shape = (patch/4, patch/4, patch/4)
@@ -123,7 +123,7 @@ class FCN_Concat(FCN_Model):
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                                  bias_initializer=tf.constant_initializer(0.0))
-            bias = tf.get_variable('biases', [10],
+            bias = tf.get_variable('biases', [nb_filters],
                                    initializer=tf.zeros_initializer())
             deconv5 = deconv5 + bias
             # shape = (patch/2, patch/2, patch/2)
