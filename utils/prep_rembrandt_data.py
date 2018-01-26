@@ -1,29 +1,54 @@
-import numpy as np
-
 import os
 import shutil
 
 import glob
 import gzip
 
-from data_utils import im_path_to_arr, arr_to_im_path
+import numpy as np
 
-in_path = '../data/REMBRANDTVerified'
-out_path = '../data/rembrandt'
+from data_utils import im_path_to_arr
+from data_utils import arr_to_im_path
+
+
+in_path = 'rembrandt'
+out_path = '/data/rembrandt_4labels'
+
 
 def j(path, fname):
     return os.path.join(path, fname)
 
+
+def create_labels(directory):
+    # hardcoded for Rembrandt dataset
+    labels = np.zeros((55, 256, 256))
+    edema = im_path_to_arr(j(directory, 'edema.nii'))
+    necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
+    active = im_path_to_arr(j(directory, 'active.nii'))
+    labels[edema > 0] = 2
+    labels[active > 0] = 3
+    labels[necrosis > 0] = 1
+    arr_to_im_path(labels, j(directory, 'tumor.nii'))
+
+
 shutil.rmtree(j(in_path, 'HF1708=')) # this one is 512x512
 shutil.rmtree(j(in_path, 'HF0899=')) # this one has no tumor
+
 
 # reorganize data
 for ex_name in os.listdir(in_path):
     ex_path = j(in_path, ex_name)
     if os.path.isdir(ex_path):
 
-        with gzip.open(j(ex_path, 'tumor.nii.gz'), 'rb') as fgz:
-            with open(j(ex_path, 'tumor.nii'), 'wb') as f:
+        with gzip.open(j(ex_path, 'edema.nii.gz'), 'rb') as fgz:
+            with open(j(ex_path, 'edema.nii'), 'wb') as f:
+                f.write(fgz.read())
+
+        with gzip.open(j(ex_path, 'active.nii.gz'), 'rb') as fgz:
+            with open(j(ex_path, 'active.nii'), 'wb') as f:
+                f.write(fgz.read())
+
+        with gzip.open(j(ex_path, 'necrosis.nii.gz'), 'rb') as fgz:
+            with open(j(ex_path, 'necrosis.nii'), 'wb') as f:
                 f.write(fgz.read())
 
         os.remove(j(ex_path, 'flair_t1_bcorr.nii'))
@@ -32,10 +57,6 @@ for ex_name in os.listdir(in_path):
         os.remove(j(ex_path, 't1-post_pre_bcorr.nii'))
         os.remove(j(ex_path, 't1-pre_bcorr.nii'))
         os.remove(j(ex_path, 't2_t1_bcorr.nii'))
-        for gz in glob.glob(j(ex_path, '*.gz')):
-            os.remove(gz)
-        for txt in glob.glob(j(ex_path, '*.txt')):
-            os.remove(txt)
 
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))
@@ -46,7 +67,8 @@ for ex_name in os.listdir(in_path):
         os.rename(j(ex_path, 't2_t1_bcorr_brain.nii'),
                   j(ex_path, 't2.nii'))
 
-# normalize data
+
+# create images and labels
 for ex_name in os.listdir(in_path):
     ex_path = os.path.join(in_path, ex_name)
     if os.path.isdir(ex_path):
@@ -55,15 +77,28 @@ for ex_name in os.listdir(in_path):
             im_type = im_name.split('.')[0]
             if im_type in ['t1', 't1c', 't2', 'flair']:
                 arr = im_path_to_arr(im_path).astype(np.float32)
-                brain = np.where(arr != 0)
-                mu = np.mean(arr[brain])
-                sigma = np.std(arr[brain])
-                arr[brain] = (arr[brain]-mu)/sigma
                 arr_to_im_path(arr, im_path)
-            if im_type == 'tumor':
-                arr = im_path_to_arr(im_path).astype(np.int32)
-                arr_to_im_path(arr, im_path)
+        create_labels(ex_path)
+
 
 # split data
-test_path = os.path.join(out_path, 'test')
-shutil.copytree(in_path, test_path)
+train_path = j(out_path, 'train')
+val_path = j(out_path, 'val')
+
+all_patients = os.listdir(in_path)
+all_patients = [j(in_path, pat) for pat in all_patients]
+all_patients = [pat for pat in all_patients if os.path.isdir(pat)]
+np.random.shuffle(all_patients)
+
+train_patients = all_patients[:int(0.8 * len(all_patients))]
+val_patients = all_patients[int(0.8 * len(all_patients)):]
+
+for pat_path in train_patients:
+    pat_name = pat_path.strip().split('/')[-1]
+    copy_path = j(train_path, pat_name)
+    shutil.copytree(pat_path, copy_path)
+
+for pat_path in val_patients:
+    pat_name = pat_path.strip().split('/')[-1]
+    copy_path = j(val_path, pat_name)
+    shutil.copytree(pat_path, copy_path)
