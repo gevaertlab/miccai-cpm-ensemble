@@ -171,23 +171,3 @@ class FCN_Concat_v2(FCN_Concat):
             bias = tf.get_variable('biases', [self.nb_classes],
                                    initializer=tf.zeros_initializer())
             self.score = deconv8 + bias
-
-    def add_loss_op(self):
-        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
-
-        # add mask
-        if self.config.use_mask:
-            mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch),
-                                   dtype=tf.int32, initializer=tf.zeros_initializer())
-            c_size = self.config.center_patch
-            lower = self.patch // 2 - c_size // 2
-            center = tf.ones(shape=(c_size, c_size, c_size), dtype=tf.int32)
-            mask = tf.assign(mask[lower: lower + c_size, lower: lower + c_size, lower: lower + c_size], center)
-            mask = tf.cast(mask, tf.bool)
-            mask = tf.expand_dims(mask, axis=0)
-            mask = tf.tile(mask, multiples=[tf.shape(ce_loss)[0], 1, 1, 1])
-            ce_loss = tf.boolean_mask(ce_loss, mask)
-
-        ce_loss = tf.reduce_mean(ce_loss)
-        reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
-        self.loss = ce_loss + reg_loss

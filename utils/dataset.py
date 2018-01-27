@@ -6,6 +6,7 @@ import tensorflow as tf
 
 from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
+from utils.data_utils import remove_low_high
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
 
@@ -21,20 +22,27 @@ def load_data_brats(patient_path):
         im_type = im_name.split('.')[0].split('_')[-1]
         image = im_path_to_arr(im_path)
         if im_type == 't1':
-            data[0] = normalize_image(image)
+            image = normalize_image(image)
+            image = remove_low_high(image)
+            data[0] = image
         if im_type == 't1c' or im_type == 't1ce':
-            data[1] = normalize_image(image)
+            image = normalize_image(image)
+            image = remove_low_high(image)
+            data[1] = image
         if im_type == 't2':
-            data[2] = normalize_image(image)
+            image = normalize_image(image)
+            image = remove_low_high(image)
+            data[2] = image
         if im_type == 'flair' or im_type == 'fla':
-            data[3] = normalize_image(image)
+            image = normalize_image(image)
+            image = remove_low_high(image)
+            data[3] = image
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
 
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal view
-    # do not use it so far
     flip = np.random.random()
     # flip = 1
     if flip < 0.5:
@@ -176,7 +184,7 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio):
             - 20% necoritc
             - 20% edema
         """
-        assert(len(ratio) == 4), 'oyu should provide 4 values of ratio for the 4 parts of the tumor'
+        assert(len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
         assert(np.sum(ratio) == 1), 'the sum of the ratios should be 1'
         ratio_non_tumorous = ratio[0]
         ratio_enhanced = ratio[1]

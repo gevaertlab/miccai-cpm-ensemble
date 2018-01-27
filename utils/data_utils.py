@@ -89,3 +89,11 @@ def normalize_image(image):
 def preprocess_labels(labels):
     labels[labels == 4] = 3
     return labels
+
+
+def remove_low_high(image):
+    low = np.percentile(image, 1)
+    high = np.percentile(image, 99)
+    image[image < low] = low
+    image[image > high] = high
+    return image

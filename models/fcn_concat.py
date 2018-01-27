@@ -7,6 +7,7 @@ from models.fcn import FCN_Model
 from utils.dataset import get_dataset
 from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
+from utils.dice_score import dice_score_tf
 from utils.lr_schedule import LRSchedule
 from utils.general import Progbar
 from utils.data_utils import get_number_patches
@@ -42,7 +43,8 @@ class FCN_Concat(FCN_Model):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
             bn1 = tf.layers.batch_normalization(conv1, axis=-1, training=self.is_training)
             relu1 = tf.nn.relu(bn1)
 
@@ -61,7 +63,8 @@ class FCN_Concat(FCN_Model):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
 
             bn2 = tf.layers.batch_normalization(conv2, axis=-1, training=self.is_training)
             relu2 = tf.nn.relu(bn2)
@@ -80,7 +83,8 @@ class FCN_Concat(FCN_Model):
                                      activation=None,
                                      use_bias=True,
                                      kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0))
+                                     bias_initializer=tf.constant_initializer(0.0),
+                                     kernel_regularizer=tf.nn.l2_loss)
 
             bn3 = tf.layers.batch_normalization(conv3, axis=-1, training=self.is_training)
             relu3 = tf.nn.relu(bn3)
@@ -101,7 +105,8 @@ class FCN_Concat(FCN_Model):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.zeros_initializer())
+                                                 bias_initializer=tf.zeros_initializer(),
+                                                 kernel_regularizer=tf.nn.l2_loss)
 
             bias = tf.get_variable('biases', [2 * nb_filters],
                                    initializer=tf.zeros_initializer())
@@ -122,7 +127,8 @@ class FCN_Concat(FCN_Model):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
+                                                 bias_initializer=tf.constant_initializer(0.0),
+                                                 kernel_regularizer=tf.nn.l2_loss)
             bias = tf.get_variable('biases', [nb_filters],
                                    initializer=tf.zeros_initializer())
             deconv5 = deconv5 + bias
@@ -145,7 +151,8 @@ class FCN_Concat(FCN_Model):
                                                  activation=None,
                                                  use_bias=False,
                                                  kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                                 bias_initializer=tf.constant_initializer(0.0))
+                                                 bias_initializer=tf.constant_initializer(0.0),
+                                                 kernel_regularizer=tf.nn.l2_loss)
 
             # print(deconv6.get_shape())
             bias = tf.get_variable('biases', [self.nb_classes],
@@ -154,6 +161,24 @@ class FCN_Concat(FCN_Model):
 
     def add_loss_op(self):
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
+
+        # dice score loss
+        dice_score_loss = 0
+        if self.config.use_dice_score_loss:
+            # dice score of WT
+            whole_pred = tf.not_equal(self.pred, 0)
+            whole_label = tf.not_equal(self.label, 0)
+            ds_loss_whole = dice_score_tf(whole_pred, whole_label)
+            # dice score of TC
+            core_pred = tf.logical_or(tf.equal(self.pred, 1), tf.equal(self.pred, 3))
+            core_label = tf.logical_or(tf.equal(self.label, 1), tf.equal(self.label, 3))
+            ds_loss_core = dice_score_tf(core_pred, core_label)
+            # dice score of ET
+            enhancing_pred = tf.equal(self.pred, 3)
+            enhancing_label = tf.equal(self.label, 3)
+            ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
+            # total dice score loss
+            dice_score_loss = self.config.ds_loss_beta * (ds_loss_enhancing + ds_loss_core + ds_loss_whole)
 
         # add mask
         if self.config.use_mask:
@@ -169,27 +194,8 @@ class FCN_Concat(FCN_Model):
             ce_loss = tf.boolean_mask(ce_loss, mask)
 
         ce_loss = tf.reduce_mean(ce_loss)
-
-        with tf.variable_scope('conv1', reuse=True):
-            w1 = tf.get_variable('conv3d/kernel')
-        with tf.variable_scope('conv2', reuse=True):
-            w2 = tf.get_variable('conv3d/kernel')
-        with tf.variable_scope('conv3', reuse=True):
-            w3 = tf.get_variable('conv3d/kernel')
-        with tf.variable_scope('deconv4', reuse=True):
-            w4 = tf.get_variable('conv3d_transpose/kernel')
-        with tf.variable_scope('deconv5', reuse=True):
-            w5 = tf.get_variable('conv3d_transpose/kernel')
-        with tf.variable_scope('deconv6', reuse=True):
-            w6 = tf.get_variable('conv3d_transpose/kernel')
-        reg_loss = self.config.l2 * (tf.nn.l2_loss(w1)
-                                     + tf.nn.l2_loss(w2)
-                                     + tf.nn.l2_loss(w3)
-                                     + tf.nn.l2_loss(w4)
-                                     + tf.nn.l2_loss(w5)
-                                     + tf.nn.l2_loss(w6))
-
-        self.loss = ce_loss + reg_loss
+        reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
+        self.loss = ce_loss + reg_loss + dice_score_loss
 
     def get_variables_to_restore(self, level=4):
         var_names_to_restore = ['conv1/conv3d/kernel:0',
