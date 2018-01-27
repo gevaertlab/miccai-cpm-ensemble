@@ -282,16 +282,19 @@ class FCN_Concat(FCN_Model):
         center = self.config.center_patch
         half_center = center // 2
         lower = self.patch // 2 - half_center
-
+        
         nbatches = get_number_patches((155, 240, 240), self.patch, center) * len(self.val_ex_paths) // self.config.batch_size + 1
         prog = Progbar(target=nbatches)
-
+        
         for batch in range(nbatches):
             feed = {self.dropout_placeholder: 1.0,
                     self.is_training: False}
-            patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
-                                                         self.k, self.label, self.pred, self.prob],
-                                                        feed_dict=feed)
+            try:
+                patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
+                                                             self.k, self.label, self.pred, self.prob],
+                                                            feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
 
             for idx, _ in enumerate(i):
                 if patients[idx] != current_patient:
