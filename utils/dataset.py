@@ -11,7 +11,7 @@ from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
 
 
-def load_data_brats(patient_path):
+def load_data_brats(patient_path, is_test):
     data = [None] * 4
 
     patient_path = patient_path.decode('utf-8')
@@ -23,19 +23,19 @@ def load_data_brats(patient_path):
         image = im_path_to_arr(im_path)
         if im_type == 't1':
             image = normalize_image(image)
-            image = remove_low_high(image)
+            # image = remove_low_high(image)
             data[0] = image
         if im_type == 't1c' or im_type == 't1ce':
             image = normalize_image(image)
-            image = remove_low_high(image)
+            # image = remove_low_high(image)
             data[1] = image
         if im_type == 't2':
             image = normalize_image(image)
-            image = remove_low_high(image)
+            # image = remove_low_high(image)
             data[2] = image
         if im_type == 'flair' or im_type == 'fla':
             image = normalize_image(image)
-            image = remove_low_high(image)
+            # image = remove_low_high(image)
             data[3] = image
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
@@ -43,17 +43,17 @@ def load_data_brats(patient_path):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal view
-    flip = np.random.random()
-    # flip = 1
-    if flip < 0.5:
-        data = data[:, ::-1, :, :]
-        labels = labels[:, ::-1, :]
+    if not is_test:
+        flip = np.random.random()
+        if flip < 0.5:
+            data = data[:, ::-1, :, :]
+            labels = labels[:, ::-1, :]
 
     return data, labels
 
 
 def train_data_iter_v2(patient_path, batch_size, patch_size):
-    data, labels = load_data_brats(patient_path)
+    data, labels = load_data_brats(patient_path, False)
 
     half_patch = patch_size // 2
 
@@ -160,7 +160,7 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio):
 
     for patient_path in all_patients:
 
-        data, labels = load_data_brats(patient_path)
+        data, labels = load_data_brats(patient_path, False)
 
         trimmed_data = data[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch, :]
         trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
@@ -285,7 +285,7 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size):
 
     for patient_path in all_patients:
 
-        data, labels = load_data_brats(patient_path)
+        data, labels = load_data_brats(patient_path, True)
         i_len, j_len, k_len = labels.shape
 
         for i in get_patch_centers_fcn(i_len, patch_size, center_size):
