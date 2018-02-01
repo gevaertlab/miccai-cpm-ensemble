@@ -422,8 +422,8 @@ class FCN_Concat(FCN_Model):
                 test_enhancing_dices.append(test_enhancing)
                 lr_schedule.update(batch_no=epoch * nbatches, score=test_core + test_enhancing)
 
-                if test_whole >= best_fdice:
-                    best_fdice = test_whole
+                if test_core + test_enhancing >= best_fdice:
+                    best_fdice = test_core + test_enhancing
 
                     print('Saving checkpoint to %s ......' %(config.ckpt_path))
                     saver.save(sess, config.ckpt_path)

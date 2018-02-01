@@ -10,7 +10,7 @@ from data_utils import im_path_to_arr
 from data_utils import arr_to_im_path
 
 
-in_path = '/labs/gevaertlab/data/tumor_segmentation/rembrandt'
+in_path = '/labs/gevaertlab/data/tumor_segmentation/REMBRANDTVerified'
 train_path = '/local-scratch/romain_scratch/rembrandt/train'
 val_path = '/local-scratch/romain_scratch/rembrandt/val'
 
@@ -22,12 +22,27 @@ def j(path, fname):
 def create_labels(directory):
     # hardcoded for Rembrandt dataset
     labels = np.zeros((55, 256, 256))
-    edema = im_path_to_arr(j(directory, 'edema.nii'))
-    necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
-    active = im_path_to_arr(j(directory, 'active.nii'))
-    labels[edema > 0] = 2
-    labels[active > 0] = 4
-    labels[necrosis > 0] = 1
+    if 'edema.nii' in os.listdir(directory):
+        with gzip.open(j(directory, 'edema.nii.gz'), 'rb') as fgz:
+            with open(j(directory, 'edema.nii'), 'wb') as f:
+                f.write(fgz.read())
+        os.remove(j(directory, 'edema.nii'))
+        edema = im_path_to_arr(j(directory, 'edema.nii'))
+        labels[edema > 0] = 2
+    if 'necrosis.nii' in os.listdir(directory):
+        with gzip.open(j(directory, 'necrosis.nii.gz'), 'rb') as fgz:
+            with open(j(directory, 'necrosis.nii'), 'wb') as f:
+                f.write(fgz.read())
+        os.remove(j(directory, 'necrosis.nii'))
+        necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
+        labels[necrosis > 0] = 1
+    if 'active.nii' in os.listdir(directory):
+        with gzip.open(j(directory, 'active.nii.gz'), 'rb') as fgz:
+            with open(j(directory, 'active.nii'), 'wb') as f:
+                f.write(fgz.read())
+        os.remove(j(directory, 'active.nii'))
+        active = im_path_to_arr(j(directory, 'active.nii'))
+        labels[active > 0] = 4
     arr_to_im_path(labels, j(directory, 'tumor.nii'))
 
 
@@ -40,24 +55,18 @@ for ex_name in os.listdir(in_path):
     ex_path = j(in_path, ex_name)
     if os.path.isdir(ex_path):
 
-        with gzip.open(j(ex_path, 'edema.nii.gz'), 'rb') as fgz:
-            with open(j(ex_path, 'edema.nii'), 'wb') as f:
-                f.write(fgz.read())
-
-        with gzip.open(j(ex_path, 'active.nii.gz'), 'rb') as fgz:
-            with open(j(ex_path, 'active.nii'), 'wb') as f:
-                f.write(fgz.read())
-
-        with gzip.open(j(ex_path, 'necrosis.nii.gz'), 'rb') as fgz:
-            with open(j(ex_path, 'necrosis.nii'), 'wb') as f:
-                f.write(fgz.read())
-
-        os.remove(j(ex_path, 'flair_t1_bcorr.nii'))
-        os.remove(j(ex_path, 'pd_t1_bcorr.nii'))
-        os.remove(j(ex_path, 'pd_t1_bcorr_brain.nii'))
-        os.remove(j(ex_path, 't1-post_pre_bcorr.nii'))
-        os.remove(j(ex_path, 't1-pre_bcorr.nii'))
-        os.remove(j(ex_path, 't2_t1_bcorr.nii'))
+        if 'flair_t1_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'flair_t1_bcorr.nii'))
+        if 'pd_t1_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'pd_t1_bcorr.nii'))
+        if 'pd_t1_bcorr_brain.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'pd_t1_bcorr_brain.nii'))
+        if 'post_pre_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't1-post_pre_bcorr.nii'))
+        if 'pre_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't1-pre_bcorr.nii'))
+        if 't2_t1_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't2_t1_bcorr.nii'))
 
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))
