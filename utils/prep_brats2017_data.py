@@ -6,14 +6,26 @@ from random import shuffle
 
 
 if __name__ == '__main__':
-    all_data_path = 'data/brats2017/HGG'
-    train_path = 'data/brats2017/HGG/train'
-    val_path = 'data/brats2017/HGG/val'
+    HGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/brats17/Brats17TrainingData/HGG'
+    LGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/brats17/Brats17TrainingData/LGG'
+    train_path = '/local-scratch/romain_scratch/brats2017/train'
+    val_path = '/local-scratch/romain_scratch/brats2017/val'
 
     all_files = []
 
-    for patient_name in os.listdir(all_data_path):
-        patient_path = os.path.join(all_data_path, patient_name)
+    for patient_name in os.listdir(HGG_data_path):
+        patient_path = os.path.join(HGG_data_path, patient_name)
+        all_files.append((patient_path, patient_name))
+        for modality in os.listdir(patient_path):
+            modality_path = os.path.join(patient_path, modality)
+            out_path = modality_path[:-3]
+            with gzip.open(modality_path, 'rb') as fgz:
+                with open(out_path, 'wb') as f:
+                    f.write(fgz.read())
+            os.remove(modality_path)
+
+    for patient_name in os.listdir(LGG_data_path):
+        patient_path = os.path.join(LGG_data_path, patient_name)
         all_files.append((patient_path, patient_name))
         for modality in os.listdir(patient_path):
             modality_path = os.path.join(patient_path, modality)

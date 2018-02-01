@@ -147,7 +147,6 @@ class FCN_Model(Model):
 #                                    + tf.nn.l2_loss(w3)
 #                                    + tf.nn.l2_loss(w4)
 
-        # self.loss = ce_loss + reg_loss
         # self.loss = dice_score_loss
 
     def get_variables_to_restore(self, level=3):

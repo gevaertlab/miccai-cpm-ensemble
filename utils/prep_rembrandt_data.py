@@ -10,8 +10,9 @@ from data_utils import im_path_to_arr
 from data_utils import arr_to_im_path
 
 
-in_path = 'rembrandt'
-out_path = '/data/rembrandt_4labels'
+in_path = '/labs/gevaertlab/data/tumor_segmentation/rembrandt'
+train_path = '/local-scratch/romain_scratch/rembrandt/train'
+val_path = '/local-scratch/romain_scratch/rembrandt/val'
 
 
 def j(path, fname):
@@ -25,7 +26,7 @@ def create_labels(directory):
     necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
     active = im_path_to_arr(j(directory, 'active.nii'))
     labels[edema > 0] = 2
-    labels[active > 0] = 3
+    labels[active > 0] = 4
     labels[necrosis > 0] = 1
     arr_to_im_path(labels, j(directory, 'tumor.nii'))
 
@@ -82,23 +83,18 @@ for ex_name in os.listdir(in_path):
 
 
 # split data
-train_path = j(out_path, 'train')
-val_path = j(out_path, 'val')
-
 all_patients = os.listdir(in_path)
-all_patients = [j(in_path, pat) for pat in all_patients]
-all_patients = [pat for pat in all_patients if os.path.isdir(pat)]
+all_patients = [(j(in_path, pat), pat) for pat in all_patients]
+all_patients = [pat for pat in all_patients if os.path.isdir(pat[0])]
 np.random.shuffle(all_patients)
 
 train_patients = all_patients[:int(0.8 * len(all_patients))]
 val_patients = all_patients[int(0.8 * len(all_patients)):]
 
-for pat_path in train_patients:
-    pat_name = pat_path.strip().split('/')[-1]
+for pat_path, pat_name in train_patients:
     copy_path = j(train_path, pat_name)
     shutil.copytree(pat_path, copy_path)
 
-for pat_path in val_patients:
-    pat_name = pat_path.strip().split('/')[-1]
+for pat_path, pat_name in val_patients:
     copy_path = j(val_path, pat_name)
     shutil.copytree(pat_path, copy_path)

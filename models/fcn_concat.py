@@ -161,6 +161,7 @@ class FCN_Concat(FCN_Model):
 
     def add_loss_op(self):
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
+        ce_loss = tf.reduce_mean(ce_loss)
 
         # dice score loss
         dice_score_loss = 0
@@ -193,7 +194,6 @@ class FCN_Concat(FCN_Model):
             mask = tf.tile(mask, multiples=[tf.shape(ce_loss)[0], 1, 1, 1])
             ce_loss = tf.boolean_mask(ce_loss, mask)
 
-        ce_loss = tf.reduce_mean(ce_loss)
         reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
         self.loss = ce_loss + reg_loss + dice_score_loss
 
