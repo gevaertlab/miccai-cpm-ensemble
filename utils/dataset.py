@@ -44,7 +44,8 @@ def load_data_brats(patient_path, is_test):
 
     # random flip around sagittal view
     if not is_test:
-        flip = np.random.random()
+        # flip = np.random.random()
+        flip = 1
         if flip < 0.5:
             data = data[:, ::-1, :, :]
             labels = labels[:, ::-1, :]
@@ -365,7 +366,7 @@ def get_dataset(directory, is_test, config):
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
-        dataset = dataset.shuffle(buffer_size=500)
+        dataset = dataset.shuffle(buffer_size=2000)
     else:
         center_size = config.center_patch
         def gen():
