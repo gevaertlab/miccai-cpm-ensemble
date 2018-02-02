@@ -6,8 +6,8 @@ from random import shuffle
 
 
 if __name__ == '__main__':
-    HGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/brats17/Brats17TrainingData/HGG'
-    LGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/brats17/Brats17TrainingData/LGG'
+    HGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG'
+    LGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/LGG'
     train_path = '/local-scratch/romain_scratch/brats2017/train'
     val_path = '/local-scratch/romain_scratch/brats2017/val'
 
