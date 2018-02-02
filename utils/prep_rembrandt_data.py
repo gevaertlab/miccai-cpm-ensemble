@@ -47,7 +47,7 @@ def create_labels(directory):
     arr_to_im_path(labels, j(directory, 'tumor.nii'))
 
 # copy whole dataset to new location
-shutil.copytree(out_path, out_path)
+shutil.copytree(in_path, out_path)
 
 # preprocess dataset
 shutil.rmtree(j(out_path, 'HF1708=')) # this one is 512x512
@@ -84,6 +84,7 @@ for ex_name in os.listdir(out_path):
 
 # create images and labels
 for ex_name in os.listdir(out_path):
+    print(ex_name)
     ex_path = os.path.join(out_path, ex_name)
     if os.path.isdir(ex_path):
         for im_name in os.listdir(ex_path):
@@ -111,3 +112,5 @@ for pat_path, pat_name in train_patients:
 for pat_path, pat_name in val_patients:
     copy_path = j(val_path, pat_name)
     shutil.copytree(pat_path, copy_path)
+
+shutil.rmtree(out_path)
