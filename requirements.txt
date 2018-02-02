@@ -1,0 +1,3 @@
+docopt
+SimpleITK
+tensorflow-gpu==1.5
