@@ -94,6 +94,8 @@ for ex_name in os.listdir(out_path):
                 arr = im_path_to_arr(im_path).astype(np.float32)
                 arr_to_im_path(arr, im_path)
         create_labels(ex_path)
+    else:
+        os.remove(ex_path)
 
 
 # split data

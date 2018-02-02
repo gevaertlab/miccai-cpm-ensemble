@@ -179,7 +179,8 @@ class FCN_Concat(FCN_Model):
             enhancing_label = tf.equal(self.label, 3)
             ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
             # total dice score loss
-            dice_score_loss = self.config.ds_loss_beta * (ds_loss_enhancing + ds_loss_core + ds_loss_whole)
+            dice_score_loss = tf.cast(self.config.ds_loss_beta * (ds_loss_enhancing + ds_loss_core + ds_loss_whole),\
+                                      tf.float32)
 
         # add mask
         if self.config.use_mask:
@@ -195,6 +196,7 @@ class FCN_Concat(FCN_Model):
             ce_loss = tf.boolean_mask(ce_loss, mask)
 
         reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
+
         self.loss = ce_loss + reg_loss + dice_score_loss
 
     def get_variables_to_restore(self, level=4):
@@ -267,8 +269,8 @@ class FCN_Concat(FCN_Model):
         all_dices_core = []
         all_dices_enhancing = []
 
-        HGG_patients = os.listdir('data/brats2017/HGG/val')
-        HGG_patients = [os.path.join('data/brats2017/HGG_and_LGG/val', pat) for pat in HGG_patients]
+        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
+        HGG_patients = [os.path.join('/local-scratch/romain_scratch/brats2017/val', pat) for pat in HGG_patients]
         HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
 
         HGG_dices_whole = []
