@@ -179,8 +179,7 @@ class FCN_Concat(FCN_Model):
             enhancing_label = tf.equal(self.label, 3)
             ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
             # total dice score loss
-            dice_score_loss = tf.cast(self.config.ds_loss_beta * (ds_loss_enhancing + ds_loss_core + ds_loss_whole),\
-                                      tf.float32)
+            dice_score_loss = tf.cast(self.config.ds_loss_beta * ds_loss_whole, tf.float32)
 
         # add mask
         if self.config.use_mask:

@@ -35,7 +35,7 @@ def load_data_brats(patient_path, is_test):
             data[2] = image
         if im_type == 'flair' or im_type == 'fla':
             image = normalize_image(image)
-            # image = remove_low_high(image)
+           #  image = remove_low_high(image)
             data[3] = image
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
