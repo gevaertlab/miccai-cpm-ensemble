@@ -5,7 +5,7 @@ class Config:
         with open(path, 'r') as f:
             for line in f:
                 param_dict[line.split()[0]] = line.split()[1]
-        
+
         self.res_path = param_dict.get('res_path')
         self.ckpt_path = param_dict.get('ckpt_path')
         self.train_path = param_dict.get('train_path')
@@ -15,6 +15,10 @@ class Config:
         self.kernel_size = int(param_dict.get('kernel_size', 5))
         self.nb_classes = int(param_dict.get('nb_classes', 2))
         self.nb_filters = int(param_dict.get('nb_filters', 10))
+        self.use_t1pre = param_dict.get('use_t1pre', 'True') == 'True'
+        self.use_t1post = param_dict.get('use_t1post', 'True') == 'True'
+        self.use_t2 = param_dict.get('use_t2', 'True') == 'True'
+        self.use_flair = param_dict.get('use_flair', 'True') == 'True'
 
         # learning rate schedule
         self.lr_init = float(param_dict.get('lr_init', 1e-4))
@@ -43,7 +47,7 @@ class Config:
         self.use_mask = param_dict.get('use_mask', 'False') == 'True'
         self.use_dice_score_loss = param_dict.get('use_dice_score_loss', 'False') == 'True'
         self.ds_loss_beta = float(param_dict.get('ds_loss_beta', 0.5))
-        
+
         # finetuning
         self.fine_tune_ckpt_path = param_dict.get('fine_tune_ckpt_path')
         self.finetuning_method = param_dict.get('finetuning_method', 'all_layers')

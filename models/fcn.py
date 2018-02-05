@@ -14,6 +14,7 @@ class FCN_Model(Model):
         self.config = config
         self.patch = config.patch_size
         self.nb_classes = config.nb_classes
+        self.nb_modalities = self.use_t1pre + self.use_t1post + self.use_t2 + self.use_flair
 
         self.load_data()
         self.add_dataset()
@@ -244,7 +245,7 @@ class FCN_Model(Model):
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
                     self.dropout_placeholder: 1.0,
-                    self.is_training:False}
+                    self.is_training: False}
 
             pred, prob = sess.run([self.pred, self.prob], feed_dict=feed)
 
@@ -266,7 +267,7 @@ class FCN_Model(Model):
             # dice score for Tumor Core
             fpred_core = (fpred == 1) + (fpred == 3)
             fy_core = (fy == 1) + (fy == 3)
-            dice_core = dice_score(fy_core, fpred_core) 
+            dice_core = dice_score(fy_core, fpred_core)
 
             # dice score for Enhancing Tumor
             fpred_enhancing = fpred == 3
@@ -288,7 +289,7 @@ class FCN_Model(Model):
             feed = {self.image_placeholder: x,
                     self.label_placeholder: y,
                     self.dropout_placeholder: 1.0,
-                    self.is_training:False}
+                    self.is_training: False}
 
             pred, prob = sess.run([self.pred, self.prob], feed_dict=feed)
 
@@ -310,7 +311,7 @@ class FCN_Model(Model):
             # dice score for Tumor Core
             fpred_core = (fpred == 1) + (fpred == 3)
             fy_core = (fy == 1) + (fy == 3)
-            dice_core = dice_score(fy_core, fpred_core) 
+            dice_core = dice_score(fy_core, fpred_core)
 
             # dice score for Enhancing Tumor
             fpred_enhancing = fpred == 3

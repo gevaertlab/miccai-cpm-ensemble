@@ -30,7 +30,7 @@ class FCN_Concat(FCN_Model):
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
     def add_model(self):
-        self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, 4])
+        self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, self.nb_modalities])
         nb_filters = self.config.nb_filters
         k_size = self.config.kernel_size
 
