@@ -23,19 +23,15 @@ def load_data_brats(patient_path, is_test):
         image = im_path_to_arr(im_path)
         if im_type == 't1':
             image = normalize_image(image)
-            # image = remove_low_high(image)
             data[0] = image
         if im_type == 't1c' or im_type == 't1ce':
             image = normalize_image(image)
-            # image = remove_low_high(image)
             data[1] = image
         if im_type == 't2':
             image = normalize_image(image)
-            # image = remove_low_high(image)
             data[2] = image
         if im_type == 'flair' or im_type == 'fla':
             image = normalize_image(image)
-           #  image = remove_low_high(image)
             data[3] = image
         if im_type == 'tumor' or im_type == 'seg':
             labels = preprocess_labels(image)
@@ -44,8 +40,8 @@ def load_data_brats(patient_path, is_test):
 
     # random flip around sagittal view
     if not is_test:
-        # flip = np.random.random()
-        flip = 1
+        flip = np.random.random()
+        # flip = 1
         if flip < 0.5:
             data = data[:, ::-1, :, :]
             labels = labels[:, ::-1, :]
