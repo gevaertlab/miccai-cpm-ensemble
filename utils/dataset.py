@@ -38,12 +38,12 @@ def load_data_brats(patient_path, is_test, modalities):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal view
-    # TODO: flip around third axis instead?
+    # flip around third axis instead?
     if not is_test:
         flip = np.random.random()
         if flip < 0.5:
-            data = data[:, ::-1, :, :]
-            labels = labels[:, ::-1, :]
+            data = data[:, :, ::-1, :]
+            labels = labels[:, :, ::-1]
 
     return data, labels
 
