@@ -14,7 +14,7 @@ class FCN_Model(Model):
         self.config = config
         self.patch = config.patch_size
         self.nb_classes = config.nb_classes
-        self.nb_modalities = self.use_t1pre + self.use_t1post + self.use_t2 + self.use_flair
+        self.nb_modalities = config.use_t1pre + config.use_t1post + config.use_t2 + config.use_flair
 
         self.load_data()
         self.add_dataset()

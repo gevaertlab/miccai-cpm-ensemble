@@ -1,3 +1,5 @@
 docopt
 SimpleITK
 tensorflow-gpu==1.5
+pandas
+pydicom
