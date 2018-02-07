@@ -291,7 +291,7 @@ def get_dataset(directory, is_test, config):
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
-        dataset = dataset.shuffle(buffer_size=2000)
+        dataset = dataset.shuffle(buffer_size=3000)
     else:
         center_size = config.center_patch
         def gen():
