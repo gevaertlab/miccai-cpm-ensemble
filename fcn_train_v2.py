@@ -31,6 +31,8 @@ if __name__ == '__main__':
         model.train_ex_paths = model.train_ex_paths[:2]
         model.val_ex_paths = model.val_ex_paths[:2]
 
-    with tf.Session() as sess:
+    conf = tf.ConfigProto()
+    conf.gpu_options.allow_growth = True
+    with tf.Session(config=conf) as sess:
         sess.run(tf.global_variables_initializer())
         model.full_train(sess)

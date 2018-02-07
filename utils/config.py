@@ -45,7 +45,9 @@ class Config:
 
         # loss
         self.use_mask = param_dict.get('use_mask', 'False') == 'True'
-        self.use_dice_score_loss = param_dict.get('use_dice_score_loss', 'False') == 'True'
+        self.use_dice_whole_loss = param_dict.get('use_dice_whole_loss', 'False') == 'True'
+        self.use_dice_core_loss = param_dict.get('use_dice_core_loss', 'False') == 'True'
+        self.use_dice_enhancing_loss = param_dict.get('use_dice_enhancing_loss', 'False') == 'True'
         self.ds_loss_beta = float(param_dict.get('ds_loss_beta', 0.5))
 
         # finetuning

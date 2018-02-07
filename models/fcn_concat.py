@@ -162,25 +162,6 @@ class FCN_Concat(FCN_Model):
     def add_loss_op(self):
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.label)
         ce_loss = tf.reduce_mean(ce_loss)
-
-        # dice score loss
-        dice_score_loss = 0
-        if self.config.use_dice_score_loss:
-            # dice score of WT
-            whole_pred = tf.not_equal(self.pred, 0)
-            whole_label = tf.not_equal(self.label, 0)
-            ds_loss_whole = dice_score_tf(whole_pred, whole_label)
-            # dice score of TC
-            core_pred = tf.logical_or(tf.equal(self.pred, 1), tf.equal(self.pred, 3))
-            core_label = tf.logical_or(tf.equal(self.label, 1), tf.equal(self.label, 3))
-            ds_loss_core = dice_score_tf(core_pred, core_label)
-            # dice score of ET
-            enhancing_pred = tf.equal(self.pred, 3)
-            enhancing_label = tf.equal(self.label, 3)
-            ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
-            # total dice score loss
-            dice_score_loss = tf.cast(self.config.ds_loss_beta * ds_loss_whole, tf.float32)
-
         # add mask
         if self.config.use_mask:
             mask = tf.get_variable('mask', shape=(self.patch, self.patch, self.patch),
@@ -194,9 +175,33 @@ class FCN_Concat(FCN_Model):
             mask = tf.tile(mask, multiples=[tf.shape(ce_loss)[0], 1, 1, 1])
             ce_loss = tf.boolean_mask(ce_loss, mask)
 
+        # dice score loss
+        dice_loss = 0
+        if self.config.use_dice_whole_loss:
+            # dice score of WT
+            whole_pred = tf.not_equal(self.pred, 0)
+            whole_label = tf.not_equal(self.label, 0)
+            ds_loss_whole = dice_score_tf(whole_pred, whole_label)
+            dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_whole, tf.float32)
+            
+        if self.config.use_dice_core_loss:
+            # dice score of TC
+            core_pred = tf.logical_or(tf.equal(self.pred, 1), tf.equal(self.pred, 3))
+            core_label = tf.logical_or(tf.equal(self.label, 1), tf.equal(self.label, 3))
+            ds_loss_core = dice_score_tf(core_pred, core_label)
+            # total dice score loss
+            dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_core, tf.float32)
+
+        if self.config.use_dice_enhancing_loss:
+            # dice score of ET
+            enhancing_pred = tf.equal(self.pred, 3)
+            enhancing_label = tf.equal(self.label, 3)
+            ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
+            dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_enhancing, tf.float32)
+
         reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
 
-        self.loss = ce_loss + reg_loss + dice_score_loss
+        self.loss = ce_loss + reg_loss + dice_loss
 
     def get_variables_to_restore(self, level=4):
         var_names_to_restore = ['conv1/conv3d/kernel:0',

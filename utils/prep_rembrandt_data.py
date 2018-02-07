@@ -21,36 +21,35 @@ def j(path, fname):
 
 
 def create_labels(directory):
-    # hardcoded for Rembrandt dataset
-    labels = np.zeros((55, 256, 256))
+    labels = [None] * 3
     if 'edema.nii.gz' in os.listdir(directory):
         with gzip.open(j(directory, 'edema.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'edema.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'edema.nii'))
+        os.remove(j(directory, 'edema.nii.gz'))
         edema = im_path_to_arr(j(directory, 'edema.nii'))
-        labels[edema > 0] = 2
+        labels[0] = edema
     if 'necrosis.nii.gz' in os.listdir(directory):
         with gzip.open(j(directory, 'necrosis.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'necrosis.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'necrosis.nii'))
+        os.remove(j(directory, 'necrosis.nii.gz'))
         necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
-        labels[necrosis > 0] = 1
+        labels[1] = necrosis
     if 'active.nii.gz' in os.listdir(directory):
         with gzip.open(j(directory, 'active.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'active.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'active.nii'))
+        os.remove(j(directory, 'active.nii.gz'))
         active = im_path_to_arr(j(directory, 'active.nii'))
-        labels[active > 0] = 4
-    arr_to_im_path(labels, j(directory, 'tumor.nii'))
+        labels[2] = active
+    return labels
 
 # copy whole dataset to new location
 shutil.copytree(in_path, out_path)
 
 # preprocess dataset
-shutil.rmtree(j(out_path, 'HF1708=')) # this one is 512x512
+shutil.rmtree(j(out_path, 'HF1708=')) # this one is 512x512 (TODO: downsample by 2 instead?)
 shutil.rmtree(j(out_path, 'HF0899=')) # this one has no tumor
 
 
@@ -75,25 +74,29 @@ for ex_name in os.listdir(out_path):
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))
         os.rename(j(ex_path, 't1-post_pre_bcorr_brain.nii'),
-                  j(ex_path, 't1.nii'))
-        os.rename(j(ex_path, 't1-pre_bcorr_brain.nii'),
                   j(ex_path, 't1c.nii'))
+        os.rename(j(ex_path, 't1-pre_bcorr_brain.nii'),
+                  j(ex_path, 't1.nii'))
         os.rename(j(ex_path, 't2_t1_bcorr_brain.nii'),
                   j(ex_path, 't2.nii'))
 
 
-# create images and labels
+# create labels
 for ex_name in os.listdir(out_path):
     print(ex_name)
     ex_path = os.path.join(out_path, ex_name)
     if os.path.isdir(ex_path):
-        for im_name in os.listdir(ex_path):
-            im_path = os.path.join(ex_path, im_name)
-            im_type = im_name.split('.')[0]
-            if im_type in ['t1', 't1c', 't2', 'flair']:
-                arr = im_path_to_arr(im_path).astype(np.float32)
-                arr_to_im_path(arr, im_path)
-        create_labels(ex_path)
+        labels = create_labels(ex_path)
+        curated_labels = [lab for lab in labels if lab is not None]
+        shape = curated_labels[0].shape
+        tumor = np.zeros(shape)
+        if labels[0] is not None:
+            tumor[labels[0] > 0] = 2
+        if labels[1]is not None:
+            tumor[labels[1] > 0] = 1
+        if labels[2]is not None:
+            tumor[labels[2] > 0] = 4
+        arr_to_im_path(tumor, j(ex_path, 'tumor.nii'))
     else:
         os.remove(ex_path)
 

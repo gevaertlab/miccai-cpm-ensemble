@@ -38,12 +38,49 @@ def load_data_brats(patient_path, is_test, modalities):
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal view
-    # flip around third axis instead?
     if not is_test:
         flip = np.random.random()
         if flip < 0.5:
-            data = data[:, :, ::-1, :]
-            labels = labels[:, :, ::-1]
+            data = data[:, ::-1, :, :]
+            labels = labels[:, ::-1, :]
+
+    return data, labels
+
+
+def load_data_rembrandt(patient_path, is_test, modalities):
+    data = [None] * 4
+    patient_path = patient_path.decode('utf-8')
+
+    for im_name in os.listdir(patient_path):
+        im_path = os.path.join(patient_path, im_name)
+        # for Rembrandt
+        im_type = im_name.split('.')[0]
+        image = im_path_to_arr(im_path)
+        if im_type == 't1' and modalities[0]:
+            image = normalize_image(image)
+            data[0] = image
+        if (im_type == 't1c' or im_type == 't1ce') and modalities[1]:
+            image = normalize_image(image)
+            data[1] = image
+        if im_type == 't2' and modalities[2]:
+            image = normalize_image(image)
+            data[2] = image
+        if (im_type == 'flair' or im_type == 'fla') and modalities[3]:
+            image = normalize_image(image)
+            data[3] = image
+        if im_type == 'tumor' or im_type == 'seg':
+            labels = preprocess_labels(image)
+
+    # remove index where modality is not used
+    data = [item for item in data if item is not None]
+    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+
+    # random flip around sagittal view
+    if not is_test:
+        flip = np.random.random()
+        if flip < 0.5:
+            data = data[:, ::-1, :, :]
+            labels = labels[:, ::-1, :]
 
     return data, labels
 
@@ -57,6 +94,9 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, mod
     x_batch = []
     y_batch = []
     path_batch = []
+
+    # shuffle order of patients to make sure to mix HGG with LGG
+    np.random.shuffle(all_patients)
 
     for patient_path in all_patients:
 
