@@ -59,16 +59,16 @@ def load_data_rembrandt(patient_path, is_test, modalities):
         if im_type == 't1' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
-        if (im_type == 't1c' or im_type == 't1ce') and modalities[1]:
+        if im_type == 't1c' and modalities[1]:
             image = normalize_image(image)
             data[1] = image
         if im_type == 't2' and modalities[2]:
             image = normalize_image(image)
             data[2] = image
-        if (im_type == 'flair' or im_type == 'fla') and modalities[3]:
+        if im_type == 'flair' and modalities[3]:
             image = normalize_image(image)
             data[3] = image
-        if im_type == 'tumor' or im_type == 'seg':
+        if im_type == 'seg':
             labels = preprocess_labels(image)
 
     # remove index where modality is not used

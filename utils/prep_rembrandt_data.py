@@ -70,6 +70,20 @@ for ex_name in os.listdir(out_path):
             os.remove(j(ex_path, 't1-pre_bcorr.nii'))
         if 't2_t1_bcorr.nii' in os.listdir(ex_path):
             os.remove(j(ex_path, 't2_t1_bcorr.nii'))
+        if 't1-post_pre_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't1-post_pre_bcorr.nii'))
+        if 't1-pre_bcorr.nii' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't1-pre_bcorr.nii'))
+        if 'flair2t1.txt' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'flair2t1.txt'))
+        if 'pd2t1.txt' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'pd2t1.txt'))
+        if 't12t1.txt' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't12t1.txt'))
+        if 't22t1.txt' in os.listdir(ex_path):
+            os.remove(j(ex_path, 't22t1.txt'))
+        if 'blood.nii.gz' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'blood.nii.gz'))
 
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))
@@ -92,11 +106,11 @@ for ex_name in os.listdir(out_path):
         tumor = np.zeros(shape)
         if labels[0] is not None:
             tumor[labels[0] > 0] = 2
-        if labels[1]is not None:
+        if labels[1] is not None:
             tumor[labels[1] > 0] = 1
-        if labels[2]is not None:
+        if labels[2] is not None:
             tumor[labels[2] > 0] = 4
-        arr_to_im_path(tumor, j(ex_path, 'tumor.nii'))
+        arr_to_im_path(tumor, j(ex_path, 'seg.nii'))
     else:
         os.remove(ex_path)
 
