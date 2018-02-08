@@ -24,8 +24,7 @@ def get_ex_paths(path):
 def get_shape(ex_path):
     for im_name in os.listdir(ex_path):
         im_path = os.path.join(ex_path, im_name)
-        im_type = im_name.split('.')[0]
-        if im_type == 'tumor':
+        if 'seg.nii' in im_name:
             labels = im_path_to_arr(im_path)
     return labels.shape
 

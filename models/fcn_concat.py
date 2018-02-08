@@ -8,6 +8,8 @@ from utils.dataset import get_dataset
 from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
 from utils.dice_score import dice_score_tf
+from utils.dice_score import get_inter_and_union
+from utils.dice_score import dice_score_from_inters_and_unions
 from utils.lr_schedule import LRSchedule
 from utils.general import Progbar
 from utils.data_utils import get_number_patches
@@ -183,7 +185,7 @@ class FCN_Concat(FCN_Model):
             whole_label = tf.not_equal(self.label, 0)
             ds_loss_whole = dice_score_tf(whole_pred, whole_label)
             dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_whole, tf.float32)
-            
+
         if self.config.use_dice_core_loss:
             # dice score of TC
             core_pred = tf.logical_or(tf.equal(self.pred, 1), tf.equal(self.pred, 3))
@@ -260,8 +262,7 @@ class FCN_Concat(FCN_Model):
 
             # logging
             prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
-                                                               ('score', lr_schedule.score),\
-                                                               ('exp_decay', lr_schedule.exp_decay)])
+                                                               ('score', lr_schedule.score)])
 
         return losses, np.mean(bdices)
 
@@ -288,17 +289,16 @@ class FCN_Concat(FCN_Model):
         center = self.config.center_patch
         half_center = center // 2
         lower = self.patch // 2 - half_center
-        
+
         nbatches = get_number_patches((155, 240, 240), self.patch, center) * len(self.val_ex_paths) // self.config.batch_size + 1
         prog = Progbar(target=nbatches)
-        
+
         for batch in range(nbatches):
             feed = {self.dropout_placeholder: 1.0,
                     self.is_training: False}
             try:
-                patients, i, j, k, y, pred, prob = sess.run([self.pat_path, self.i, self.j,\
-                                                             self.k, self.label, self.pred, self.prob],
-                                                            feed_dict=feed)
+                patients, i, j, k, y, pred = sess.run([self.pat_path, self.i, self.j, self.k, self.label, self.pred],
+                                                      feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
 
@@ -342,7 +342,6 @@ class FCN_Concat(FCN_Model):
                     #hardcoded for BraTS
                     fpred = np.zeros((155, 240, 240))
                     fy = np.zeros((155, 240, 240))
-                    fprob = np.zeros((155, 240, 240, 4))
                     current_patient = patients[idx]
 
                 fy[i[idx] - half_center :i[idx] + half_center,
@@ -352,12 +351,108 @@ class FCN_Concat(FCN_Model):
                       j[idx] - half_center:j[idx] + half_center,
                       k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
                                                                         lower:lower + center, lower:lower + center]
-                fprob[i[idx] - half_center:i[idx] + half_center,
-                      j[idx] - half_center:j[idx] + half_center,
-                      k[idx] - half_center:k[idx] + half_center, :] = prob[idx, lower:lower + center,\
-                                                                           lower:lower + center, lower:lower + center, :]
 
             prog.update(batch + 1)
+
+        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),\
+               np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),\
+               np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
+
+    def run_test_v2(self, sess):
+        sess.run(self.test_init_op)
+        current_patient = ""
+
+        all_dices_whole = []
+        all_dices_core = []
+        all_dices_enhancing = []
+
+        # for Brats2017 only, because we don't have the split for Rembrandt
+        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
+        HGG_patients = [os.path.join('/local-scratch/romain_scratch/brats2017/val', pat) for pat in HGG_patients]
+        HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
+
+        HGG_dices_whole = []
+        HGG_dices_core = []
+        HGG_dices_enhancing = []
+
+        LGG_dices_whole = []
+        LGG_dices_core = []
+        LGG_dices_enhancing = []
+
+        center = self.config.center_patch
+        half_center = center // 2
+        lower = self.patch // 2 - half_center
+
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1.0, self.is_training: False}
+                patients, y, pred = sess.run([self.pat_path, self.label, self.pred], feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
+
+            for idx, pat in enumerate(patients):
+                if pat != current_patient:
+                    if current_patient != "":
+                        # compute dice scores for different classes
+                        # dice score for the Whole Tumor
+                        dice_whole = dice_score_from_inters_and_unions(inters_whole, unions_whole)
+                        all_dices_whole.append(dice_whole)
+                        if current_patient in HGG_patients:
+                            HGG_dices_whole.append(dice_whole)
+                        else:
+                            LGG_dices_whole.append(dice_whole)
+                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
+
+                        if self.nb_classes > 2:
+                            # dice score for Tumor Core
+                            dice_core = dice_score_from_inters_and_unions(inters_core, unions_core)
+                            all_dices_core.append(dice_core)
+                            if current_patient in HGG_patients:
+                                HGG_dices_core.append(dice_core)
+                            else:
+                                LGG_dices_core.append(dice_core)
+                            # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
+
+                            # dice score for Enhancing Tumor
+                            dice_enhancing = dice_score_from_inters_and_unions(inters_enhancing, unions_enhancing)
+                            all_dices_enhancing.append(dice_enhancing)
+                            if current_patient in HGG_patients:
+                                HGG_dices_enhancing.append(dice_enhancing)
+                            else:
+                                LGG_dices_enhancing.append(dice_enhancing)
+                            # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
+
+                    #hardcoded for BraTS
+                    inters_enhancing = []
+                    unions_enhancing = []
+                    inters_core = []
+                    unions_core = []
+                    inters_whole = []
+                    unions_whole = []
+                    current_patient = pat
+
+                crop_y = y[idx, lower:lower + center, lower:lower + center, lower:lower + center]
+                crop_pred = pred[idx, :, :, :]
+
+                # dice score for whole tumor
+                in_wh, un_wh = get_inter_and_union(crop_pred, crop_y)
+                inters_whole.append(in_wh)
+                unions_whole.append(un_wh)
+
+                if self.nb_classes > 2:
+                    # dice score for tumor core
+                    crop_pred_core = (crop_pred == 1) + (crop_pred == 3)
+                    crop_y_core = (crop_y == 1) + (crop_y == 3)
+                    in_co, un_co = get_inter_and_union(crop_pred_core, crop_y_core)
+                    inters_core.append(in_co)
+                    unions_core.append(un_co)
+
+                    # dice score for tumor enhancing
+                    crop_pred_enhancing = crop_pred == 3
+                    crop_y_enhancing = crop_y == 3
+                    in_en, un_en = get_inter_and_union(crop_pred_enhancing, crop_y_enhancing)
+                    inters_enhancing.append(in_en)
+                    unions_enhancing.append(un_en)
 
         return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),\
                np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),\
@@ -449,3 +544,18 @@ class FCN_Concat(FCN_Model):
                 lr_schedule.update(batch_no=epoch * nbatches)
 
         return test_whole
+
+    def finetune(self, sess):
+        saver = tf.train.Saver()
+
+        print('Initializing / restoring weights ...')
+        if self.config.finetuning_method == "all_layers":
+            saver.restore(sess, self.config.ckpt_path_to_finetune)
+        elif self.config.finetuning_method == "no_layers":
+            sess.run(tf.global_variables_initializer())
+        else:
+            print("Finetuning method not supported")
+            raise NotImplementedError
+
+        return self.full_train(sess)
+        
