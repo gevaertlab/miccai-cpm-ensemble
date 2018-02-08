@@ -431,8 +431,8 @@ class FCN_Concat(FCN_Model):
                     unions_whole = []
                     current_patient = pat
 
-                crop_y = y[idx, lower:lower + center, lower:lower + center, lower:lower + center]
-                crop_pred = pred[idx, :, :, :]
+                crop_y = y[idx, :, :, :]
+                crop_pred = pred[idx, lower:lower + center, lower:lower + center, lower:lower + center]
 
                 # dice score for whole tumor
                 in_wh, un_wh = get_inter_and_union(crop_pred, crop_y)
