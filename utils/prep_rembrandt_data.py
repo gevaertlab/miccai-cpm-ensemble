@@ -84,6 +84,8 @@ for ex_name in os.listdir(out_path):
             os.remove(j(ex_path, 't22t1.txt'))
         if 'blood.nii.gz' in os.listdir(ex_path):
             os.remove(j(ex_path, 'blood.nii.gz'))
+        if '.DS_Store' in os.listdir(ex_path):
+            os.remove(j(ex_path, '.DS_Store'))
 
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))

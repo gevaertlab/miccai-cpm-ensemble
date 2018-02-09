@@ -56,22 +56,23 @@ def load_data_rembrandt(patient_path, is_test, modalities):
         im_path = os.path.join(patient_path, im_name)
         # for Rembrandt
         im_type = im_name.split('.')[0]
-        image = im_path_to_arr(im_path)
-        image = resize_data_to_match_brats(image)
-        if im_type == 't1' and modalities[0]:
-            image = normalize_image(image)
-            data[0] = image
-        if im_type == 't1c' and modalities[1]:
-            image = normalize_image(image)
-            data[1] = image
-        if im_type == 't2' and modalities[2]:
-            image = normalize_image(image)
-            data[2] = image
-        if im_type == 'flair' and modalities[3]:
-            image = normalize_image(image)
-            data[3] = image
-        if im_type == 'seg':
-            labels = preprocess_labels(image)
+        if any(mod == im_type for mod in ['t1', 't1c', 'flair', 't2', 'seg']):
+            image = im_path_to_arr(im_path)
+            image = resize_data_to_match_brats(image)
+            if im_type == 't1' and modalities[0]:
+                image = normalize_image(image)
+                data[0] = image
+            if im_type == 't1c' and modalities[1]:
+                image = normalize_image(image)
+                data[1] = image
+            if im_type == 't2' and modalities[2]:
+                image = normalize_image(image)
+                data[2] = image
+            if im_type == 'flair' and modalities[3]:
+                image = normalize_image(image)
+                data[3] = image
+            if im_type == 'seg':
+                labels = preprocess_labels(image)
 
     # remove index where modality is not used
     data = [item for item in data if item is not None]
