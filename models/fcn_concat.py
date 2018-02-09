@@ -18,8 +18,16 @@ from utils.data_utils import get_number_patches
 class FCN_Concat(FCN_Model):
 
     def add_dataset(self):
-        train_dataset = get_dataset(self.config.train_path, False, self.config)
-        test_dataset = get_dataset(self.config.val_path, True, self.config)
+        if 'brats' in self.config.train_path.lower():
+            name_dataset = 'Brats'
+        elif 'rembrandt' in self.config.train_path.lower():
+            name_dataset = 'Rembrandt'
+        else:
+            print('Unknown dataset')
+            raise NotImplementedError
+
+        train_dataset = get_dataset(self.config.train_path, False, self.config, name_dataset)
+        test_dataset = get_dataset(self.config.val_path, True, self.config, name_dataset)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
             output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
@@ -383,6 +391,7 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
 
+        print('Validation ...')
         while True:
             try:
                 feed = {self.dropout_placeholder: 1.0, self.is_training: False}
@@ -458,7 +467,7 @@ class FCN_Concat(FCN_Model):
                np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),\
                np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
 
-    def run_test_single_example(self, sess, patient):
+    def run_pred_single_example(self, sess, patient):
         dataset = get_dataset_single_patient(patient, self.config.batch_size, self.patch, self.config.center_patch)
         init_op = self.iterator.make_initializer(dataset)
         sess.run(init_op)
@@ -514,7 +523,8 @@ class FCN_Concat(FCN_Model):
             train_bdices.append(train_dice)
 
             if epoch % 2 == 0:
-                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test(sess)
+                # test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test(sess)
+                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
                 print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
                       %(test_whole, test_core, test_enhancing))
                 # logging

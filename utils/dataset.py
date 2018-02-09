@@ -7,6 +7,7 @@ from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
+from utils.data_utils import resize_data_to_match_brats
 
 
 def load_data_brats(patient_path, is_test, modalities):
@@ -56,6 +57,7 @@ def load_data_rembrandt(patient_path, is_test, modalities):
         # for Rembrandt
         im_type = im_name.split('.')[0]
         image = im_path_to_arr(im_path)
+        image = resize_data_to_match_brats(image)
         if im_type == 't1' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
@@ -85,7 +87,7 @@ def load_data_rembrandt(patient_path, is_test, modalities):
     return data, labels
 
 
-def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, modalities):
+def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, modalities, name_dataset):
     batch_count = 0
     half_patch = patch_size // 2
     i_batch = []
@@ -100,7 +102,14 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, mod
 
     for patient_path in all_patients:
 
-        data, labels = load_data_brats(patient_path, False, modalities)
+        if name_dataset == 'Brats':
+            data, labels = load_data_brats(patient_path, False, modalities)
+        elif name_dataset == 'Rembrandt':
+            data, labels = load_data_rembrandt(patient_path, False, modalities)
+        else:
+            print("Unknown dataset")
+            raise NotImplementedError
+
 
         trimmed_data = data[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch, :]
         trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
@@ -205,7 +214,7 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, mod
         yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities):
+def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities, name_dataset):
     batch_count = 0
 
     half_patch = patch_size // 2
@@ -219,7 +228,14 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities
 
     for patient_path in all_patients:
 
-        data, labels = load_data_brats(patient_path, True, modalities)
+        if name_dataset == 'Brats':
+            data, labels = load_data_brats(patient_path, True, modalities)
+        elif name_dataset == 'Rembrandt':
+            data, labels = load_data_rembrandt(patient_path, False, modalities)
+        else:
+            print("Unknown dataset")
+            raise NotImplementedError
+
         i_len, j_len, k_len = labels.shape
 
         for i in get_patch_centers_fcn(i_len, patch_size, center_size):
@@ -271,7 +287,7 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities
         yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset(directory, is_test, config):
+def get_dataset(directory, is_test, config, name_dataset):
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
@@ -286,7 +302,7 @@ def get_dataset(directory, is_test, config):
     if not is_test:
         nb_batches = config.num_train_batches
         def gen():
-            return train_data_iter(patients, patch_size, batch_size, nb_batches, ratio, modalities)
+            return train_data_iter(patients, patch_size, batch_size, nb_batches, ratio, modalities, name_dataset)
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
@@ -295,7 +311,7 @@ def get_dataset(directory, is_test, config):
     else:
         center_size = config.center_patch
         def gen():
-            return test_data_iter(patients, patch_size, center_size, batch_size, modalities)
+            return test_data_iter(patients, patch_size, center_size, batch_size, modalities, name_dataset)
 
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(tf.string, tf.int32, tf.int32,\

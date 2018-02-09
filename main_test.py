@@ -16,7 +16,7 @@ def run_test(model, patient):
 
     with tf.Session() as sess:
         saver.restore(sess, ckpt_path)
-        fpred = model.run_test_single_example(sess, patient)
+        fpred = model.run_pred_single_example(sess, patient)
         fpred[fpred == 3] = 4
         out_path = patient.decode('utf-8') + 'results/'
         if not os.path.exists(out_path):
