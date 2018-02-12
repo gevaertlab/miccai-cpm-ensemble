@@ -88,8 +88,7 @@ def load_data_rembrandt(patient_path, is_test, modalities):
     return data, labels
 
 
-def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, modalities, name_dataset):
-    batch_count = 0
+def train_data_iter(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
     half_patch = patch_size // 2
     i_batch = []
     j_batch = []
@@ -98,121 +97,92 @@ def train_data_iter(all_patients, patch_size, batch_size, nb_batches, ratio, mod
     y_batch = []
     path_batch = []
 
-    # shuffle order of patients to make sure to mix HGG with LGG
-    np.random.shuffle(all_patients)
+    name_dataset = name_dataset.decode('utf-8')
+    if name_dataset == 'Brats':
+        data, labels = load_data_brats(patient_path, False, modalities)
+    elif name_dataset == 'Rembrandt':
+        data, labels = load_data_rembrandt(patient_path, False, modalities)
+    else:
+        print("Unknown dataset")
+        raise NotImplementedError
 
-    for patient_path in all_patients:
+    trimmed_data = data[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch, :]
+    trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
 
-        if name_dataset == 'Brats':
-            data, labels = load_data_brats(patient_path, False, modalities)
-        elif name_dataset == 'Rembrandt':
-            data, labels = load_data_rembrandt(patient_path, False, modalities)
+    bg = np.where((trimmed_labels == 0) & (trimmed_data[..., 0] != 0))
+    enhanced = np.where((trimmed_labels == 3) & (trimmed_data[..., 0] != 0))
+    necrotic = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
+    edema = np.where((trimmed_labels == 2) & (trimmed_data[..., 0] != 0))
+    fg = np.where((trimmed_labels > 0) & (trimmed_data[..., 0] != 0))
+
+    num_bg = len(bg[0])
+    num_enhanced = len(enhanced[0])
+    num_necrotic = len(necrotic[0])
+    num_edema = len(edema[0])
+    num_fg = len(fg[0])
+
+    # oversampling
+    ratio_non_tumorous = ratio[0]
+    ratio_enhanced = ratio[1]
+    ratio_necrotic = ratio[2]
+
+    for patch in range(batch_size):
+        epsilon = np.random.rand()
+        if epsilon <= ratio_non_tumorous:
+            idx = np.random.randint(num_bg)
+            i = bg[0][idx]
+            j = bg[1][idx]
+            k = bg[2][idx]
+        elif epsilon <= ratio_enhanced:
+            if num_enhanced == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_enhanced)
+                i = enhanced[0][idx]
+                j = enhanced[1][idx]
+                k = enhanced[2][idx]
+        elif epsilon <= ratio_necrotic:
+            if num_necrotic == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_necrotic)
+                i = necrotic[0][idx]
+                j = necrotic[1][idx]
+                k = necrotic[2][idx]
         else:
-            print("Unknown dataset")
-            raise NotImplementedError
+            if num_edema == 0:
+                idx = np.random.randint(num_fg)
+                i = fg[0][idx]
+                j = fg[1][idx]
+                k = fg[2][idx]
+            else:
+                idx = np.random.randint(num_edema)
+                i = edema[0][idx]
+                j = edema[1][idx]
+                k = edema[2][idx]
+        x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
+        y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
+        i_batch.append(i)
+        j_batch.append(j)
+        k_batch.append(k)
+        x_batch.append(x)
+        y_batch.append(y)
+        path_batch.append(patient_path)
 
+    path_batch = np.array(path_batch)
+    i_batch = np.array(i_batch).astype(np.int32)
+    j_batch = np.array(j_batch).astype(np.int32)
+    k_batch = np.array(k_batch).astype(np.int32)
+    x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
+    y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
 
-        trimmed_data = data[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch, :]
-        trimmed_labels = labels[half_patch:-half_patch, half_patch:-half_patch, half_patch:-half_patch]
-
-        bg = np.where((trimmed_labels == 0) & (trimmed_data[..., 0] != 0))
-        enhanced = np.where((trimmed_labels == 3) & (trimmed_data[..., 0] != 0))
-        necrotic = np.where((trimmed_labels == 1) & (trimmed_data[..., 0] != 0))
-        edema = np.where((trimmed_labels == 2) & (trimmed_data[..., 0] != 0))
-        fg = np.where((trimmed_labels > 0) & (trimmed_data[..., 0] != 0))
-
-        num_bg = len(bg[0])
-        num_enhanced = len(enhanced[0])
-        num_necrotic = len(necrotic[0])
-        num_edema = len(edema[0])
-        num_fg = len(fg[0])
-
-        # oversampling
-        assert(len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
-        assert(np.sum(ratio) == 1), 'the sum of the ratios should be 1'
-        ratio_non_tumorous = ratio[0]
-        ratio_enhanced = ratio[1]
-        ratio_necrotic = ratio[2]
-
-        for _ in range(nb_batches):
-            for _ in range(batch_size):
-                epsilon = np.random.rand()
-                if epsilon <= ratio_non_tumorous:
-                    idx = np.random.randint(num_bg)
-                    i = bg[0][idx]
-                    j = bg[1][idx]
-                    k = bg[2][idx]
-                elif epsilon <= ratio_enhanced:
-                    if num_enhanced == 0:
-                        idx = np.random.randint(num_fg)
-                        i = fg[0][idx]
-                        j = fg[1][idx]
-                        k = fg[2][idx]
-                    else:
-                        idx = np.random.randint(num_enhanced)
-                        i = enhanced[0][idx]
-                        j = enhanced[1][idx]
-                        k = enhanced[2][idx]
-                elif epsilon <= ratio_necrotic:
-                    if num_necrotic == 0:
-                        idx = np.random.randint(num_fg)
-                        i = fg[0][idx]
-                        j = fg[1][idx]
-                        k = fg[2][idx]
-                    else:
-                        idx = np.random.randint(num_necrotic)
-                        i = necrotic[0][idx]
-                        j = necrotic[1][idx]
-                        k = necrotic[2][idx]
-                else:
-                    if num_edema == 0:
-                        idx = np.random.randint(num_fg)
-                        i = fg[0][idx]
-                        j = fg[1][idx]
-                        k = fg[2][idx]
-                    else:
-                        idx = np.random.randint(num_edema)
-                        i = edema[0][idx]
-                        j = edema[1][idx]
-                        k = edema[2][idx]
-                x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
-                y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
-                i_batch.append(i)
-                j_batch.append(j)
-                k_batch.append(k)
-                x_batch.append(x)
-                y_batch.append(y)
-                path_batch.append(patient_path)
-
-                batch_count += 1
-                if batch_count == batch_size:
-                    path_batch = np.array(path_batch)
-                    i_batch = np.array(i_batch).astype(np.int32)
-                    j_batch = np.array(j_batch).astype(np.int32)
-                    k_batch = np.array(k_batch).astype(np.int32)
-                    x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
-                    y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
-
-                    yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
-
-                    i_batch = []
-                    j_batch = []
-                    k_batch = []
-                    x_batch = []
-                    y_batch = []
-                    path_batch = []
-
-                    batch_count = 0
-
-    if batch_count != 0:
-        path_batch = np.array(path_batch)
-        i_batch = np.array(i_batch).astype(np.int32)
-        j_batch = np.array(j_batch).astype(np.int32)
-        k_batch = np.array(k_batch).astype(np.int32)
-        x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
-        y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
-
-        yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+    return path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
 def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities, name_dataset):
@@ -288,27 +258,35 @@ def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities
         yield path_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset(directory, is_test, config, name_dataset):
+def get_dataset_v2(directory, is_test, config, name_dataset):
+    patch_size = config.patch_size
+    batch_size = config.batch_size
+    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
+
+    ratio = config.ratio
+    assert(len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
+    assert(np.sum(ratio) == 1), 'the sum of the ratios should be 1'
+    
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
-    # TODO: check if still useful now that we use dataset.from_generator
     patients = [pat.encode('utf-8') for pat in patients]
 
-    patch_size = config.patch_size
-    batch_size = config.batch_size
-    ratio = config.ratio
-    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
-    # TODO: first use a dataset generator on the NON-random parts of preprocessing, then cache the files
-    # and then use another dataset generator on the random parts of preprocessing
-    # this way, the non random parts of preprocessing won't be done at each epoch but will be read from cache
     if not is_test:
+        patients.sort()
+        patients = list(np.repeat(patients, nb_batches))
+        np.random.seed(0)
+        np.random.shuffle(patients)
+        patients = tf.constant(patients)
+
         nb_batches = config.num_train_batches
-        def gen():
-            return train_data_iter(patients, patch_size, batch_size, nb_batches, ratio, modalities, name_dataset)
-        dataset = tf.data.Dataset.from_generator(generator=gen,
-                                                 output_types=(tf.string, tf.int32, tf.int32,\
-                                                               tf.int32, tf.float32, tf.int32))
+        dataset = tf.data.Dataset.from_tensor_slices(patients)
+        dataset = dataset.map(lambda p: tuple(tf.py_func(train_data_iter,
+                                                         [p, patch_size, batch_size, ratio,\
+                                                          modalities, name_dataset],
+                                                         [tf.string, tf.int32, tf.int32,\
+                                                          tf.int32, tf.float32, tf.int32])),
+                              num_parallel_calls=12)
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=2000)
     else:
@@ -319,8 +297,9 @@ def get_dataset(directory, is_test, config, name_dataset):
                                                  output_types=(tf.string, tf.int32, tf.int32,\
                                                                tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
+
     batched_dataset = dataset.batch(batch_size)
-    batched_dataset = batched_dataset.prefetch(1)
+    batched_dataset = batched_dataset.prefetch(5)
 
     return batched_dataset
 

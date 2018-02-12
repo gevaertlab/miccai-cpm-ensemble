@@ -32,7 +32,7 @@ if __name__ == '__main__':
         model.val_ex_paths = model.val_ex_paths[:2]
 
     conf = tf.ConfigProto()
-    conf.gpu_options.allow_growth = True
+    conf.gpu_options.allow_growth = False
     with tf.Session(config=conf) as sess:
         sess.run(tf.global_variables_initializer())
         model.full_train(sess)

@@ -5,6 +5,7 @@ import tensorflow as tf
 
 from models.fcn import FCN_Model
 from utils.dataset import get_dataset
+from utils.dataset_v2 import get_dataset_v2
 from utils.dataset import get_dataset_single_patient
 from utils.dice_score import dice_score
 from utils.dice_score import dice_score_tf
@@ -26,8 +27,8 @@ class FCN_Concat(FCN_Model):
             print('Unknown dataset')
             raise NotImplementedError
 
-        train_dataset = get_dataset(self.config.train_path, False, self.config, name_dataset)
-        test_dataset = get_dataset(self.config.val_path, True, self.config, name_dataset)
+        train_dataset = get_dataset_v2(self.config.train_path, False, self.config, name_dataset)
+        test_dataset = get_dataset_v2(self.config.val_path, True, self.config, name_dataset)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
             output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
