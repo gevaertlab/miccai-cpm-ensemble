@@ -45,6 +45,17 @@ def load_data_brats(patient_path, is_test, modalities):
             data = data[:, ::-1, :, :]
             labels = labels[:, ::-1, :]
 
+        scale = np.random.random()
+        if scale < 0.2:
+            data = data[::2, :, :, :]
+            labels = labels[::2, :, :]
+        if 0.2 < scale and scale < 0.4:
+            data = data[:, ::2, :, :]
+            labels = labels[:, ::2, :]
+        if 0.4 < scale < 0.6:
+            data = data[:, :, ::2, :]
+            scale = scale[:, :, ::2]
+
     return data, labels
 
 
