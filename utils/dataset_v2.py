@@ -54,7 +54,7 @@ def load_data_brats(patient_path, is_test, modalities):
             labels = labels[:, ::2, :]
         if 0.4 < scale < 0.6:
             data = data[:, :, ::2, :]
-            scale = scale[:, :, ::2]
+            labels = labels[:, :, ::2]
 
     return data, labels
 
