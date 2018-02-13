@@ -273,20 +273,20 @@ def get_dataset_v2(directory, is_test, config, name_dataset):
     patients = [pat.encode('utf-8') for pat in patients]
 
     if not is_test:
+        nb_batches = config.num_train_batches
         patients.sort()
         patients = list(np.repeat(patients, nb_batches))
         np.random.seed(0)
         np.random.shuffle(patients)
         patients = tf.constant(patients)
 
-        nb_batches = config.num_train_batches
         dataset = tf.data.Dataset.from_tensor_slices(patients)
         dataset = dataset.map(lambda p: tuple(tf.py_func(train_data_iter,
                                                          [p, patch_size, batch_size, ratio,\
                                                           modalities, name_dataset],
                                                          [tf.string, tf.int32, tf.int32,\
                                                           tf.int32, tf.float32, tf.int32])),
-                              num_parallel_calls=12)
+                              num_parallel_calls=8)
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=2000)
     else:
@@ -299,7 +299,7 @@ def get_dataset_v2(directory, is_test, config, name_dataset):
         dataset = dataset.apply(tf.contrib.data.unbatch())
 
     batched_dataset = dataset.batch(batch_size)
-    batched_dataset = batched_dataset.prefetch(5)
+    batched_dataset = batched_dataset.prefetch(1)
 
     return batched_dataset
 
