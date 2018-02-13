@@ -45,17 +45,6 @@ def load_data_brats(patient_path, is_test, modalities):
             data = data[:, ::-1, :, :]
             labels = labels[:, ::-1, :]
 
-        scale = np.random.random()
-        if scale < 0.2:
-            data = data[::2, :, :, :]
-            labels = labels[::2, :, :]
-        if 0.2 < scale and scale < 0.4:
-            data = data[:, ::2, :, :]
-            labels = labels[:, ::2, :]
-        if 0.4 < scale < 0.6:
-            data = data[:, :, ::2, :]
-            labels = labels[:, :, ::2]
-
     return data, labels
 
 
@@ -179,6 +168,18 @@ def train_data_iter(patient_path, patch_size, batch_size, ratio, modalities, nam
                 k = edema[2][idx]
         x = data[i:i + patch_size, j:j + patch_size, k:k + patch_size, :]
         y = labels[i:i + patch_size, j:j + patch_size, k:k + patch_size]
+
+        scale = np.random.random()
+        if scale < 0.2:
+            x = x[::2, :, :, :]
+            y = y[::2, :, :]
+        if 0.2 < scale and scale < 0.4:
+            x = x[:, ::2, :, :]
+            y = y[:, ::2, :]
+        if 0.4 < scale < 0.6:
+            x = x[:, :, ::2, :]
+            y = y[:, :, ::2]
+
         i_batch.append(i)
         j_batch.append(j)
         k_batch.append(k)
