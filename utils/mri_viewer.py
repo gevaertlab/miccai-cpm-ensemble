@@ -5,7 +5,7 @@ from matplotlib.widgets import Slider
 
 class MRIViewer:
 
-    def __init__(self, im1, im2, cmap, title1='Image 1', title2='Image 2'):
+    def __init__(self, im1, im2, im3, cmap, title1='Image 1', title2='Image 2', title3='Image3'):
         self.i = 0
 
         self.im1 = im1
@@ -17,6 +17,11 @@ class MRIViewer:
         self.vmin2 = self.im2.min()
         self.vmax2 = self.im2.max()
         self.title2 = title2
+
+        self.im3 = im3
+        self.vmin3 = self.im3.min()
+        self.vmax3 = self.im3.max()
+        self.title3 = title3
 
         [self.depth, _, _] = self.im1.shape
 
@@ -37,6 +42,12 @@ class MRIViewer:
         self.ax2.set_xticklabels([])
         self.ax2.set_yticklabels([])
         self.ax2.set_title(title2)
+
+        self.ax3 = plt.subplot(gs[1, 0])
+        self.ax3.grid(False)
+        self.ax3.set_xticklabels([])
+        self.ax3.set_yticklabels([])
+        self.ax3.set_title(title3)
 
         self.slax = plt.subplot(gs[1, :])
         self.slider = Slider(self.slax, 'Slice',
@@ -62,4 +73,8 @@ class MRIViewer:
         
         im2 = self.im2[self.i, :, :]
         self.ax2.imshow(im2, vmin=self.vmin2, vmax=self.vmax2,
+                        cmap=self.cmap, interpolation=None)
+
+        im3 = self.im3[self.i, :, :]
+        self.ax2.imshow(im3, vmin=self.vmin3, vmax=self.vmax3,
                         cmap=self.cmap, interpolation=None)
