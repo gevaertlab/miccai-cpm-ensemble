@@ -5,7 +5,7 @@ from matplotlib.widgets import Slider
 
 class MRIViewer:
 
-    def __init__(self, im1, im2, im3, cmap, title1='Image 1', title2='Image 2', title3='Image3'):
+    def __init__(self, im1, im2, im3, im4, cmap, title1='Image 1', title2='Image 2', title3='Image3', title4='Image4'):
         self.i = 0
 
         self.im1 = im1
@@ -23,13 +23,18 @@ class MRIViewer:
         self.vmax3 = self.im3.max()
         self.title3 = title3
 
+        self.im4 = im4
+        self.vmin4 = self.im4.min()
+        self.vmax4 = self.im4.max()
+        self.title4 = title4
+
         [self.depth, _, _] = self.im1.shape
 
         self.cmap = cmap
 
         self.fig = plt.figure()
         
-        gs = gridspec.GridSpec(2, 2, height_ratios=[10, 1])
+        gs = gridspec.GridSpec(4, 2, height_ratios=[10, 1, 10, 1])
 
         self.ax1 = plt.subplot(gs[0, 0])
         self.ax1.grid(False)
@@ -43,13 +48,19 @@ class MRIViewer:
         self.ax2.set_yticklabels([])
         self.ax2.set_title(title2)
 
-        self.ax3 = plt.subplot(gs[1, 0])
+        self.ax3 = plt.subplot(gs[2, 0])
         self.ax3.grid(False)
         self.ax3.set_xticklabels([])
         self.ax3.set_yticklabels([])
         self.ax3.set_title(title3)
 
-        self.slax = plt.subplot(gs[1, :])
+        self.ax4 = plt.subplot(gs[2, 1])
+        self.ax4.grid(False)
+        self.ax4.set_xticklabels([])
+        self.ax4.set_yticklabels([])
+        self.ax4.set_title(title3)
+
+        self.slax = plt.subplot(gs[3, :])
         self.slider = Slider(self.slax, 'Slice',
                       0.01, self.depth - 0.01, valinit=0, valfmt='%d')
 
@@ -76,5 +87,9 @@ class MRIViewer:
                         cmap=self.cmap, interpolation=None)
 
         im3 = self.im3[self.i, :, :]
-        self.ax2.imshow(im3, vmin=self.vmin3, vmax=self.vmax3,
+        self.ax3.imshow(im3, vmin=self.vmin3, vmax=self.vmax3,
+                        cmap=self.cmap, interpolation=None)
+
+        im4 = self.im4[self.i, :, :]
+        self.ax4.imshow(im4, vmin=self.vmin4, vmax=self.vmax4,
                         cmap=self.cmap, interpolation=None)
