@@ -289,7 +289,7 @@ def get_dataset_v2(directory, is_test, config, name_dataset):
                                                           tf.int32, tf.float32, tf.int32])),
                               num_parallel_calls=8)
         dataset = dataset.apply(tf.contrib.data.unbatch())
-        dataset = dataset.shuffle(buffer_size=2000)
+        dataset = dataset.shuffle(buffer_size=3000)
     else:
         center_size = config.center_patch
         def gen():
