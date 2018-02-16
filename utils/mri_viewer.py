@@ -58,7 +58,7 @@ class MRIViewer:
         self.ax4.grid(False)
         self.ax4.set_xticklabels([])
         self.ax4.set_yticklabels([])
-        self.ax4.set_title(title3)
+        self.ax4.set_title(title4)
 
         self.slax = plt.subplot(gs[3, :])
         self.slider = Slider(self.slax, 'Slice',

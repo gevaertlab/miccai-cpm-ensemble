@@ -561,6 +561,10 @@ class FCN_Concat(FCN_Model):
         else:
             print("Finetuning method not supported")
             raise NotImplementedError
+        
+        test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
+        print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
+              %(test_whole, test_core, test_enhancing))        
 
         return self.full_train(sess)
         
