@@ -187,14 +187,17 @@ class FCN_Concat(FCN_Model):
             whole_label = tf.not_equal(self.label, 0)
             ds_loss_whole = dice_score_tf(whole_pred, whole_label)
             dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_whole, tf.float32)
+            # for tensorboard
+            tf.summary.scalar("dice_loss_whole", ds_loss_whole)
 
         if self.config.use_dice_core_loss:
             # dice score of TC
             core_pred = tf.logical_or(tf.equal(self.pred, 1), tf.equal(self.pred, 3))
             core_label = tf.logical_or(tf.equal(self.label, 1), tf.equal(self.label, 3))
             ds_loss_core = dice_score_tf(core_pred, core_label)
-            # total dice score loss
             dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_core, tf.float32)
+            # for tensorboard
+            tf.summary.scalar("dice_loss_core", ds_loss_core)
 
         if self.config.use_dice_enhancing_loss:
             # dice score of ET
@@ -202,11 +205,25 @@ class FCN_Concat(FCN_Model):
             enhancing_label = tf.equal(self.label, 3)
             ds_loss_enhancing = dice_score_tf(enhancing_pred, enhancing_label)
             dice_loss += tf.cast(self.config.ds_loss_beta * ds_loss_enhancing, tf.float32)
+            # for tensorboard
+            tf.summary.scalar("dice_loss_enhancing", ds_loss_enhancing)
 
         ce_loss = tf.reduce_mean(ce_loss)
         reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
 
         self.loss = ce_loss + reg_loss + dice_loss
+
+        # for tensorboard
+        tf.summary.scalar("loss", self.loss)
+
+    def add_summary(self, sess): 
+        # tensorboard stuff
+        # hardcoded
+        # TODO: do it properly
+        name_exp = self.config.res_path.strip().split('/')[1][:-4]
+        summary_path = os.path.join('summaries', name_exp)
+        self.merged = tf.summary.merge_all()
+        self.file_writer = tf.summary.FileWriter(summary_path, sess.graph)
 
     def get_variables_to_restore(self, level=4):
         var_names_to_restore = ['conv1/conv3d/kernel:0',
@@ -250,10 +267,12 @@ class FCN_Concat(FCN_Model):
                         self.is_training: self.config.use_batch_norm}
 
                 if finetune:
-                    pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train_last_layers],\
+                    pred, loss, y, summary, _ = sess.run([self.pred, self.loss, self.label,\
+                                                          self.merged, self.train_last_layers],\
                                                 feed_dict=feed)
                 else:
-                    pred, loss, y, _ = sess.run([self.pred, self.loss, self.label, self.train],\
+                    pred, loss, y, summary, _ = sess.run([self.pred, self.loss, self.label,\
+                                                          self.merged, self.train],\
                                                 feed_dict=feed)
                 batch += 1
             except tf.errors.OutOfRangeError:
@@ -266,6 +285,8 @@ class FCN_Concat(FCN_Model):
             # logging
             prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
                                                                ('score', lr_schedule.score)])
+            # for tensorboard
+            self.file_writer.add_summary(summary, self.global_step)
 
         return losses, np.mean(bdices)
 
@@ -502,6 +523,9 @@ class FCN_Concat(FCN_Model):
                                  end_warm=config.end_warm * nbatches, exp_decay=exp_decay)
 
         saver = tf.train.Saver()
+
+        # for tensorboard
+        self.add_summary(sess)
 
         train_losses = []
         train_bdices = []

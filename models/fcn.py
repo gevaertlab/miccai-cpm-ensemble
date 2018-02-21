@@ -22,6 +22,7 @@ class FCN_Model(Model):
         self.add_model()
         self.add_pred_op()
         self.add_loss_op()
+        self.global_step = tf.train.get_or_create_global_step()
         self.add_train_op()
 
     def load_data(self):
@@ -39,6 +40,9 @@ class FCN_Model(Model):
         self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
         self.lr_placeholder = tf.placeholder(tf.float32, shape=[])
         self.is_training = tf.placeholder(tf.bool, shape = [])
+
+        # for tensorboard
+        tf.summary.scalar("lr", self.lr)
 
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
@@ -167,12 +171,13 @@ class FCN_Model(Model):
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         with tf.control_dependencies(update_ops):
             self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
-                                 .minimize(self.loss)
+                                 .minimize(self.loss, global_step=self.global_step)
 
             if self.config.finetuning_method == 'last_layers':
                 var_to_train, _ = self.get_variables_to_restore(self.config.finetuning_level)
                 self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
-                                                 .minimize(self.loss, var_list=var_to_train)
+                                                 .minimize(self.loss, var_list=var_to_train,\
+                                                           global_step=self.global_step)
 
     def _train(self, ex_path, sess, lr, finetune=False):
         losses = []
