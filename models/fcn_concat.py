@@ -267,13 +267,15 @@ class FCN_Concat(FCN_Model):
                         self.is_training: self.config.use_batch_norm}
 
                 if finetune:
-                    pred, loss, y, summary, _ = sess.run([self.pred, self.loss, self.label,\
-                                                          self.merged, self.train_last_layers],\
-                                                feed_dict=feed)
+                    pred, loss, y, summary, global_step, _ = sess.run([self.pred, self.loss, self.label,\
+                                                                       self.merged, self.global_step,\
+                                                                       self.train_last_layers],\
+                                                                      feed_dict=feed)
                 else:
-                    pred, loss, y, summary, _ = sess.run([self.pred, self.loss, self.label,\
-                                                          self.merged, self.train],\
-                                                feed_dict=feed)
+                    pred, loss, y, summary, global_step, _ = sess.run([self.pred, self.loss, self.label,\
+                                                                       self.merged, self.global_step,\
+                                                                       self.train],\
+                                                                      feed_dict=feed)
                 batch += 1
             except tf.errors.OutOfRangeError:
                 break
@@ -286,7 +288,7 @@ class FCN_Concat(FCN_Model):
             prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
                                                                ('score', lr_schedule.score)])
             # for tensorboard
-            self.file_writer.add_summary(summary, self.global_step)
+            self.file_writer.add_summary(summary, global_step)
 
         return losses, np.mean(bdices)
 

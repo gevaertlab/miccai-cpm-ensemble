@@ -22,7 +22,6 @@ class FCN_Model(Model):
         self.add_model()
         self.add_pred_op()
         self.add_loss_op()
-        self.global_step = tf.train.get_or_create_global_step()
         self.add_train_op()
 
     def load_data(self):
@@ -42,7 +41,7 @@ class FCN_Model(Model):
         self.is_training = tf.placeholder(tf.bool, shape = [])
 
         # for tensorboard
-        tf.summary.scalar("lr", self.lr)
+        tf.summary.scalar("lr", self.lr_placeholder)
 
     def add_model(self):
         batch_size = tf.shape(self.label_placeholder)[0]
@@ -168,6 +167,7 @@ class FCN_Model(Model):
         return var_to_train, var_to_restore
 
     def add_train_op(self):
+        self.global_step = tf.train.get_or_create_global_step()
         update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
         with tf.control_dependencies(update_ops):
             self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder)\
