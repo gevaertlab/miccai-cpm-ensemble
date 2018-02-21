@@ -202,8 +202,8 @@ class FCN_Concat_v2(FCN_Concat):
             # print(deconv6.get_shape())
             bias_6 = tf.get_variable('biases', [self.nb_classes],
                                    initializer=tf.zeros_initializer())
-
-            bn6_1 = tf.layers.batch_normalization(deconv5_1, axis=-1, training=self.is_training)
+            deconv6_1 = deconv6_1 + bias_6
+            bn6_1 = tf.layers.batch_normalization(deconv6_1, axis=-1, training=self.is_training)
             relu6_1 = tf.nn.relu(bn6_1)
             drop6_1 = tf.nn.dropout(relu6_1, self.dropout_placeholder)
 
