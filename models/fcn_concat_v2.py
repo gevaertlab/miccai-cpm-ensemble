@@ -203,19 +203,4 @@ class FCN_Concat_v2(FCN_Concat):
             bias_6 = tf.get_variable('biases', [self.nb_classes],
                                    initializer=tf.zeros_initializer())
             deconv6_1 = deconv6_1 + bias_6
-            bn6_1 = tf.layers.batch_normalization(deconv6_1, axis=-1, training=self.is_training)
-            relu6_1 = tf.nn.relu(bn6_1)
-            drop6_1 = tf.nn.dropout(relu6_1, self.dropout_placeholder)
-
-            conv6_2 = tf.layers.conv3d(inputs=drop6_1,
-                                     filters=self.nb_classes,
-                                     kernel_size=k_size,
-                                     strides=(1, 1, 1),
-                                     padding='SAME',
-                                     activation=None,
-                                     use_bias=True,
-                                     kernel_initializer=tf.contrib.layers.xavier_initializer(),
-                                     bias_initializer=tf.constant_initializer(0.0),
-                                     kernel_regularizer=tf.nn.l2_loss)
-
-            self.score = conv6_2
+            self.score = deconv6_1
