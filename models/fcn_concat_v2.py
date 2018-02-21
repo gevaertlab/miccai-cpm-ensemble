@@ -208,7 +208,7 @@ class FCN_Concat_v2(FCN_Concat):
             drop6_1 = tf.nn.dropout(relu6_1, self.dropout_placeholder)
 
             conv6_2 = tf.layers.conv3d(inputs=drop6_1,
-                                     filters=4 * nb_filters,
+                                     filters=self.nb_classes,
                                      kernel_size=k_size,
                                      strides=(1, 1, 1),
                                      padding='SAME',
