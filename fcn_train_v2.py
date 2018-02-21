@@ -24,8 +24,8 @@ if __name__ == '__main__':
     debug = arguments['--debug']
 
     config = Config(cfg_path)
-    model = FCN_Concat(config)
-    # model = FCN_Concat_v2(config)
+    # model = FCN_Concat(config)
+    model = FCN_Concat_v2(config)
 
     if debug:
         model.train_ex_paths = model.train_ex_paths[:2]
