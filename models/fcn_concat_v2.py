@@ -129,7 +129,7 @@ class FCN_Concat_v2(FCN_Concat):
             deconv4_1 = deconv4_1 + bias_4
             # shape = (patch/4, patch/4, patch/4)
             bn4_1 = tf.layers.batch_normalization(deconv4_1, axis=-1, training=self.is_training)
-            bn4_1 = tf.concat([bn4_1, pool2], axis=-1)
+            bn4_1 = tf.concat([bn4_1, pool2_2], axis=-1)
             relu4_1 = tf.nn.relu(bn4_1)
             drop4_1 = tf.nn.dropout(relu4_1, self.dropout_placeholder)
 
@@ -164,7 +164,7 @@ class FCN_Concat_v2(FCN_Concat):
             deconv5_1 = deconv5_1 + bias_5
             # shape = (patch/2, patch/2, patch/2)
             bn5_1 = tf.layers.batch_normalization(deconv5_1, axis=-1, training=self.is_training)
-            bn5_1 = tf.concat([bn5_1, pool1], axis=-1)
+            bn5_1 = tf.concat([bn5_1, pool1_2], axis=-1)
             relu5_1 = tf.nn.relu(bn5_1)
 
             drop5_1 = tf.nn.dropout(relu5_1, self.dropout_placeholder)
