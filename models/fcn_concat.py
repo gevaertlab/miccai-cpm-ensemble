@@ -6,7 +6,9 @@ import tensorflow as tf
 from models.fcn import FCN_Model
 from utils.dataset import get_dataset
 from utils.dataset_v2 import get_dataset_v2
+from utils.dataset_v3 import get_dataset_v3
 from utils.dataset import get_dataset_single_patient
+from utils.dataset_v3 import get_dataset_single_patient_v3
 from utils.dice_score import dice_score
 from utils.dice_score import dice_score_tf
 from utils.dice_score import get_inter_and_union
@@ -21,22 +23,18 @@ class FCN_Concat(FCN_Model):
     def add_dataset(self):
         if 'brats' in self.config.train_path.lower():
             name_dataset = 'Brats'
-        elif 'rembrandt' in self.config.train_path.lower():
-            name_dataset = 'Rembrandt'
         else:
-            print('Unknown dataset')
-            raise NotImplementedError
+            name_dataset = 'not Brats'
 
-        train_dataset = get_dataset_v2(self.config.train_path, False, self.config, name_dataset)
-        test_dataset = get_dataset_v2(self.config.val_path, True, self.config, name_dataset)
+        train_dataset = get_dataset_v3(self.config.train_path, False, self.config, name_dataset)
+        test_dataset = get_dataset_v3(self.config.val_path, True, self.config, name_dataset)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(\
-            output_types=(tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
-            output_shapes=([None], [None], [None], [None],\
+            output_types=(tf.string, tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
+            output_shapes=([None], [None], [None], [None], [None],\
                            [None, self.patch, self.patch, self.patch, 4],\
                            [None, self.patch, self.patch, self.patch]))
-        self.pat_path, self.i, self.j, self.k, self.image, self.label = self.iterator.get_next()
-
+        self.pat_path, self.pat_shape, self.i, self.j, self.k, self.image, self.label = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
@@ -292,7 +290,7 @@ class FCN_Concat(FCN_Model):
 
         return losses, np.mean(bdices)
 
-    def run_test(self, sess):
+    def run_test_v3(self, sess):
         sess.run(self.test_init_op)
         current_patient = ""
 
@@ -316,15 +314,14 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
 
-        nbatches = get_number_patches((155, 240, 240), self.patch, center) * len(self.val_ex_paths) // self.config.batch_size + 1
-        prog = Progbar(target=nbatches)
-
-        for batch in range(nbatches):
+        while True:
             feed = {self.dropout_placeholder: 1.0,
                     self.is_training: False}
             try:
-                patients, i, j, k, y, pred = sess.run([self.pat_path, self.i, self.j, self.k, self.label, self.pred],
-                                                      feed_dict=feed)
+                patients, pat_shapes, i, j, k, y, pred = sess.run([self.pat_path, self.pat_shape,\
+                                                                   self.i, self.j, self.k,\
+                                                                   self.label, self.pred],
+                                                                  feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
 
@@ -366,8 +363,8 @@ class FCN_Concat(FCN_Model):
                             # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
                     #hardcoded for BraTS
-                    fpred = np.zeros((155, 240, 240))
-                    fy = np.zeros((155, 240, 240))
+                    fpred = np.zeros(eval(pat_shapes[idx]))
+                    fy = np.zeros(eval(pat_shapes[idx]))
                     current_patient = patients[idx]
 
                 fy[i[idx] - half_center :i[idx] + half_center,
@@ -503,6 +500,40 @@ class FCN_Concat(FCN_Model):
                 i, j, k, pred = sess.run([self.i, self.j, self.k, self.pred], feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
+
+            for idx, _ in enumerate(i):
+                fpred[i[idx] - half_center:i[idx] + half_center,
+                      j[idx] - half_center:j[idx] + half_center,
+                      k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
+                                                                        lower:lower + center, lower:lower + center]
+
+        return fpred
+
+    def run_pred_single_example_v3(self, sess, patient):
+        if 'brats' in self.config.train_path.lower():
+            name_dataset = 'Brats'
+        else:
+            name_dataset = 'not Brats'
+        dataset = get_dataset_single_patient_v3(patient, self.config.batch_size, self.patch,\
+                                                self.config.center_patch, name_dataset)
+        init_op = self.iterator.make_initializer(dataset)
+        sess.run(init_op)
+
+        #hardcoded for BraTS
+        center = self.config.center_patch
+        half_center = center // 2
+        lower = self.patch // 2 - half_center
+        fpred = None
+
+        while True:
+            try:
+                feed = {self.dropout_placeholder: 1.0,
+                        self.is_training: False}
+                pat_shape, i, j, k, pred = sess.run([self.pat_shape, self.i, self.j, self.k, self.pred], feed_dict=feed)
+            except tf.errors.OutOfRangeError:
+                break
+            if fpred is None:
+                fpred = np.zeros(eval(pat_shape[0]))
 
             for idx, _ in enumerate(i):
                 fpred[i[idx] - half_center:i[idx] + half_center,
