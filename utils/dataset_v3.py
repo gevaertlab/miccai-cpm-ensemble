@@ -7,7 +7,7 @@ from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
-from utils.data_utils import resize_data_to_match_brats
+from utils.data_utils import resize_data_to_brats_size
 
 
 def load_data_brats(patient_path, is_test, modalities):
@@ -57,7 +57,7 @@ def load_data_not_brats(patient_path, is_test, modalities):
         im_type = im_name.split('.')[0]
         if any(mod == im_type for mod in ['t1', 't1c', 'flair', 't2', 'seg']):
             image = im_path_to_arr(im_path)
-            image = resize_data_to_match_brats(image)
+            image = resize_data_to_brats_size(image)
             if im_type == 't1' and modalities[0]:
                 image = normalize_image(image)
                 data[0] = image
@@ -83,8 +83,10 @@ def load_data_not_brats(patient_path, is_test, modalities):
         if flip < 0.5:
             data = data[:, ::-1, :, :]
             labels = labels[:, ::-1, :]
-
-    return data, labels
+    try:
+        return data, labels
+    except:
+        return data
 
 
 def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
@@ -257,7 +259,7 @@ def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalit
         x_batch = np.concatenate([item[np.newaxis, ...] for item in x_batch]).astype(np.float32)
         y_batch = np.concatenate([item[np.newaxis, ...] for item in y_batch]).astype(np.int32)
 
-        yield path_batch shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
+        yield path_batch, shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
 def get_dataset_v3(directory, is_test, config, name_dataset):
@@ -306,11 +308,14 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
     return batched_dataset
 
 
-def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_size, name_dataset):
+def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_size, modalities, name_dataset):
     if name_dataset == 'Brats':
-        data, labels = load_data_brats(patient_path, True, modalities)
+        data, _ = load_data_brats(patient_path, True, modalities)
     else:
-        data, labels = load_data_not_brats(patient_path, True, modalities)
+        try:
+            data, _ = load_data_not_brats(patient_path, True, modalities)
+        except:
+            data = load_data_not_brats(patient_path, True, modalities)
 
     batch_count = 0
     half_patch = patch_size // 2
@@ -321,8 +326,7 @@ def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_siz
     y_batch = []
     path_batch = []
     shape_batch = []
-
-    i_len, j_len, k_len = (155, 240, 240)
+    i_len, j_len, k_len, _ = data.shape
 
     for i in get_patch_centers_fcn(i_len, patch_size, center_size):
         for j in get_patch_centers_fcn(j_len, patch_size, center_size):
@@ -339,7 +343,7 @@ def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_siz
                 x_batch.append(x)
                 y_batch.append(y)
                 path_batch.append(patient_path)
-                shape_batch.append(labels.shape)
+                shape_batch.append(str((i_len, j_len, k_len)))
 
                 batch_count += 1
                 if batch_count == batch_size:
@@ -375,9 +379,13 @@ def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_siz
         yield path_batch, shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset_single_patient_v3(patient, batch_size, patch_size, center_size, name_dataset):
+def get_dataset_single_patient_v3(patient, config, name_dataset):
+    patch_size = config.patch_size
+    batch_size = config.batch_size
+    center_size = config.center_patch
+    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
     def gen():
-        return data_iter_single_example_v3(patient, patch_size, center_size, batch_size, name_dataset)
+        return data_iter_single_example_v3(patient, patch_size, center_size, batch_size, modalities, name_dataset)
     dataset = tf.data.Dataset.from_generator(generator=gen,
                                              output_types=(tf.string, tf.string, tf.int32, tf.int32,\
                                                            tf.int32, tf.float32, tf.int32))

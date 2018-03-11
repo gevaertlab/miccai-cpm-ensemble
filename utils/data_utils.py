@@ -98,7 +98,7 @@ def remove_low_high(image):
     return image
 
 
-def resize_data_to_match_brats(data):
+def resize_data_to_brats_size(data):
     # hardcoded for brats 2017
     shape_of_brats = (155, 240, 240)
     current_shape = data.shape
@@ -123,5 +123,31 @@ def resize_data_to_match_brats(data):
     if ratio_z <= 0.5:
         down = round(1 / ratio_z)
         data = data[:, :, ::down, ...]
+
+    return data
+
+def resize_data_to_original_size(data, original_shape):
+    current_shape = data.shape
+    ratio_x = current_shape[0] / original_shape[0]
+    ratio_y = current_shape[1] / original_shape[1]
+    ratio_z = current_shape[2] / original_shape[2]
+    
+    if ratio_x > 1 and round(ratio_x) >= 2:
+        data = data[::round(ratio_x), :, :]
+    if ratio_x <= 0.5:
+        down = round(1 / ratio_x)
+        data = np.repeat(data, down, axis=0)
+       
+    if ratio_y > 1 and round(ratio_y) >= 2:
+        data = data[:, ::round(ratio_y), :]
+    if ratio_y <= 0.5:
+        down = round(1 / ratio_y)
+        data = np.repeat(data, down, axis=1)
+        
+    if ratio_z > 1 and round(ratio_z) >= 2:
+        data = data[:, :, ::round(ratio_z)]
+    if ratio_z <= 0.5:
+        down = round(1 / ratio_z)
+        data = np.repeat(data, down, axis=2)
 
     return data

@@ -375,8 +375,6 @@ class FCN_Concat(FCN_Model):
                       k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center,\
                                                                         lower:lower + center, lower:lower + center]
 
-            prog.update(batch + 1)
-
         return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing),\
                np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing),\
                np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
@@ -510,12 +508,11 @@ class FCN_Concat(FCN_Model):
         return fpred
 
     def run_pred_single_example_v3(self, sess, patient):
-        if 'brats' in self.config.train_path.lower():
+        if b'brats' in patient:
             name_dataset = 'Brats'
         else:
             name_dataset = 'not Brats'
-        dataset = get_dataset_single_patient_v3(patient, self.config.batch_size, self.patch,\
-                                                self.config.center_patch, name_dataset)
+        dataset = get_dataset_single_patient_v3(patient, self.config, name_dataset)
         init_op = self.iterator.make_initializer(dataset)
         sess.run(init_op)
 
@@ -532,6 +529,7 @@ class FCN_Concat(FCN_Model):
                 pat_shape, i, j, k, pred = sess.run([self.pat_shape, self.i, self.j, self.k, self.pred], feed_dict=feed)
             except tf.errors.OutOfRangeError:
                 break
+
             if fpred is None:
                 fpred = np.zeros(eval(pat_shape[0]))
 

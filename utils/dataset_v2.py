@@ -7,7 +7,7 @@ from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
-from utils.data_utils import resize_data_to_match_brats
+from utils.data_utils import resize_data_to_brats_size
 
 
 def load_data_brats(patient_path, is_test, modalities):
@@ -58,7 +58,7 @@ def load_data_rembrandt(patient_path, is_test, modalities):
         im_type = im_name.split('.')[0]
         if any(mod == im_type for mod in ['t1', 't1c', 'flair', 't2', 'seg']):
             image = im_path_to_arr(im_path)
-            image = resize_data_to_match_brats(image)
+            image = resize_data_to_brats_size(image)
             if im_type == 't1' and modalities[0]:
                 image = normalize_image(image)
                 data[0] = image

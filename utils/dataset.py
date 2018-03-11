@@ -7,7 +7,7 @@ from utils.data_utils import im_path_to_arr
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
-from utils.data_utils import resize_data_to_match_brats
+from utils.data_utils import resize_data_to_brats_size
 
 
 def load_data_brats(patient_path, is_test, modalities):
