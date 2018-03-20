@@ -38,12 +38,12 @@ def load_data_brats(patient_path, is_test, modalities):
     data = [item for item in data if item is not None]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
-    # random flip around sagittal view
+    # random flip around sagittal axis
     if not is_test:
         flip = np.random.random()
         if flip < 0.5:
-            data = data[:, ::-1, :, :]
-            labels = labels[:, ::-1, :]
+            data = data[:, :, ::-1, :]
+            labels = labels[:, :, ::-1]
 
     return data, labels
 
@@ -76,13 +76,17 @@ def load_data_not_brats(patient_path, is_test, modalities):
     # remove index where modality is not used
     data = [item for item in data if item is not None]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+    
+    # flip data for Rembrandt
+    # TODO: special case for Rembrandt, check first for other datasets
+    data = data[:, ::-1, :, :]
 
-    # random flip around sagittal view
+    # random flip around sagittal axis
     if not is_test:
         flip = np.random.random()
         if flip < 0.5:
-            data = data[:, ::-1, :, :]
-            labels = labels[:, ::-1, :]
+            data = data[:, :, ::-1, :]
+            labels = labels[:, :, ::-1]
     try:
         return data, labels
     except:

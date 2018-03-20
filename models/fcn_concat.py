@@ -16,6 +16,7 @@ from utils.dice_score import dice_score_from_inters_and_unions
 from utils.lr_schedule import LRSchedule
 from utils.general import Progbar
 from utils.data_utils import get_number_patches
+from utils.data_utils import get_hgg_patients
 
 
 class FCN_Concat(FCN_Model):
@@ -297,10 +298,8 @@ class FCN_Concat(FCN_Model):
         all_dices_whole = []
         all_dices_core = []
         all_dices_enhancing = []
-
-        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
-        HGG_patients = [os.path.join('/local-scratch/romain_scratch/brats2017/val', pat) for pat in HGG_patients]
-        HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
+        
+        HGG_patients = get_hgg_patients(self.config.val_path)
 
         HGG_dices_whole = []
         HGG_dices_core = []

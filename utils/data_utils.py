@@ -1,6 +1,7 @@
 import os
 
 import numpy as np
+import pandas as pd
 import SimpleITK as sitk
 
 
@@ -151,3 +152,19 @@ def resize_data_to_original_size(data, original_shape):
         data = np.repeat(data, down, axis=2)
 
     return data
+
+
+def get_hgg_patients(val_path):
+    HGG_patients = []
+    if 'brats' in val_path.lower():
+        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
+    if 'rembrandt' in val_path.lower():
+        df = pd.read_csv('/labs/gevaertlab/data/tumor_segmentation/REMBRANDT_Clinical_Annotation_Updated.csv')
+        df = df.loc[:, ['SAMPLE_ID', 'DISEASE_TYPE']]
+        df = df[df.DISEASE_TYPE == 'GBM']
+        HGG_patients = df.SAMPLE_ID.tolist()
+        # dirty: because '=' at the end of each patient in rembrandt
+        HGG_patients = [pat + '=' for pat in HGG_patients]
+    HGG_patients = [os.path.join(val_path, pat) for pat in HGG_patients]
+    HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
+    return HGG_patients
