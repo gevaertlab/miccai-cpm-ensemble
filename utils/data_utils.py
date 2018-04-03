@@ -154,6 +154,8 @@ def resize_data_to_original_size(data, original_shape):
     return data
 
 
+# TODO: retrieve also the names of LGG patients because some patients are neither LGG nor HGG.
+# TODO: do the same for BraTS
 def get_hgg_patients(val_path):
     HGG_patients = []
     if 'brats' in val_path.lower():
