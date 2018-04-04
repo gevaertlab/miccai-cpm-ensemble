@@ -48,15 +48,6 @@ def get_shape_hb(ex_path):
     return labels.shape
 
 
-# generalize this later
-def get_patch_centers(im_size):
-    quotient = (im_size - 16) // 9
-    remainder = (im_size - 16) % 9
-    start = remainder // 2 + 12
-    end = start + (quotient - 1) * 9 + 1
-    return range(start, end, 9)
-
-
 # hardcoded for BraTS
 def get_patch_centers_fcn(im_size, patch_size, center):
     half = patch_size // 2
@@ -87,6 +78,8 @@ def normalize_image(image):
 
 
 def preprocess_labels(labels):
+    # in BraTS and rembrandt the class 'enhancing' has label 4 and there is no label 3
+    # need to do that for the cross entropy loss
     labels[labels == 4] = 3
     return labels
 

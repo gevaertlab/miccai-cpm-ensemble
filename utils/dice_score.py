@@ -7,6 +7,8 @@ def dice_score(x, y):
     y_bool = y.astype(bool)
     num = np.sum(np.logical_and(x_bool, y_bool)) * 2.
     denom = np.sum(x_bool) + np.sum(y_bool)
+    if denom == 0:
+        return 1
     return num / denom
 
 

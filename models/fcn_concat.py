@@ -225,6 +225,9 @@ class FCN_Concat(FCN_Model):
         self.file_writer = tf.summary.FileWriter(summary_path, sess.graph)
 
     def get_variables_to_restore(self, level=4):
+        # to initialize some variables with pretained weights
+        # 'level' refers to a level in the V-net architecture
+        # TODO: fix this function with new FCN_concat_v2
         var_names_to_restore = ['conv1/conv3d/kernel:0',
                                 'conv1/conv3d/bias:0',
                                 'conv2/conv3d/kernel:0',
@@ -243,9 +246,9 @@ class FCN_Concat(FCN_Model):
 
         var_to_restore = tf.contrib.framework.get_variables_to_restore(include=var_names_to_restore)
         var_to_train = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
-        # print('*' * 20 + 'variables to retrain' + '*' * 50)
+        # print('*' * 50 + 'variables to retrain' + '*' * 50)
         # print([var.name for var in var_to_train])
-        # print('*' * 20 + 'variables to restore' + '*' * 50)
+        # print('*' * 50 + 'variables to restore' + '*' * 50)
         # print([var.name for var in var_to_restore])
         return var_to_train, var_to_restore
 
@@ -350,18 +353,16 @@ class FCN_Concat(FCN_Model):
                             # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
 
                             # dice score for Enhancing Tumor
-                            if np.sum(fpred == 3) > 0:
-                                fpred_enhancing = fpred == 3
-                                fy_enhancing = fy == 3
-                                dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-                                all_dices_enhancing.append(dice_enhancing)
-                                if current_patient in HGG_patients:
-                                    HGG_dices_enhancing.append(dice_enhancing)
-                                else:
-                                    LGG_dices_enhancing.append(dice_enhancing)
+                            fpred_enhancing = fpred == 3
+                            fy_enhancing = fy == 3
+                            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
+                            all_dices_enhancing.append(dice_enhancing)
+                            if current_patient in HGG_patients:
+                                HGG_dices_enhancing.append(dice_enhancing)
+                            else:
+                                LGG_dices_enhancing.append(dice_enhancing)
                             # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
-                    #hardcoded for BraTS
                     fpred = np.zeros(eval(pat_shapes[idx]))
                     fy = np.zeros(eval(pat_shapes[idx]))
                     current_patient = patients[idx]
@@ -515,7 +516,6 @@ class FCN_Concat(FCN_Model):
         init_op = self.iterator.make_initializer(dataset)
         sess.run(init_op)
 
-        #hardcoded for BraTS
         center = self.config.center_patch
         half_center = center // 2
         lower = self.patch // 2 - half_center
