@@ -1,15 +1,18 @@
 import os
+import getpass
+
 import gzip
 import shutil
 
 from random import shuffle
 
+user_name = getpass.getuser()
 
 if __name__ == '__main__':
     HGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG'
     LGG_data_path = '/labs/gevaertlab/data/tumor_segmentation/brats2017/LGG'
-    train_path = '/local-scratch/romain_scratch/brats2017/train'
-    val_path = '/local-scratch/romain_scratch/brats2017/val'
+    train_path = '/local-scratch/{}_scratch/brats2017/train'.format(user_name)
+    val_path = '/local-scratch/{}_scratch/brats2017/val'.format(user_name)
 
     all_files = []
 

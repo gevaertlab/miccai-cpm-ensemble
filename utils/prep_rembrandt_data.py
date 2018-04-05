@@ -1,7 +1,7 @@
 import os
-import shutil
+import getpass
 
-import glob
+import shutil
 import gzip
 
 import numpy as np
@@ -9,11 +9,12 @@ import numpy as np
 from data_utils import im_path_to_arr
 from data_utils import arr_to_im_path
 
+user_name = getpass.getuser()
 
 in_path = '/labs/gevaertlab/data/tumor_segmentation/REMBRANDTVerified'
-out_path = '/local-scratch/romain_scratch/REMBRANDTVerified'
-train_path = '/local-scratch/romain_scratch/rembrandt/train'
-val_path = '/local-scratch/romain_scratch/rembrandt/val'
+out_path = '/local-scratch/{}_scratch/REMBRANDTVerified'.format(user_name)
+train_path = '/local-scratch/{}_scratch/rembrandt/train'.format(user_name)
+val_path = '/local-scratch/{}_scratch/rembrandt/val'.format(user_name)
 
 
 def j(path, fname):

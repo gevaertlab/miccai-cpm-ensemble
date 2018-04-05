@@ -316,6 +316,7 @@ class FCN_Concat(FCN_Model):
         half_center = center // 2
         lower = self.patch // 2 - half_center
 
+        print('Validation ...')
         while True:
             feed = {self.dropout_placeholder: 1.0,
                     self.is_training: False}
@@ -573,7 +574,7 @@ class FCN_Concat(FCN_Model):
 
             if epoch % 2 == 0:
                 # test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test(sess)
-                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
+                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v3(sess)
                 print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
                       %(test_whole, test_core, test_enhancing))
                 # logging
@@ -616,7 +617,7 @@ class FCN_Concat(FCN_Model):
             print("Finetuning method not supported")
             raise NotImplementedError
         
-        test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v2(sess)
+        test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v3(sess)
         print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f'\
               %(test_whole, test_core, test_enhancing))        
 
