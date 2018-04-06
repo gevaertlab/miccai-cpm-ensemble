@@ -80,6 +80,7 @@ def load_data_not_brats(patient_path, is_test, modalities):
     # flip data for Rembrandt
     # TODO: special case for Rembrandt, check first for other datasets
     data = data[:, ::-1, :, :]
+    labels = labels[:, ::-1, :]
 
     # random flip around sagittal axis
     if not is_test:
@@ -88,6 +89,10 @@ def load_data_not_brats(patient_path, is_test, modalities):
             data = data[:, :, ::-1, :]
             labels = labels[:, :, ::-1]
     try:
+        # flip data for Rembrandt
+        # TODO: special case for Rembrandt, check first for other datasets
+        data = data[:, ::-1, :, :]
+        labels = labels[:, ::-1, :]
         return data, labels
     except:
         return data
