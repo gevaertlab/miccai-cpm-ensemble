@@ -147,19 +147,23 @@ def resize_data_to_original_size(data, original_shape):
     return data
 
 
-# TODO: retrieve also the names of LGG patients because some patients are neither LGG nor HGG.
-# TODO: do the same for BraTS
-def get_hgg_patients(val_path):
+def get_hgg_and_lgg_patients(val_path):
     HGG_patients = []
     if 'brats' in val_path.lower():
         HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
+        LGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/LGG')
     if 'rembrandt' in val_path.lower():
         df = pd.read_csv('/labs/gevaertlab/data/tumor_segmentation/REMBRANDT_Clinical_Annotation_Updated.csv')
         df = df.loc[:, ['SAMPLE_ID', 'DISEASE_TYPE']]
-        df = df[df.DISEASE_TYPE == 'GBM']
-        HGG_patients = df.SAMPLE_ID.tolist()
-        # dirty: because '=' at the end of each patient in rembrandt
+        df_hgg = df[df.DISEASE_TYPE == 'GBM']
+        HGG_patients = df_hgg.SAMPLE_ID.tolist()
         HGG_patients = [pat + '=' for pat in HGG_patients]
+        df_lgg = df[df.DISEASE_TYPE != 'GBM']
+        LGG_patients = df_lgg.SAMPLE_ID.tolist()
+        LGG_patients = [pat + '=' for pat in LGG_patients]
+    
     HGG_patients = [os.path.join(val_path, pat) for pat in HGG_patients]
     HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
-    return HGG_patients
+    LGG_patients = [os.path.join(val_path, pat) for pat in LGG_patients]
+    LGG_patients = [pat.encode('utf-8') for pat in LGG_patients]
+    return HGG_patients, LGG_patients

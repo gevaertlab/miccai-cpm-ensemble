@@ -16,7 +16,7 @@ from utils.dice_score import dice_score_from_inters_and_unions
 from utils.lr_schedule import LRSchedule
 from utils.general import Progbar
 from utils.data_utils import get_number_patches
-from utils.data_utils import get_hgg_patients
+from utils.data_utils import get_hgg_and_lgg_patients
 
 
 class FCN_Concat(FCN_Model):
@@ -302,7 +302,7 @@ class FCN_Concat(FCN_Model):
         all_dices_core = []
         all_dices_enhancing = []
         
-        HGG_patients = get_hgg_patients(self.config.val_path)
+        HGG_patients, LGG_patients = get_hgg_and_lgg_patients(self.config.val_path)
 
         HGG_dices_whole = []
         HGG_dices_core = []
@@ -337,7 +337,7 @@ class FCN_Concat(FCN_Model):
                         all_dices_whole.append(dice_whole)
                         if current_patient in HGG_patients:
                             HGG_dices_whole.append(dice_whole)
-                        else:
+                        if current_patient in LGG_patients:
                             LGG_dices_whole.append(dice_whole)
                         # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
 
@@ -349,7 +349,7 @@ class FCN_Concat(FCN_Model):
                             all_dices_core.append(dice_core)
                             if current_patient in HGG_patients:
                                 HGG_dices_core.append(dice_core)
-                            else:
+                            if current_patient in LGG_patients:
                                 LGG_dices_core.append(dice_core)
                             # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
 
@@ -360,7 +360,7 @@ class FCN_Concat(FCN_Model):
                             all_dices_enhancing.append(dice_enhancing)
                             if current_patient in HGG_patients:
                                 HGG_dices_enhancing.append(dice_enhancing)
-                            else:
+                            if current_patient in LGG_patients:
                                 LGG_dices_enhancing.append(dice_enhancing)
                             # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
 
