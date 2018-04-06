@@ -7,7 +7,8 @@ import gzip
 import numpy as np
 
 from data_utils import im_path_to_arr
-from data_utils import arr_to_im_path
+from data_utils import 
+from data_utils import get_hgg_and_lgg_patients
 
 user_name = getpass.getuser()
 
@@ -122,10 +123,29 @@ for ex_name in os.listdir(out_path):
 all_patients = os.listdir(out_path)
 all_patients = [(j(out_path, pat), pat) for pat in all_patients]
 all_patients = [pat for pat in all_patients if os.path.isdir(pat[0])]
+
+#shuffle patients
+np.random.seed(0)
 np.random.shuffle(all_patients)
 
-train_patients = all_patients[:int(0.8 * len(all_patients))]
-val_patients = all_patients[int(0.8 * len(all_patients)):]
+#split patients between LGG and HGG
+HGG_patients_csv, LGG_patients_csv = get_hgg_and_lgg_patients(out_path)
+HGG_patients_csv = [pat.decode('utf-8') for pat in HGG_patients_csv]
+LGG_patients_csv = [pat.decode('utf-8') for pat in LGG_patients_csv]
+HGG_patients = [pat for pat in all_patients if pat in HGG_patients_csv]
+LGG_patients = [pat for pat in all_patients if pat in LGG_patients_csv]
+other_patients = [pat for pat in all_patients if (pat not in HGG_patients_csv and pat not in LGG_patients_csv)]
+
+#create train and test set
+ratio_val = 0.3
+train_patients = HGG_patients[int(ratio_val) * len(HGG_patients):]\
+                 + LGG_patients[int(ratio_val) * len(LGG_patients):]\
+                 + other_patients[int(ratio_val) * len(other_patients):]
+val_patients = HGG_patients[:int(ratio_val) * len(HGG_patients)]\
+               + LGG_patients[:int(ratio_val) * len(LGG_patients)]
+               + other_patients[:int(ratio_val) * len(other_patients)]
+np.random.shuffle(train_patients)
+np.random.shuffle(val_patients)
 
 for pat_path, pat_name in train_patients:
     copy_path = j(train_path, pat_name)
