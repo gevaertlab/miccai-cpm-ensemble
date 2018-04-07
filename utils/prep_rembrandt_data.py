@@ -7,7 +7,7 @@ import gzip
 import numpy as np
 
 from data_utils import im_path_to_arr
-from data_utils import 
+from data_utils import arr_to_im_path
 from data_utils import get_hgg_and_lgg_patients
 
 user_name = getpass.getuser()
