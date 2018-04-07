@@ -147,7 +147,7 @@ train_patients = HGG_patients[int(ratio_val * len(HGG_patients)):]\
                  + LGG_patients[int(ratio_val * len(LGG_patients)):]\
                  + other_patients[int(ratio_val * len(other_patients)):]
 val_patients = HGG_patients[:int(ratio_val * len(HGG_patients))]\
-               + LGG_patients[:int(ratio_val * len(LGG_patients))]
+               + LGG_patients[:int(ratio_val * len(LGG_patients))]\
                + other_patients[:int(ratio_val * len(other_patients))]
 np.random.shuffle(train_patients)
 np.random.shuffle(val_patients)
