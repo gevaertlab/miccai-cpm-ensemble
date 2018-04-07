@@ -56,8 +56,8 @@ np.random.shuffle(LGG_files)
 
 #create train and test set
 ratio_val = 0.2
-train_files = HGG_files[int(ratio_val) * len(HGG_files):] + LGG_files[int(ratio_val) * len(LGG_files):]
-val_files = HGG_files[:int(ratio_val) * len(HGG_files)] + LGG_files[:int(ratio_val) * len(LGG_files)]
+train_files = HGG_files[int(ratio_val * len(HGG_files)):] + LGG_files[int(ratio_val * len(LGG_files)):]
+val_files = HGG_files[:int(ratio_val * len(HGG_files))] + LGG_files[:int(ratio_val * len(LGG_files))]
 np.random.shuffle(train_files)
 np.random.shuffle(val_files)
 

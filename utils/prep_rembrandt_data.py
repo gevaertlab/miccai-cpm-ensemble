@@ -143,12 +143,12 @@ print('number of HGG patients: %d | number of LGG patients: %d | number of other
 print('Create training and test sets ...')
 #create train and test set
 ratio_val = 0.3
-train_patients = HGG_patients[int(ratio_val) * len(HGG_patients):]\
-                 + LGG_patients[int(ratio_val) * len(LGG_patients):]\
-                 + other_patients[int(ratio_val) * len(other_patients):]
-val_patients = HGG_patients[:int(ratio_val) * len(HGG_patients)]\
-               + LGG_patients[:int(ratio_val) * len(LGG_patients)]
-               + other_patients[:int(ratio_val) * len(other_patients)]
+train_patients = HGG_patients[int(ratio_val * len(HGG_patients)):]\
+                 + LGG_patients[int(ratio_val * len(LGG_patients)):]\
+                 + other_patients[int(ratio_val * len(other_patients)):]
+val_patients = HGG_patients[:int(ratio_val * len(HGG_patients))]\
+               + LGG_patients[:int(ratio_val * len(LGG_patients))]
+               + other_patients[:int(ratio_val * len(other_patients))]
 np.random.shuffle(train_patients)
 np.random.shuffle(val_patients)
 
