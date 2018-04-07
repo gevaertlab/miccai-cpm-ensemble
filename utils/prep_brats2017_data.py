@@ -17,10 +17,11 @@ val_path = '/local-scratch/{}_scratch/brats2017/val'.format(user_name)
 HGG_files = []
 LGG_files = []
 
+print('Unzip files ...')
 for patient_name in os.listdir(HGG_data_path):
     patient_path = os.path.join(HGG_data_path, patient_name)
     out_patient_path = os.path.join(out_path, patient_name)
-    HGG_files.append(out_patient_path)
+    HGG_files.append((out_patient_path, patient_name))
     if os.path.exists(out_patient_path):
         shutil.rmtree(out_patient_path)
     else:
@@ -35,7 +36,7 @@ for patient_name in os.listdir(HGG_data_path):
 for patient_name in os.listdir(LGG_data_path):
     patient_path = os.path.join(LGG_data_path, patient_name)
     out_patient_path = os.path.join(out_path, patient_name)
-    LGG_files.append(out_patient_path)
+    LGG_files.append((out_patient_path, patient_name))
     if os.path.exists(out_patient_path):
         shutil.rmtree(out_patient_path)
     else:
@@ -47,6 +48,7 @@ for patient_name in os.listdir(LGG_data_path):
             with open(unzipped_path, 'wb') as f:
                 f.write(fgz.read())
 
+print('Create training and test sets ...')
 #shuffle patients
 np.random.seed(0)
 np.random.shuffle(HGG_files)

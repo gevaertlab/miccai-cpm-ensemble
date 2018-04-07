@@ -47,6 +47,7 @@ def create_labels(directory):
         labels[2] = active
     return labels
 
+print('Create a copy of the original data ...')
 # copy whole dataset to new location
 shutil.copytree(in_path, out_path)
 
@@ -54,7 +55,7 @@ shutil.copytree(in_path, out_path)
 shutil.rmtree(j(out_path, 'HF1708=')) # this one is 512x512 (TODO: downsample by 2 instead?)
 shutil.rmtree(j(out_path, 'HF0899=')) # this one has no tumor
 
-
+print('Rename and remove data ...')
 # reorganize data
 for ex_name in os.listdir(out_path):
     ex_path = j(out_path, ex_name)
@@ -99,6 +100,7 @@ for ex_name in os.listdir(out_path):
                   j(ex_path, 't2.nii'))
 
 
+print('Create labels ...')
 # create labels
 for ex_name in os.listdir(out_path):
     print(ex_name)
@@ -118,7 +120,7 @@ for ex_name in os.listdir(out_path):
     else:
         os.remove(ex_path)
 
-
+print('Split data between HGG and LGG ...')
 # split data
 all_patients = os.listdir(out_path)
 all_patients = [(j(out_path, pat), pat) for pat in all_patients]
@@ -132,10 +134,13 @@ np.random.shuffle(all_patients)
 HGG_patients_csv, LGG_patients_csv = get_hgg_and_lgg_patients(out_path)
 HGG_patients_csv = [pat.decode('utf-8') for pat in HGG_patients_csv]
 LGG_patients_csv = [pat.decode('utf-8') for pat in LGG_patients_csv]
-HGG_patients = [pat for pat in all_patients if pat in HGG_patients_csv]
-LGG_patients = [pat for pat in all_patients if pat in LGG_patients_csv]
-other_patients = [pat for pat in all_patients if (pat not in HGG_patients_csv and pat not in LGG_patients_csv)]
+HGG_patients = [pat for pat in all_patients if pat[0] in HGG_patients_csv]
+LGG_patients = [pat for pat in all_patients if pat[0] in LGG_patients_csv]
+other_patients = [pat for pat in all_patients if (pat[0] not in HGG_patients_csv and pat[0] not in LGG_patients_csv)]
+print('number of HGG patients: %d | number of LGG patients: %d | number of other patients: %d'\
+      %(len(HGG_patients), len(LGG_patients), len(other_patients)))
 
+print('Create training and test sets ...')
 #create train and test set
 ratio_val = 0.3
 train_patients = HGG_patients[int(ratio_val) * len(HGG_patients):]\
