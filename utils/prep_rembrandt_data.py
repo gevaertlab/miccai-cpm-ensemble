@@ -28,23 +28,26 @@ def create_labels(directory):
         with gzip.open(j(directory, 'edema.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'edema.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'edema.nii.gz'))
         edema = im_path_to_arr(j(directory, 'edema.nii'))
         labels[0] = edema
+        os.remove(j(directory, 'edema.nii.gz'))
+        os.remove(j(directory, 'edema.nii'))
     if 'necrosis.nii.gz' in os.listdir(directory):
         with gzip.open(j(directory, 'necrosis.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'necrosis.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'necrosis.nii.gz'))
         necrosis = im_path_to_arr(j(directory, 'necrosis.nii'))
         labels[1] = necrosis
+        os.remove(j(directory, 'necrosis.nii.gz'))
+        os.remove(j(directory, 'necrosis.nii'))
     if 'active.nii.gz' in os.listdir(directory):
         with gzip.open(j(directory, 'active.nii.gz'), 'rb') as fgz:
             with open(j(directory, 'active.nii'), 'wb') as f:
                 f.write(fgz.read())
-        os.remove(j(directory, 'active.nii.gz'))
         active = im_path_to_arr(j(directory, 'active.nii'))
         labels[2] = active
+        os.remove(j(directory, 'active.nii.gz'))
+        os.remove(j(directory, 'active.nii'))
     return labels
 
 print('Create a copy of the original data ...')
@@ -89,6 +92,8 @@ for ex_name in os.listdir(out_path):
             os.remove(j(ex_path, 'blood.nii.gz'))
         if '.DS_Store' in os.listdir(ex_path):
             os.remove(j(ex_path, '.DS_Store'))
+        if 'tumor.nii.gz' in os.listdir(ex_path):
+            os.remove(j(ex_path, 'tumor.nii.gz'))      
 
         os.rename(j(ex_path, 'flair_t1_bcorr_brain.nii'),
                   j(ex_path, 'flair.nii'))
