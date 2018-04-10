@@ -103,7 +103,6 @@ for ex_name in os.listdir(out_path):
 print('Create labels ...')
 # create labels
 for ex_name in os.listdir(out_path):
-    print(ex_name)
     ex_path = os.path.join(out_path, ex_name)
     if os.path.isdir(ex_path):
         labels = create_labels(ex_path)
@@ -112,10 +111,10 @@ for ex_name in os.listdir(out_path):
         tumor = np.zeros(shape)
         if labels[0] is not None:
             tumor[labels[0] > 0] = 2
-        if labels[1] is not None:
-            tumor[labels[1] > 0] = 1
         if labels[2] is not None:
             tumor[labels[2] > 0] = 4
+        if labels[1] is not None:
+            tumor[labels[1] > 0] = 1
         arr_to_im_path(tumor, j(ex_path, 'seg.nii'))
     else:
         os.remove(ex_path)
