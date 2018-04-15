@@ -1,0 +1,42 @@
+#! /usr/bin/env python
+
+import gzip
+import os
+
+from utils.data_utils import im_path_to_arr
+from utils.mri_viewer import MRIViewer
+
+def main():
+    in_dir = 'nii'
+    out_dir = in_dir + '_out'
+
+    nii1 = os.path.join(in_dir, 't1c.nii')
+    nii2 = os.path.join(in_dir, 'flair.nii')
+    nii3 = os.path.join(out_dir, 't1c_bcorr_brain.nii')
+    nii4 = os.path.join(out_dir, 'flair_bcorr_brain.nii')
+
+    with gzip.open(nii3 + '.gz', 'rb') as fgz:
+        with open(nii3, 'wb') as f:
+            f.write(fgz.read())
+
+    with gzip.open(nii4 + '.gz', 'rb') as fgz:
+        with open(nii4, 'wb') as f:
+            f.write(fgz.read())
+    
+    im1 = im_path_to_arr(nii1)
+    im2 = im_path_to_arr(nii2)
+    im3 = im_path_to_arr(nii3)
+    im4 = im_path_to_arr(nii4)
+
+    cmap = 'viridis'
+
+    title1 = 'T1c Pre'
+    title2 = 'Flair Pre'
+    title3 = 'T1c Post'
+    title4 = 'Flair Post'
+    
+    MRIViewer(im1, im2, im3, im4, cmap, title1, title2, title3, title4)
+    input()
+
+if __name__ == '__main__':
+    main()
