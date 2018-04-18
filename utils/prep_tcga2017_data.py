@@ -19,6 +19,7 @@ LGG_files = []
 
 print('Unzip files ...')
 for patient_name in os.listdir(HGG_data_path):
+    print("Handling patient {}.".format(patient_name))
     patient_path = os.path.join(HGG_data_path, patient_name)
     out_patient_path = os.path.join(out_path, patient_name)
     HGG_files.append((out_patient_path, patient_name))
@@ -27,6 +28,7 @@ for patient_name in os.listdir(HGG_data_path):
     else:
         os.makedirs(out_patient_path)
     for modality in os.listdir(patient_path):
+        print("\t Handling file {}.".format(modality))
         modality_path = os.path.join(patient_path, modality)
         unzipped_path = os.path.join(out_patient_path, modality[:-3])
         with gzip.open(modality_path, 'rb') as fgz:
