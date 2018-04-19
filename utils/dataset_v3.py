@@ -99,6 +99,7 @@ def load_data_not_brats(patient_path, is_test, modalities):
 
 
 def load_data_tcga(patient_path, is_test, modalities):
+    print("entering load_data_tcga")
     data = [None] * 4
     patient_path = patient_path.decode('utf-8')
 
@@ -160,6 +161,7 @@ def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, 
     shape_batch = []
 
     name_dataset = name_dataset.decode('utf-8')
+    print("name_dataset ", name_dataset)
     if name_dataset == 'Brats':
         data, labels = load_data_brats(patient_path, False, modalities)
     elif name_dataset == 'TCGA':
