@@ -24,6 +24,8 @@ class FCN_Concat(FCN_Model):
     def add_dataset(self):
         if 'brats' in self.config.train_path.lower():
             name_dataset = 'Brats'
+        elif 'tcga' in self.config.train_path.lower():
+            name_dataset = 'TCGA'
         else:
             name_dataset = 'not Brats'
 
