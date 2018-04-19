@@ -152,6 +152,9 @@ def get_hgg_and_lgg_patients(val_path):
     if 'brats' in val_path.lower():
         HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
         LGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/LGG')
+    elif 'tcga' in val_path.lower():
+        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/tcga2017/operative_TCGA_GBM_NIfTI_and_Segmentations')
+        LGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/tcga2017/operative_TCGA_LGG_NIfTI_and_Segmentations')
     if 'rembrandt' in val_path.lower():
         df = pd.read_csv('/labs/gevaertlab/data/tumor_segmentation/REMBRANDT_Clinical_Annotation_Updated.csv')
         df = df.loc[:, ['SAMPLE_ID', 'DISEASE_TYPE']]
