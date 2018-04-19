@@ -105,7 +105,7 @@ def load_data_tcga(patient_path, is_test, modalities):
     im_type_to_path = {}
     for im_name in os.listdir(patient_path):
         im_path = os.path.join(patient_path, im_name)
-        im_type = im_name.split('.')[-3].split('_')[-1]
+        im_type = im_name.split('.')[-2].split('_')[-1]
         im_type_to_path[im_type] = im_path
 
     assert all([im_type in im_type_to_path for im_type in ['t1', 't1Gd', 'flair', 't2']])
