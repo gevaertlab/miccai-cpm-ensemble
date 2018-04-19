@@ -120,7 +120,7 @@ def load_data_tcga(patient_path, is_test, modalities):
         if im_type == 't1' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
-        elif im_type == 't1c' and modalities[1]:
+        elif im_type == 't1Gd' and modalities[1]:
             image = normalize_image(image)
             data[1] = image
         elif im_type == 't2' and modalities[2]:
