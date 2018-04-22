@@ -19,8 +19,8 @@ from utils.mri_viewer import MRIViewer
 
 # variables
 im = 'nii/t1c.nii'
-fs = [0., 0.05, 0.1, 0.2]
-gs = [-1., -0.5, -0.]
+fs = [0.025, 0.05]
+gs = [-0.6, -0.3]
 
 # build work directory
 try:
@@ -56,14 +56,14 @@ step = int(len(arr) / 4)
 idxs = [int(step / 2 + sl * step) for sl in range(4)]
 for k, idx in enumerate(idxs):
     ax = axes[k, 0]
-    ax.imshow(arr[idx])
+    ax.imshow(arr[idx], vmin=arr.min(), vmax=arr.max())
     ax.set_title('orig')
 for i, f in enumerate(fs):
     for j, g in enumerate(gs):
         arr = arrs[f, g]
         for k, idx in enumerate(idxs):
             ax = axes[k, 1 + len(gs) * i + j]
-            ax.imshow(arr[idx])
+            ax.imshow(arr[idx], vmin=arr.min(), vmax=arr.max())
             ax.set_title('f={}, g={}'.format(f, g))
 plt.suptitle('standard_space_roi + bet')
 plt.tight_layout()
