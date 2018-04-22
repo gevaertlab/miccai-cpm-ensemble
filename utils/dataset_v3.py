@@ -76,7 +76,7 @@ def load_data_not_brats(patient_path, is_test, modalities):
     # remove index where modality is not used
     data = [item for item in data if item is not None]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
-    
+
     # flip data for Rembrandt
     # TODO: special case for Rembrandt, check first for other datasets
     data = data[:, ::-1, :, :]
@@ -98,6 +98,57 @@ def load_data_not_brats(patient_path, is_test, modalities):
         return data
 
 
+def load_data_tcga(patient_path, is_test, modalities):
+    data = [None] * 4
+    patient_path = patient_path.decode('utf-8')
+
+    im_type_to_path = {}
+    for im_name in os.listdir(patient_path):
+        im_path = os.path.join(patient_path, im_name)
+        im_type = im_name.split('.')[-2].split('_')[-1]
+        im_type_to_path[im_type] = im_path
+
+    assert all([im_type in im_type_to_path for im_type in ['t1', 't1Gd', 'flair', 't2']])
+    assert ('ManuallyCorrected' in im_type_to_path) or ('GlistrBoost' in im_type_to_path)
+
+    if 'ManuallyCorrected' in im_type_to_path:
+        del im_type_to_path['GlistrBoost']
+
+    for im_type in im_type_to_path:
+        image = im_path_to_arr(im_type_to_path[im_type])
+        image = resize_data_to_brats_size(image)
+        if im_type == 't1' and modalities[0]:
+            image = normalize_image(image)
+            data[0] = image
+        elif im_type == 't1Gd' and modalities[1]:
+            image = normalize_image(image)
+            data[1] = image
+        elif im_type == 't2' and modalities[2]:
+            image = normalize_image(image)
+            data[2] = image
+        elif im_type == 'flair' and modalities[3]:
+            image = normalize_image(image)
+            data[3] = image
+        elif (im_type == 'ManuallyCorrected') or (im_type == 'GlistrBoost'):
+            labels = preprocess_labels(image)
+
+    # remove index where modality is not used
+    data = [item for item in data if item is not None]
+    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+
+    # random flip around sagittal axis
+    if not is_test:
+        flip = np.random.random()
+        if flip < 0.5:
+            data = data[:, :, ::-1, :]
+            labels = labels[:, :, ::-1]
+    try:
+        labels = labels[:, ::-1, :]
+        return data, labels
+    except:
+        return data
+
+
 def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
     half_patch = patch_size // 2
     i_batch = []
@@ -111,6 +162,8 @@ def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, 
     name_dataset = name_dataset.decode('utf-8')
     if name_dataset == 'Brats':
         data, labels = load_data_brats(patient_path, False, modalities)
+    elif name_dataset == 'TCGA':
+        data, labels = load_data_tcga(patient_path, False, modalities)
     else:
         data, labels = load_data_not_brats(patient_path, False, modalities)
 
@@ -213,6 +266,8 @@ def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalit
 
         if name_dataset == 'Brats':
             data, labels = load_data_brats(patient_path, True, modalities)
+        elif name_dataset == 'TCGA':
+            data, labels = load_data_tcga(patient_path, True, modalities)
         else:
             data, labels = load_data_not_brats(patient_path, True, modalities)
 
@@ -222,12 +277,12 @@ def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalit
             for j in get_patch_centers_fcn(j_len, patch_size, center_size):
                 for k in get_patch_centers_fcn(k_len, patch_size, center_size):
 
-                    x = data[i - half_patch:i + half_patch,\
-                             j - half_patch:j + half_patch,\
-                             k - half_patch:k + half_patch, :]
-                    y = labels[i - half_center:i + half_center,\
-                               j - half_center:j + half_center,\
-                               k - half_center:k + half_center]
+                    x = data[i - half_patch:i + half_patch, \
+                        j - half_patch:j + half_patch, \
+                        k - half_patch:k + half_patch, :]
+                    y = labels[i - half_center:i + half_center, \
+                        j - half_center:j + half_center, \
+                        k - half_center:k + half_center]
 
                     i_batch.append(i)
                     j_batch.append(j)
@@ -277,9 +332,9 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
     modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
 
     ratio = config.ratio
-    assert(len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
-    assert(np.sum(ratio) == 1), 'the sum of the ratios should be 1'
-    
+    assert (len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
+    assert (np.sum(ratio) == 1), 'the sum of the ratios should be 1'
+
     patients = os.listdir(directory)
     patients = [os.path.join(directory, pat) for pat in patients]
     # need to encode in bytes to pass it to tf.py_func
@@ -295,20 +350,23 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
 
         dataset = tf.data.Dataset.from_tensor_slices(patients)
         dataset = dataset.map(lambda p: tuple(tf.py_func(train_data_iter_v3,
-                                                         [p, patch_size, batch_size, ratio,\
+                                                         [p, patch_size, batch_size, ratio,
                                                           modalities, name_dataset],
-                                                         [tf.string, tf.string, tf.int32, tf.int32,\
-                                                          tf.int32, tf.float32, tf.int32])),
+                                                         [tf.string, tf.string,
+                                                          tf.int32, tf.int32, tf.int32,
+                                                          tf.float32,
+                                                          tf.int32])),
                               num_parallel_calls=8)
         dataset = dataset.apply(tf.contrib.data.unbatch())
         dataset = dataset.shuffle(buffer_size=3000)
     else:
         center_size = config.center_patch
+
         def gen():
             return test_data_iter_v3(patients, patch_size, center_size, batch_size, modalities, name_dataset)
+
         dataset = tf.data.Dataset.from_generator(generator=gen,
-                                                 output_types=(tf.string, tf.string, tf.int32, tf.int32,\
-                                                               tf.int32, tf.float32, tf.int32))
+                                                 output_types=(tf.string, tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
 
     batched_dataset = dataset.batch(batch_size)
@@ -320,6 +378,8 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
 def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_size, modalities, name_dataset):
     if name_dataset == 'Brats':
         data, _ = load_data_brats(patient_path, True, modalities)
+    elif name_dataset == 'TCGA':
+        data, _ = load_data_tcga(patient_path, True, modalities)
     else:
         try:
             data, _ = load_data_not_brats(patient_path, True, modalities)
@@ -341,9 +401,9 @@ def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_siz
         for j in get_patch_centers_fcn(j_len, patch_size, center_size):
             for k in get_patch_centers_fcn(k_len, patch_size, center_size):
 
-                x = data[i - half_patch:i + half_patch,\
-                         j - half_patch:j + half_patch,\
-                         k - half_patch:k + half_patch, :]
+                x = data[i - half_patch:i + half_patch, \
+                    j - half_patch:j + half_patch, \
+                    k - half_patch:k + half_patch, :]
                 y = np.zeros((patch_size, patch_size, patch_size))
 
                 i_batch.append(i)
@@ -393,10 +453,12 @@ def get_dataset_single_patient_v3(patient, config, name_dataset):
     batch_size = config.batch_size
     center_size = config.center_patch
     modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
+
     def gen():
         return data_iter_single_example_v3(patient, patch_size, center_size, batch_size, modalities, name_dataset)
+
     dataset = tf.data.Dataset.from_generator(generator=gen,
-                                             output_types=(tf.string, tf.string, tf.int32, tf.int32,\
+                                             output_types=(tf.string, tf.string, tf.int32, tf.int32, \
                                                            tf.int32, tf.float32, tf.int32))
     dataset = dataset.apply(tf.contrib.data.unbatch())
     dataset = dataset.batch(batch_size)

@@ -24,6 +24,8 @@ class FCN_Concat(FCN_Model):
     def add_dataset(self):
         if 'brats' in self.config.train_path.lower():
             name_dataset = 'Brats'
+        elif 'tcga' in self.config.train_path.lower():
+            name_dataset = 'TCGA'
         else:
             name_dataset = 'not Brats'
 
@@ -287,7 +289,7 @@ class FCN_Concat(FCN_Model):
             bdices.append(bdice)
 
             # logging
-            prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),\
+            prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),
                                                                ('score', lr_schedule.score)])
             # for tensorboard
             self.file_writer.add_summary(summary, global_step)
@@ -321,8 +323,8 @@ class FCN_Concat(FCN_Model):
             feed = {self.dropout_placeholder: 1.0,
                     self.is_training: False}
             try:
-                patients, pat_shapes, i, j, k, y, pred = sess.run([self.pat_path, self.pat_shape,\
-                                                                   self.i, self.j, self.k,\
+                patients, pat_shapes, i, j, k, y, pred = sess.run([self.pat_path, self.pat_shape,
+                                                                   self.i, self.j, self.k,
                                                                    self.label, self.pred],
                                                                   feed_dict=feed)
             except tf.errors.OutOfRangeError:
