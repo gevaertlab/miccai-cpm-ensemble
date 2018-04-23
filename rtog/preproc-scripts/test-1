@@ -8,7 +8,7 @@ https://neuroimager.wordpress.com/2012/10/26/brain-extraction-using-fsl-bet/
 import errno
 import gzip
 import os
-import pickle
+import shutil
 import subprocess
 
 import matplotlib.pyplot as plt
@@ -19,8 +19,9 @@ from utils.mri_viewer import MRIViewer
 
 # variables
 im = 'nii/t1c.nii'
-fs = [0.025, 0.05]
-gs = [-0.6, -0.3]
+fs = [0., 0.05]
+gs = [-1, -0.5]
+opts = ['-Z']
 
 # build work directory
 try:
@@ -42,12 +43,23 @@ for f in fs:
     for g in gs:
         print('f={}, g={}'.format(f, g))
         im_ss = 'test_out/im_ss_f_{}_g_{}.nii'.format(f, g)
-        subprocess.call(['bet', im_std, im_ss, '-f', str(f), '-g', str(g)])
+        bet_cmd = ['bet', im_std, im_ss, '-f', str(f), '-g', str(g)]
+        bet_cmd.extend(opts)
+        subprocess.call(bet_cmd)
         with gzip.open(im_ss + '.gz', 'rb') as niigz:
             with open(im_ss, 'wb') as nii:
                 nii.write(niigz.read())
         im_ss_arr = im_path_to_arr(im_ss)
         arrs[f, g] = im_ss_arr
+
+# remove work directory
+try:
+    shutil.rmtree('test_out')
+except OSError as e:
+    if e.errno == errno.ENOENT:
+        pass
+    else:
+        raise
 
 # sweep over f and g values and visualize
 fig, axes = plt.subplots(4, 1 + len(fs) * len(gs))
@@ -56,15 +68,18 @@ step = int(len(arr) / 4)
 idxs = [int(step / 2 + sl * step) for sl in range(4)]
 for k, idx in enumerate(idxs):
     ax = axes[k, 0]
-    ax.imshow(arr[idx], vmin=arr.min(), vmax=arr.max())
-    ax.set_title('orig')
+    ax.imshow(arr[idx], cmap='viridis', vmin=arr.min(), vmax=arr.max())
+    if k == 0:
+        ax.set_title('orig', fontsize=10)
+    ax.axis('off')
 for i, f in enumerate(fs):
     for j, g in enumerate(gs):
         arr = arrs[f, g]
         for k, idx in enumerate(idxs):
             ax = axes[k, 1 + len(gs) * i + j]
-            ax.imshow(arr[idx], vmin=arr.min(), vmax=arr.max())
-            ax.set_title('f={}, g={}'.format(f, g))
-plt.suptitle('standard_space_roi + bet')
-plt.tight_layout()
+            ax.imshow(arr[idx], cmap='viridis', vmin=arr.min(), vmax=arr.max())
+            if k == 0:
+                ax.set_title('f={}\ng={}'.format(f, g), fontsize=10)
+            ax.axis('off')
+fig.canvas.set_window_title('standard_space_roi + bet')
 plt.show()
