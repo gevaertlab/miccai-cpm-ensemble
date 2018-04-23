@@ -513,7 +513,7 @@ class FCN_Concat(FCN_Model):
     def run_pred_single_example_v3(self, sess, patient):
         if b'brats' in patient:
             name_dataset = 'Brats'
-        elif 'TCGA' in patient:
+        elif b'TCGA' in patient:
             name_dataset = 'TCGA'
         else:
             name_dataset = 'not Brats'
