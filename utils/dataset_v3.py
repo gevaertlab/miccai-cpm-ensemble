@@ -143,7 +143,7 @@ def load_data_tcga(patient_path, is_test, modalities):
             data = data[:, :, ::-1, :]
             labels = labels[:, :, ::-1]
     try:
-        labels = labels[:, ::-1, :]
+        # labels = labels[:, ::-1, :]
         return data, labels
     except:
         return data
