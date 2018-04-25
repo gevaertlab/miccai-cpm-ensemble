@@ -30,7 +30,7 @@ class CNN_Classifier(Model):
         self.val_ex_paths = get_ex_paths(self.config.val_path)
 
     def add_dataset(self):
-        train_dataset, train_labels = get_dataset_batched(self.config.train_path, False, self.config)
+        train_dataset = get_dataset_batched(self.config.train_path, False, self.config)
         test_dataset = get_dataset_batched(self.config.val_path, True, self.config)
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(
