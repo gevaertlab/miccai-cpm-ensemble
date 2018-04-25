@@ -325,7 +325,7 @@ class CNN_Classifier(Model):
                               global_step=self.global_step)
 
     def add_model(self):
-        self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, self.nb_modalities])
+        # self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, self.nb_modalities])
         nb_filters = self.config.nb_filters
         k_size = self.config.kernel_size
 
