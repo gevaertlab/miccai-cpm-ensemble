@@ -36,7 +36,7 @@ class CNN_Classifier(Model):
         self.iterator = tf.contrib.data.Iterator.from_structure(
             output_types=(tf.float32,
                           tf.int32,
-                          tf.bool),
+                          tf.int32),
             output_shapes=([None, 240, 240, 155, 4],
                            [None, 240, 240, 155],
                            [None]))
@@ -45,10 +45,10 @@ class CNN_Classifier(Model):
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
     def add_placeholders(self):
-        self.image_placeholder = tf.placeholder(tf.float32,
-                                                shape=[None, self.patch, self.patch, self.patch, 4])
-        self.label_placeholder = tf.placeholder(tf.int32,
-                                                shape=[None, self.patch, self.patch, self.patch])
+        # self.image_placeholder = tf.placeholder(tf.float32,
+        #                                         shape=[None, self.patch, self.patch, self.patch, 4])
+        # self.label_placeholder = tf.placeholder(tf.int32,
+        #                                         shape=[None, self.patch, self.patch, self.patch])
         self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
         self.lr_placeholder = tf.placeholder(tf.float32, shape=[])
         self.is_training = tf.placeholder(tf.bool, shape=[])
@@ -434,24 +434,18 @@ class CNN_Classifier(Model):
             # print(conv.get_shape())
 
         with tf.variable_scope('predict'):
-            print(drop3_2.get_shape())
             innerdim = np.prod(drop3_2.get_shape().as_list()[1:])
-            print(innerdim)
             features = tf.reshape(drop3_2, [-1, innerdim])
-            print(features.get_shape())
 
             self.score = tf.layers.dense(inputs=features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
-            print(self.score.get_shape())
 
     def add_pred_op(self):
-        probs = tf.sigmoid(self.score)
-
-        self.pred = probs > .5
+        self.pred = self.score >= 0
 
     def add_loss_op(self):
-        ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.mgmtmethylated)
+        ce_loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=self.score, labels=self.mgmtmethylated)
         ce_loss = tf.reduce_mean(ce_loss)
         reg_loss = self.config.l2 * tf.losses.get_regularization_loss()
 
