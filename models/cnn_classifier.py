@@ -36,7 +36,7 @@ class CNN_Classifier(Model):
         self.iterator = tf.contrib.data.Iterator.from_structure(
             output_types=(tf.float32,
                           tf.int32,
-                          tf.int32),
+                          tf.float32),
             output_shapes=([None, 240, 240, 155, 4],
                            [None, 240, 240, 155],
                            [None, 1]))
