@@ -408,7 +408,7 @@ def get_dataset_batched(directory, is_test, config):
         return gen_tcga_mgmt(directory, is_test, config)
 
     dataset = tf.data.Dataset.from_generator(generator=gen,
-                                             output_types=(tf.float32, tf.int32, tf.bool))
+                                             output_types=(tf.float32, tf.int32, tf.int32))
     batch_size = config.batch_size
     batched_dataset = dataset.batch(batch_size)
     batched_dataset = batched_dataset.prefetch(1)
