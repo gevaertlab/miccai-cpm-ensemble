@@ -435,7 +435,7 @@ class CNN_Classifier(Model):
 
         with tf.variable_scope('predict'):
             print(drop3_2.get_shape())
-            innerdim = tf.reduce_prod(tf.shape(drop3_2)[1:])
+            innerdim = np.prod(tf.shape(drop3_2)[1:])
             print(innerdim)
             features = tf.reshape(drop3_2, [-1, innerdim])
             print(features.get_shape())
