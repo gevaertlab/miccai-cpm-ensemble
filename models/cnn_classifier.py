@@ -434,7 +434,10 @@ class CNN_Classifier(Model):
             # print(conv.get_shape())
 
         with tf.variable_scope('predict'):
-            self.score = tf.layers.dense(inputs=drop3_2,
+            innerdim = tf.reduce_prod(tf.shape(drop3_2)[1:])
+            features = tf.reshape(drop3_2, [-1, innerdim])
+
+            self.score = tf.layers.dense(inputs=features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
 
