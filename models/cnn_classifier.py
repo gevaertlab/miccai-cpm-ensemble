@@ -434,12 +434,16 @@ class CNN_Classifier(Model):
             # print(conv.get_shape())
 
         with tf.variable_scope('predict'):
+            print(drop3_2.get_shape())
             innerdim = tf.reduce_prod(tf.shape(drop3_2)[1:])
+            print(innerdim)
             features = tf.reshape(drop3_2, [-1, innerdim])
+            print(features.get_shape())
 
             self.score = tf.layers.dense(inputs=features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
+            print(score.get_shape())
 
     def add_pred_op(self):
         probs = tf.nn.softmax(tf.reshape(self.score, [-1, self.nb_classes]))
