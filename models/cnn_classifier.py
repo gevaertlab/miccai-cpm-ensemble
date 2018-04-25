@@ -446,11 +446,9 @@ class CNN_Classifier(Model):
             print(self.score.get_shape())
 
     def add_pred_op(self):
-        probs = tf.nn.softmax(tf.reshape(self.score, [-1, self.nb_classes]))
-        reshape_probs = tf.reshape(probs, tf.shape(self.score))
+        probs = tf.sigmoid(self.score)
 
-        self.pred = tf.argmax(reshape_probs, 4)
-        self.prob = reshape_probs
+        self.pred = probs > .5
 
     def add_loss_op(self):
         ce_loss = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=self.score, labels=self.mgmtmethylated)
