@@ -39,7 +39,7 @@ class CNN_Classifier(Model):
                           tf.int32),
             output_shapes=([None, 240, 240, 155, 4],
                            [None, 240, 240, 155],
-                           [None]))
+                           [None, 1]))
         self.image, self.label, self.mgmtmethylated = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
