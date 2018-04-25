@@ -443,7 +443,7 @@ class CNN_Classifier(Model):
             self.score = tf.layers.dense(inputs=features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
-            print(score.get_shape())
+            print(self.score.get_shape())
 
     def add_pred_op(self):
         probs = tf.nn.softmax(tf.reshape(self.score, [-1, self.nb_classes]))
