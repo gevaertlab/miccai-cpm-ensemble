@@ -27,8 +27,8 @@ class CNN_Classifier(Model):
         self.add_train_op()
 
     def load_data(self):
-        self.train_ex_paths = get_ex_paths(self.config.train_path)
-        self.val_ex_paths = get_ex_paths(self.config.val_path)
+        self.train_ex_paths = get_ex_paths(self.config.train_path)[:2]
+        self.val_ex_paths = get_ex_paths(self.config.val_path)[:2]
 
     def add_dataset(self):
         train_dataset = get_dataset_batched(self.config.train_path, False, self.config)
