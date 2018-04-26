@@ -394,7 +394,7 @@ def gen_tcga_mgmt(directory, is_test, config):
         np.random.seed(0)
         np.random.shuffle(patients)
 
-    tcga_molecular_file_path = os.path.join(directory, "../TCGA\ 2016\ Glioma\ Cell\ Supp\ Data.csv")
+    tcga_molecular_file_path = os.path.join(directory, "../TCGA 2016 Glioma Cell Supp Data.csv")
     df = pd.read_csv(tcga_molecular_file_path, sep=";", header=1)
 
     for patient in patients:
