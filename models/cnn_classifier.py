@@ -1,13 +1,14 @@
 import os
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 from models.model import Model
-from utils.data_utils import get_ex_paths, get_hgg_and_lgg_patients
-from utils.dataset_v3 import get_dataset_v3, get_dataset_single_patient_v3, get_dataset_batched
+from utils.data_utils import get_ex_paths
+from utils.dataset_v3 import get_dataset_single_patient_v3, get_dataset_batched
 from utils.general import Progbar
 from utils.lr_schedule import LRSchedule
+from utils.metrics import all_scores
 
 
 class CNN_Classifier(Model):
@@ -125,93 +126,38 @@ class CNN_Classifier(Model):
 
         return losses, np.mean(bdices)
 
-    def run_test_v3(self, sess):
+    def run_test(self, sess):
         sess.run(self.test_init_op)
-        current_patient = ""
 
-        all_dices_whole = []
-        all_dices_core = []
-        all_dices_enhancing = []
+        ypreds = []
+        ytrues = []
+        batch = 0
 
-        HGG_patients, LGG_patients = get_hgg_and_lgg_patients(self.config.val_path)
-
-        HGG_dices_whole = []
-        HGG_dices_core = []
-        HGG_dices_enhancing = []
-
-        LGG_dices_whole = []
-        LGG_dices_core = []
-        LGG_dices_enhancing = []
-
-        center = self.config.center_patch
-        half_center = center // 2
-        lower = self.patch // 2 - half_center
-
+        nbatches = len(self.val_ex_paths)
+        prog = Progbar(target=nbatches)
         print('Validation ...')
         while True:
-            feed = {self.dropout_placeholder: 1.0,
-                    self.is_training: False}
             try:
-                patients, pat_shapes, i, j, k, y, pred = sess.run([self.pat_path, self.pat_shape,
-                                                                   self.i, self.j, self.k,
-                                                                   self.label, self.pred],
-                                                                  feed_dict=feed)
+                feed = {self.dropout_placeholder: 1.0,
+                        self.is_training: False}
+
+                pred, methylated = sess.run([self.pred, self.mgmtmethylated],
+                                            feed_dict=feed)
+
+                ypreds.append(pred)
+                ytrues.append(methylated)
+
+                batch += self.config.batch_size
+                prog.update(batch)
+
             except tf.errors.OutOfRangeError:
                 break
 
-            for idx, _ in enumerate(i):
-                if patients[idx] != current_patient:
-                    if current_patient != "":
-                        # compute dice scores for different classes
-                        # dice score for the Whole Tumor
-                        dice_whole = dice_score(fy, fpred)
-                        all_dices_whole.append(dice_whole)
-                        if current_patient in HGG_patients:
-                            HGG_dices_whole.append(dice_whole)
-                        if current_patient in LGG_patients:
-                            LGG_dices_whole.append(dice_whole)
-                        # print('dice score of whole of patient %s is %f'%(current_patient, dice_whole))
-
-                        if self.nb_classes > 2:
-                            # dice score for Tumor Core
-                            fpred_core = (fpred == 1) + (fpred == 3)
-                            fy_core = (fy == 1) + (fy == 3)
-                            dice_core = dice_score(fy_core, fpred_core)
-                            all_dices_core.append(dice_core)
-                            if current_patient in HGG_patients:
-                                HGG_dices_core.append(dice_core)
-                            if current_patient in LGG_patients:
-                                LGG_dices_core.append(dice_core)
-                            # print('dice score of core of patient %s is %f'%(current_patient, dice_core))
-
-                            # dice score for Enhancing Tumor
-                            fpred_enhancing = fpred == 3
-                            fy_enhancing = fy == 3
-                            dice_enhancing = dice_score(fy_enhancing, fpred_enhancing)
-                            all_dices_enhancing.append(dice_enhancing)
-                            if current_patient in HGG_patients:
-                                HGG_dices_enhancing.append(dice_enhancing)
-                            if current_patient in LGG_patients:
-                                LGG_dices_enhancing.append(dice_enhancing)
-                            # print('dice score of enhancing of patient %s is %f'%(current_patient, dice_enhancing))
-
-                    fpred = np.zeros(eval(pat_shapes[idx]))
-                    fy = np.zeros(eval(pat_shapes[idx]))
-                    current_patient = patients[idx]
-
-                fy[i[idx] - half_center:i[idx] + half_center,
-                j[idx] - half_center:j[idx] + half_center,
-                k[idx] - half_center:k[idx] + half_center] = y[idx, :, :, :]
-                fpred[i[idx] - half_center:i[idx] + half_center,
-                j[idx] - half_center:j[idx] + half_center,
-                k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center, \
-                                                             lower:lower + center, lower:lower + center]
-
-        return np.mean(all_dices_whole), np.mean(all_dices_core), np.mean(all_dices_enhancing), \
-               np.mean(HGG_dices_whole), np.mean(HGG_dices_core), np.mean(HGG_dices_enhancing), \
-               np.mean(LGG_dices_whole), np.mean(LGG_dices_core), np.mean(LGG_dices_enhancing)
+        return all_scores(ypred=ypreds, ytrue=ytrues)
 
     def run_pred_single_example_v3(self, sess, patient):
+        raise NotImplementedError
+
         if b'brats' in patient:
             name_dataset = 'Brats'
         elif b'TCGA' in patient:
@@ -251,7 +197,7 @@ class CNN_Classifier(Model):
         config = self.config
 
         nbatches = len(self.train_ex_paths) * config.num_train_batches
-        exp_decay = np.power(config.lr_min / config.lr_init, \
+        exp_decay = np.power(config.lr_min / config.lr_init,
                              1 / float(config.end_decay - config.start_decay))
         lr_schedule = LRSchedule(lr_init=config.lr_init, lr_min=config.lr_min,
                                  start_decay=config.start_decay * nbatches,
@@ -264,33 +210,31 @@ class CNN_Classifier(Model):
         # for tensorboard
         self.add_summary(sess)
 
+        precisions = []
+        recalls = []
+        f1s = []
+
         train_losses = []
-        train_bdices = []
-        test_whole_dices = []
-        test_core_dices = []
-        test_enhancing_dices = []
-        best_fdice = 0
+        best_f1 = 0
 
         print('Start training ....')
         for epoch in range(1, config.num_epochs + 1):
             print('Epoch %d ...' % epoch)
             losses, train_dice = self.run_epoch(sess, lr_schedule)
             train_losses.extend(losses)
-            train_bdices.append(train_dice)
 
             if epoch % 2 == 0:
-                # test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test(sess)
-                test_whole, test_core, test_enhancing, _, _, _, _, _, _ = self.run_test_v3(sess)
-                print('End of test, whole dice score is %f, core dice score is %f and enhancing dice score is %f' \
-                      % (test_whole, test_core, test_enhancing))
+                precision, recall, f1 = self.run_test(sess)
+                print('End of test, precision is %f, recall is %f and f1-score is %f' \
+                      % (precision, recall, f1))
                 # logging
-                test_whole_dices.append(test_whole)
-                test_core_dices.append(test_core)
-                test_enhancing_dices.append(test_enhancing)
-                lr_schedule.update(batch_no=epoch * nbatches, score=test_core + test_enhancing)
+                precisions.append(precision)
+                recalls.append(recall)
+                f1s.append(f1)
+                lr_schedule.update(batch_no=epoch * nbatches, score=f1)
 
-                if test_core + test_enhancing >= best_fdice:
-                    best_fdice = test_core + test_enhancing
+                if f1 >= best_f1:
+                    best_f1 = f1
 
                     print('Saving checkpoint to %s ......' % (config.ckpt_path))
                     saver.save(sess, config.ckpt_path)
@@ -298,10 +242,9 @@ class CNN_Classifier(Model):
                     print('Saving results to %s ......' % (config.res_path))
                     np.savez(config.res_path,
                              train_losses=train_losses,
-                             train_bdices=train_bdices,
-                             test_whole_dices=test_whole_dices,
-                             test_core_dices=test_core_dices,
-                             test_enhancing_dices=test_enhancing_dices,
+                             precisions=precisions,
+                             recalls=recalls,
+                             f1s=f1s,
                              train_ex_paths=self.train_ex_paths,
                              val_ex_paths=self.val_ex_paths,
                              config_file=config.__dict__)
@@ -309,7 +252,7 @@ class CNN_Classifier(Model):
             else:
                 lr_schedule.update(batch_no=epoch * nbatches)
 
-        return test_whole
+        return f1
 
     def add_train_op(self):
         self.global_step = tf.train.get_or_create_global_step()
