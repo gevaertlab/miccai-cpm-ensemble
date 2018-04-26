@@ -144,7 +144,7 @@ class CNN_Classifier(Model):
                 feed = {self.dropout_placeholder: 1.0,
                         self.is_training: False}
 
-                pred, methylated = sess.run([self.pred, self.mgmtmethylated],
+                pred, methylated, loss = sess.run([self.pred, self.mgmtmethylated, self.loss],
                                             feed_dict=feed)
 
                 ypreds.append(pred)
@@ -156,6 +156,7 @@ class CNN_Classifier(Model):
             except tf.errors.OutOfRangeError:
                 break
 
+        print(ypreds, ytrues)
         return all_scores(ypred=ypreds, ytrue=ytrues)
 
     def run_pred_single_example_v3(self, sess, patient):
