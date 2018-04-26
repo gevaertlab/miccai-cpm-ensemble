@@ -119,6 +119,7 @@ class CNN_Classifier(Model):
             losses.append(loss)
 
             # logging
+            print(loss)
             prog.update(batch, values=[("loss", loss)], exact=[("lr", lr_schedule.lr),
                                                                ('score', lr_schedule.score)])
             # for tensorboard
