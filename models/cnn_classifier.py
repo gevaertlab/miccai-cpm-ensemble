@@ -116,6 +116,9 @@ class CNN_Classifier(Model):
             except tf.errors.OutOfRangeError:
                 break
 
+            if batch >= nbatches:
+                break
+
             losses.append(loss)
 
             # logging
