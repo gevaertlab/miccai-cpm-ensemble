@@ -148,8 +148,8 @@ class CNN_Classifier(Model):
                 pred, methylated, loss = sess.run([self.pred, self.mgmtmethylated, self.loss],
                                             feed_dict=feed)
 
-                ypreds.append(pred)
-                ytrues.append(methylated)
+                ypreds.extend(np.ravel(pred))
+                ytrues.extend(np.ravel(methylated))
 
                 batch += self.config.batch_size
                 prog.update(batch)
