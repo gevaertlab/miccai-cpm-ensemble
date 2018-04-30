@@ -399,7 +399,7 @@ def gen_tcga_mgmt(directory, is_test, config):
 
     for patient in patients:
         image, label = load_data_tcga(patient, is_test, modalities)
-        mgmt_state = df.loc[df.loc[:, "Case"] == patient, "MGMT promoter status"].values == "Methylated"
+        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8"), "MGMT promoter status"].values == "Methylated"
         yield image, label, mgmt_state
 
 
