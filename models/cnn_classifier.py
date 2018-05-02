@@ -146,7 +146,7 @@ class CNN_Classifier(Model):
                         self.is_training: False}
 
                 pred, methylated, loss = sess.run([self.pred, self.mgmtmethylated, self.loss],
-                                            feed_dict=feed)
+                                                  feed_dict=feed)
 
                 ypreds.extend(np.ravel(pred))
                 ytrues.extend(np.ravel(methylated))
@@ -379,13 +379,50 @@ class CNN_Classifier(Model):
                                               strides=(2, 2, 2), padding='VALID')
             drop3_2 = tf.nn.dropout(pool3_2, self.dropout_placeholder)
 
-            # print(conv.get_shape())
+        with tf.variable_scope('conv4'):
+            conv4_1 = tf.layers.conv3d(inputs=drop3_2,
+                                       filters=8 * nb_filters,
+                                       kernel_size=k_size,
+                                       strides=(1, 1, 1),
+                                       padding='SAME',
+                                       activation=None,
+                                       use_bias=True,
+                                       kernel_initializer=tf.contrib.layers.xavier_initializer(),
+                                       bias_initializer=tf.constant_initializer(0.0),
+                                       kernel_regularizer=tf.nn.l2_loss)
+
+            bn4_1 = tf.layers.batch_normalization(conv4_1, axis=-1, training=self.is_training)
+            relu4_1 = tf.nn.relu(bn4_1)
+            drop4_1 = tf.nn.dropout(relu4_1, self.dropout_placeholder)
+
+            conv4_2 = tf.layers.conv3d(inputs=drop4_1,
+                                       filters=8 * nb_filters,
+                                       kernel_size=k_size,
+                                       strides=(1, 1, 1),
+                                       padding='SAME',
+                                       activation=None,
+                                       use_bias=True,
+                                       kernel_initializer=tf.contrib.layers.xavier_initializer(),
+                                       bias_initializer=tf.constant_initializer(0.0),
+                                       kernel_regularizer=tf.nn.l2_loss)
+
+            bn4_2 = tf.layers.batch_normalization(conv4_2, axis=-1, training=self.is_training)
+            relu4_2 = tf.nn.relu(bn4_2)
+
+            # shape = (patch/8, patch/8, patch/8)
+            pool4_2 = tf.layers.max_pooling3d(inputs=relu4_2, pool_size=(2, 2, 2),
+                                              strides=(2, 2, 2), padding='VALID')
+            drop4_2 = tf.nn.dropout(pool4_2, self.dropout_placeholder)
+
+            print(drop4_2.get_shape())
+            aggregate_features = tf.reduce_mean(drop4_2, axis=(1, 2, 3))
+            print(aggregate_features.get_shape())
 
         with tf.variable_scope('predict'):
-            innerdim = np.prod(drop3_2.get_shape().as_list()[1:])
-            features = tf.reshape(drop3_2, [-1, innerdim])
+            # innerdim = np.prod(aggregate_features.get_shape().as_list()[1:])
+            # features = tf.reshape(aggregate_features, [-1, innerdim])
 
-            self.score = tf.layers.dense(inputs=features,
+            self.score = tf.layers.dense(inputs=aggregate_features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
 

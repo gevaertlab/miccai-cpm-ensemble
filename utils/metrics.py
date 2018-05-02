@@ -16,13 +16,13 @@ def compute_recall(ypred, ytrue):
     return tp / (tp + fn)
 
 
-def f1_score(ypred, ytrue):
+def f1_score(ypred, ytrue, epsilon=1e-6):
     precision = compute_precision(ypred, ytrue)
     recall = compute_recall(ypred, ytrue)
-    return 2 * (precision * recall) / (precision + recall)
+    return 2 * (precision * recall) / (precision + recall + epsilon)
 
 
-def all_scores(ypred, ytrue):
+def all_scores(ypred, ytrue, epsilon=1e-6):
     precision = compute_precision(ypred, ytrue)
     recall = compute_recall(ypred, ytrue)
-    return precision, recall, 2 * (precision * recall) / (precision + recall)
+    return precision, recall, 2 * (precision * recall) / (precision + recall + epsilon)
