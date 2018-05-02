@@ -414,14 +414,9 @@ class CNN_Classifier(Model):
                                               strides=(2, 2, 2), padding='VALID')
             drop4_2 = tf.nn.dropout(pool4_2, self.dropout_placeholder)
 
-            print(drop4_2.get_shape())
             aggregate_features = tf.reduce_mean(drop4_2, axis=(1, 2, 3))
-            print(aggregate_features.get_shape())
 
         with tf.variable_scope('predict'):
-            # innerdim = np.prod(aggregate_features.get_shape().as_list()[1:])
-            # features = tf.reshape(aggregate_features, [-1, innerdim])
-
             self.score = tf.layers.dense(inputs=aggregate_features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
