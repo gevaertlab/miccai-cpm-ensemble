@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 
 """
-First test: pre-mask to standard brain space then skull strip with bet.
-https://neuroimager.wordpress.com/2012/10/26/brain-extraction-using-fsl-bet/
+Update header; use fsl_anat for orientation, bias, fov; run bet
 """
 
 import errno
@@ -15,13 +14,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from utils.data_utils import im_path_to_arr
-from utils.mri_viewer import MRIViewer
 
 # variables
-im = 'nii/t1c.nii'
-fs = [0., 0.05]
-gs = [-1, -0.5]
-opts = ['-Z']
+im = 'nii/flair.nii'
+mod = 'T2'
+dz = 12
+fs = [0.3, 0.4, 0.5]
+gs = [-0.3, 0., 0.3]
 
 # build work directory
 try:
@@ -32,34 +31,30 @@ except OSError as e:
     else:
         raise
 
-# pre-mask to standard brain space
-im_std = 'test_out/im_std.nii'
-subprocess.call(['standard_space_roi', im, im_std, '-b'])
+# run update-header-dz
+subprocess.call(['./update-header-dz', '-f', im, '-z', str(dz)])
 
-# sweep over f and g values and run bet
-arrs = {}
+# run fsl_anat
+fsl_anat_dir = 'test_out/{}'.format(mod)
+subprocess.call(['fsl_anat', '-i', im, '-o', fsl_anat_dir, '-t', mod,
+                 '--noreg', '--nononlinreg', '--noseg', '--nosubcortseg'])
+im_proc = os.path.join(fsl_anat_dir + '.anat', '{}_biascorr.nii'.format(mod))
+
+# sweep over f and g values and run bet -Z
+arrs = {} 
 arrs['orig'] = im_path_to_arr(im)
 for f in fs:
     for g in gs:
-        print('f={}, g={}'.format(f, g))
         im_ss = 'test_out/im_ss_f_{}_g_{}.nii'.format(f, g)
-        bet_cmd = ['bet', im_std, im_ss, '-f', str(f), '-g', str(g)]
-        bet_cmd.extend(opts)
+        bet_cmd = ['bet', im_proc, im_ss, '-f', str(f), '-g', str(g)]
+        print(' '.join(bet_cmd))
         subprocess.call(bet_cmd)
         with gzip.open(im_ss + '.gz', 'rb') as niigz:
             with open(im_ss, 'wb') as nii:
                 nii.write(niigz.read())
-        im_ss_arr = im_path_to_arr(im_ss)
-        arrs[f, g] = im_ss_arr
-
-# remove work directory
-try:
-    shutil.rmtree('test_out')
-except OSError as e:
-    if e.errno == errno.ENOENT:
-        pass
-    else:
-        raise
+        arr_ss = im_path_to_arr(im_ss)
+        arrs[f, g] = arr_ss
+        os.remove(im_ss)
 
 # sweep over f and g values and visualize
 fig, axes = plt.subplots(4, 1 + len(fs) * len(gs))
@@ -75,11 +70,13 @@ for k, idx in enumerate(idxs):
 for i, f in enumerate(fs):
     for j, g in enumerate(gs):
         arr = arrs[f, g]
+        step = int(len(arr) / 4)
+        idxs = [int(step / 2 + sl * step) for sl in range(4)]
         for k, idx in enumerate(idxs):
             ax = axes[k, 1 + len(gs) * i + j]
             ax.imshow(arr[idx], cmap='viridis', vmin=arr.min(), vmax=arr.max())
             if k == 0:
                 ax.set_title('f={}\ng={}'.format(f, g), fontsize=10)
             ax.axis('off')
-fig.canvas.set_window_title('standard_space_roi + bet')
+fig.canvas.set_window_title('preproc + bet')
 plt.show()

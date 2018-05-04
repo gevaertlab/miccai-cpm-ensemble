@@ -1,2 +1,4 @@
 *.nii
 *.nii.gz
+*.mat
+log.txt
