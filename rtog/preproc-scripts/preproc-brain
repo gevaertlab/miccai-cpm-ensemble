@@ -9,8 +9,8 @@ main()
         i)
             i="$OPTARG"
             ;;
-        i)
-            i="$OPTARG"
+        o)
+            o="$OPTARG"
             ;;
         f)
             f="$OPTARG"
