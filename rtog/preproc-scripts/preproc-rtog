@@ -1,0 +1,107 @@
+#! /usr/bin/env python
+
+"""
+A script that preprocesses the RTOG dataset.
+
+Goes from raw DICOM to processed NIFTI.
+"""
+
+import os
+
+import re
+import csv
+
+import numpy as np
+import pandas as pd
+
+import dicom
+from collections import Counter
+
+import shutil
+
+from utils.data_utils import arr_to_im_path
+from utils.classify_utils import collect_info_patient_folder
+
+DCM_DIR = '/local-scratch/rsub_scratch/rtog_dcm'
+NII_DIR = '/local-scratch/rsub_scratch/rtog_nii'
+PROC_NII_DIR = '/local-scratch/rsub_scratch/rtog_nii_proc'
+
+def convert_dcm_to_nii():
+
+    # get the raw names of the folders to classify
+    all_files = []
+    all_files_path = []
+    for study in os.listdir(DCM_DIR):  
+        if 'Studies' in study:
+            study_path = os.path.join(DCM_DIR, study)
+            for filename in os.listdir(study_path):
+                filename_path = os.path.join(study_path, filename)
+                # exclude folders with no dicoms
+                if len(os.listdir(filename_path)) > 0:
+                    full_name = study + '/' + filename
+                    all_files.append(full_name)
+                    all_files_path.append(filename_path)
+
+    # tmp csv path
+    csv_path = 'tmp.csv'
+
+    # save csv on disk
+    with open(csv_path, 'w') as csvfile:
+        fieldnames = ['study', 'id', 'description', 'view', 'modality',
+                      'nb_dicoms', 'date', 'thickness', 'rows', 'columns',
+                      'raw']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for k, raw_file in enumerate(all_files_path):
+            if k % 500 == 0:
+                print('file %d out of %d'%(k + 1, len(all_files_path)))
+            study = raw_file.strip().split('/')[-2]
+            try:
+                (patient_id, view, modality, date, thickness, rows, columns,
+                 nb_dicoms, description) = collect_info_patient_folder(raw_file)
+            except:
+                continue
+            patient_id = os.path.join(study, patient_id)
+            writer.writerow({'study': study, 'id': patient_id,
+                             'description': description, 'view': view,
+                             'modality': modality, 'nb_dicoms': nb_dicoms,
+                             'date': date, 'thickness': thickness, 'rows': rows,
+                             'columns': columns, 'raw': raw_file})
+
+    # load csv to run some analysis
+    df = pd.read_csv(csv_path)
+    # drop any row where there is a NaN
+    df2 = df.dropna(axis=0, how='any') 
+    # drop any row for which view is not axial
+    df3 = df2.replace('sagital', pd.np.nan)
+    df3 = df3.replace('coronal', pd.np.nan)
+    df3 = df3.dropna(axis=0, how='any')
+    dfpivot = df3.loc[:,['id', 'modality', 'nb_dicoms', 'date']]
+    # TODO: figure out which folder to keep in case one patient has several
+    # folders for the same view and modality
+    dfpivot = dfpivot.sort_values(by=['date'])
+    dfpivot.drop_duplicates(subset=['id', 'modality'], keep='first',
+                            inplace=True)
+    dfpivot = dfpivot.loc[:, ['id', 'modality', 'nb_dicoms']]
+    dfpivot = dfpivot.set_index(['id', 'modality'])
+    dfpivot = dfpivot.unstack(fill_value=0)
+    dfpivot = dfpivot.loc[:, 'nb_dicoms']
+    dfcomp = df3.loc[:, ['id', 'thickness', 'rows', 'columns']]
+    dfcomp = dfcomp.drop_duplicates()
+    dfcomp = dfcomp.set_index('id')
+    dfpivot.join(dfcomp)
+
+    # get path of t1post and flair modalities for each patient
+    selection = dfpivot.loc[(dfpivot.flair > 0) & (dfpivot.t1post > 0) &
+                            (dfpivot.flair == dfpivot.t1post)]
+
+    # TODO: convert dcm to nii
+    pass
+
+def process_nii():
+    # TODO: call preproc-brain
+    pass
+
+if __name__ == '__main__':
+    convert_dcm_to_nii()
+    process_nii()

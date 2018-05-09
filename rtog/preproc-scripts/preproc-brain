@@ -1,0 +1,64 @@
+#! /usr/bin/env bash
+#
+# Run skull stripping and registration on one brain
+
+main()
+{
+    while getopts "i:o:f:g:" opt ; do
+        case "$opt" in 
+        i)
+            i="$OPTARG"
+            ;;
+        i)
+            i="$OPTARG"
+            ;;
+        f)
+            f="$OPTARG"
+            ;;
+        g)
+            g="$OPTARG"
+            ;;
+        esac
+    done
+
+    if [[ -z "$i" ]] ; then
+        echo "Input directory not found"
+        exit 1
+    fi
+    if [[ -z "$o" ]] ; then
+        echo "Output directory not found"
+        exit 1
+    fi
+    if [[ -z "$f" ]] ; then
+        echo "Using default f value of 0.5"
+        f=0.5
+    fi
+    if [[ -z "$g" ]] ; then
+        echo "Using default g value of 0.0"
+        g=0.0
+    fi
+
+    mkdir -p tmp
+
+    fsl_anat -i "$i"/t1c.nii -o tmp/t1c -t T1 \
+        --noreg --nononlinreg --noseg --nosubcortseg
+    fsl_anat -i "$i"/flair.nii -o tmp/flair -t T2 \
+        --noreg --nononlinreg --noseg --nosubcortseg
+
+    bet tmp/t1c.anat/T1_biascorr.nii tmp/t1c_bet.nii -f "$f" -g "$g"
+    bet tmp/flair.anat/T2_biascorr.nii tmp/flair_bet.nii -f "$f" -g "$g"
+
+    reg_aladin -ref tmp/t1c_bet.nii.gz -flo tmp/flair_bet.nii.gz \
+        -aff tmp/reg.txt -res tmp/flair_bet_reg.nii -rigOnly
+
+    gunzip tmp/t1c_bet.nii.gz
+
+    mkdir -p "$o"
+
+    cp tmp/t1c_bet.nii "$o"/t1c.nii
+    cp tmp/flair_bet_reg.nii "$o"/flair.nii
+
+    rm -r tmp
+}
+
+main "$@"

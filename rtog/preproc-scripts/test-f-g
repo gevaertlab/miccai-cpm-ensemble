@@ -18,7 +18,7 @@ from utils.data_utils import im_path_to_arr
 # variables
 im = 'nii/flair.nii'
 mod = 'T2'
-dz = 12
+# dz = 12
 fs = [0.3, 0.4, 0.5]
 gs = [-0.3, 0., 0.3]
 
@@ -32,7 +32,7 @@ except OSError as e:
         raise
 
 # run update-header-dz
-subprocess.call(['./update-header-dz', '-f', im, '-z', str(dz)])
+# subprocess.call(['./update-header-dz', '-f', im, '-z', str(dz)])
 
 # run fsl_anat
 fsl_anat_dir = 'test_out/{}'.format(mod)
