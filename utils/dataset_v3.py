@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 import numpy as np
 import tensorflow as tf
@@ -143,7 +144,7 @@ def load_data_tcga(patient_path, is_test, modalities):
             data = data[:, :, ::-1, :]
             labels = labels[:, :, ::-1]
     try:
-        labels = labels[:, ::-1, :]
+        # labels = labels[:, ::-1, :]
         return data, labels
     except:
         return data
@@ -277,11 +278,11 @@ def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalit
             for j in get_patch_centers_fcn(j_len, patch_size, center_size):
                 for k in get_patch_centers_fcn(k_len, patch_size, center_size):
 
-                    x = data[i - half_patch:i + half_patch, \
-                        j - half_patch:j + half_patch, \
+                    x = data[i - half_patch:i + half_patch,
+                        j - half_patch:j + half_patch,
                         k - half_patch:k + half_patch, :]
-                    y = labels[i - half_center:i + half_center, \
-                        j - half_center:j + half_center, \
+                    y = labels[i - half_center:i + half_center,
+                        j - half_center:j + half_center,
                         k - half_center:k + half_center]
 
                     i_batch.append(i)
@@ -366,9 +367,49 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
             return test_data_iter_v3(patients, patch_size, center_size, batch_size, modalities, name_dataset)
 
         dataset = tf.data.Dataset.from_generator(generator=gen,
-                                                 output_types=(tf.string, tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32))
+                                                 output_types=(
+                                                     tf.string, tf.string, tf.int32, tf.int32, tf.int32, tf.float32,
+                                                     tf.int32))
         dataset = dataset.apply(tf.contrib.data.unbatch())
 
+    batched_dataset = dataset.batch(batch_size)
+    batched_dataset = batched_dataset.prefetch(1)
+
+    return batched_dataset
+
+
+def gen_tcga_mgmt(directory, is_test, config):
+    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
+
+    ratio = config.ratio
+    assert (len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'
+    assert (np.sum(ratio) == 1), 'the sum of the ratios should be 1'
+
+    patients = os.listdir(directory)
+    patients = [os.path.join(directory, pat) for pat in patients]
+    patients = [pat.encode('utf-8') for pat in patients]  # need to encode in bytes to pass it to tf.py_func
+
+    patients.sort()
+    if not is_test:
+        np.random.seed(0)
+        np.random.shuffle(patients)
+
+    tcga_molecular_file_path = os.path.join(directory, "../TCGA 2016 Glioma Cell Supp Data.csv")
+    df = pd.read_csv(tcga_molecular_file_path, sep=";", header=1)
+
+    for patient in patients:
+        image, label = load_data_tcga(patient, is_test, modalities)
+        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[-1], "MGMT promoter status"].values == "Methylated"
+        yield image, label, mgmt_state
+
+
+def get_dataset_batched(directory, is_test, config):
+    def gen():
+        return gen_tcga_mgmt(directory, is_test, config)
+
+    dataset = tf.data.Dataset.from_generator(generator=gen,
+                                             output_types=(tf.float32, tf.int32, tf.float32))
+    batch_size = config.batch_size
     batched_dataset = dataset.batch(batch_size)
     batched_dataset = batched_dataset.prefetch(1)
 
