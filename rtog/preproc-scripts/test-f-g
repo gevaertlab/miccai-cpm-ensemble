@@ -1,0 +1,82 @@
+#! /usr/bin/env python
+
+"""
+Update header; use fsl_anat for orientation, bias, fov; run bet
+"""
+
+import errno
+import gzip
+import os
+import shutil
+import subprocess
+
+import matplotlib.pyplot as plt
+import numpy as np
+
+from utils.data_utils import im_path_to_arr
+
+# variables
+im = 'nii/flair.nii'
+mod = 'T2'
+dz = 12
+fs = [0.3, 0.4, 0.5]
+gs = [-0.3, 0., 0.3]
+
+# build work directory
+try:
+    os.mkdir('test_out')
+except OSError as e:
+    if e.errno == errno.EEXIST:
+        pass
+    else:
+        raise
+
+# run update-header-dz
+subprocess.call(['./update-header-dz', '-f', im, '-z', str(dz)])
+
+# run fsl_anat
+fsl_anat_dir = 'test_out/{}'.format(mod)
+subprocess.call(['fsl_anat', '-i', im, '-o', fsl_anat_dir, '-t', mod,
+                 '--noreg', '--nononlinreg', '--noseg', '--nosubcortseg'])
+im_proc = os.path.join(fsl_anat_dir + '.anat', '{}_biascorr.nii'.format(mod))
+
+# sweep over f and g values and run bet -Z
+arrs = {} 
+arrs['orig'] = im_path_to_arr(im)
+for f in fs:
+    for g in gs:
+        im_ss = 'test_out/im_ss_f_{}_g_{}.nii'.format(f, g)
+        bet_cmd = ['bet', im_proc, im_ss, '-f', str(f), '-g', str(g)]
+        print(' '.join(bet_cmd))
+        subprocess.call(bet_cmd)
+        with gzip.open(im_ss + '.gz', 'rb') as niigz:
+            with open(im_ss, 'wb') as nii:
+                nii.write(niigz.read())
+        arr_ss = im_path_to_arr(im_ss)
+        arrs[f, g] = arr_ss
+        os.remove(im_ss)
+
+# sweep over f and g values and visualize
+fig, axes = plt.subplots(4, 1 + len(fs) * len(gs))
+arr = arrs['orig']
+step = int(len(arr) / 4)
+idxs = [int(step / 2 + sl * step) for sl in range(4)]
+for k, idx in enumerate(idxs):
+    ax = axes[k, 0]
+    ax.imshow(arr[idx], cmap='viridis', vmin=arr.min(), vmax=arr.max())
+    if k == 0:
+        ax.set_title('orig', fontsize=10)
+    ax.axis('off')
+for i, f in enumerate(fs):
+    for j, g in enumerate(gs):
+        arr = arrs[f, g]
+        step = int(len(arr) / 4)
+        idxs = [int(step / 2 + sl * step) for sl in range(4)]
+        for k, idx in enumerate(idxs):
+            ax = axes[k, 1 + len(gs) * i + j]
+            ax.imshow(arr[idx], cmap='viridis', vmin=arr.min(), vmax=arr.max())
+            if k == 0:
+                ax.set_title('f={}\ng={}'.format(f, g), fontsize=10)
+            ax.axis('off')
+fig.canvas.set_window_title('preproc + bet')
+plt.show()

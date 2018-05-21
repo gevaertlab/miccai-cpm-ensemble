@@ -1,0 +1,5 @@
+*.log
+*.mat
+*.nii
+*.nii.gz
+*.txt
