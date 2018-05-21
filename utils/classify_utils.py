@@ -1,7 +1,7 @@
 import os
 import re
 
-import dicom
+import pydicom
 
 
 types_of_scan = ['MR', 'CT', 'PR']
@@ -27,45 +27,72 @@ def find_view(description):
 # TODO: look at Echo Time and Inversion Time fields in the metadata to classify between T1 and T2
 def find_modality(description):
     description = description.lower()
-    modalities = [x for x in MODALITIES if x in description]
-    if len(modalities) == 0:
+    recognized_modalities = [x for x in MODALITIES if x in description]
+    if len(recognized_modalities) == 0:
         modality = 'N/A'
-    elif len(modalities) == 1:
-        if 't1' in modalities:
+        
+    elif len(recognized_modalities) == 1:
+        if 't1' in recognized_modalities:
             if 'pre' in description:
                 modality = 't1pre'
                 
             elif any(re.search('(?<![a-zA-Z])' + x + '(?![a-zA-Z])', description)\
-                     for x in ['post', 't1c', '\+c', '\+ c', 'c\+', 'con', 'gd', 'gad']):
+                     for x in ['post', 't1c', 'con', 'gd', 'gad', 'gado']):
+                modality = 't1post'
+            elif any(re.search(x + '(?![a-zA-Z])', description)\
+                     for x in ['\+c', '\+ c', 'c\+']):
                 modality = 't1post'
             else:
                 modality = 't1 pre or post?'
         else:
-            modality = modalities[0]
+            modality = recognized_modalities[0]
+
     else:
-        if set(modalities) == set(['flair', 't2']):
+        if set(recognized_modalities) == set(['flair', 't2']):
             modality = 'flair'
         else:
-            modality = 'multiple modalities detected'
+            modality = 'multiple modalities detected: ' + "/".join(recognized_modalities)
 
     return modality
 
 
-def collect_info_patient_folder(patient_folder):  
+def collect_info_patient_folder(patient_folder):
     dicoms = os.listdir(patient_folder)
     dicoms = [dic for dic in dicoms if dic[-4:] == '.dcm']
     sample = dicoms[0]
     sample = os.path.join(patient_folder, sample)
-    sample = dicom.read_file(sample)
+    sample = pydicom.read_file(sample)
 
     # collect information
     patient_id = str(sample.PatientName)
-    date = str(sample.AcquisitionDate)
-    thickness = str(sample.SliceThickness)
-    rows = int(sample.Rows)
-    columns = int(sample.Columns)
+
+    try:
+        date = str(sample.AcquisitionDate)
+    except AttributeError:
+        date = 'N/A'
+
+    try:
+        thickness = str(sample.SliceThickness)
+    except AttributeError:
+        thickness = 'N/A'
+
+    try:
+        rows = int(sample.Rows)
+    except:
+        rows = -1
+
+    try:
+        columns = int(sample.Columns)
+    except:
+        columns = -1
+
     nb_dicoms = len(dicoms)
-    description = str(sample.SeriesDescription)
+
+    try:
+        description = str(sample.SeriesDescription)
+    except:
+        description = 'N/A'
+
     view = find_view(description)
     modality = find_modality(description)
 

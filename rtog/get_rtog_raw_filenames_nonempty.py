@@ -1,9 +1,9 @@
 import os
-
+from tqdm import tqdm
 data_dir = '/labs/gevaertlab/users/hackhack/RTOG/scratch'
 
-with open('/home/romains/rtog_files.txt', 'w') as f:
-    for study in os.listdir(data_dir):  
+with open('rtog/outputs/rtog_files.txt', 'w') as f:
+    for study in tqdm(os.listdir(data_dir)):  
         if 'Studies' in study:
             study_path = os.path.join(data_dir, study)
             for filename in os.listdir(study_path):
