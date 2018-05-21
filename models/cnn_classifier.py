@@ -139,7 +139,7 @@ class CNN_Classifier(Model):
 
         nbatches = len(self.val_ex_paths)
         prog = Progbar(target=nbatches)
-        print('Validation ...')
+        print('\nValidation ...')
         while True:
             try:
                 feed = {self.dropout_placeholder: 1.0,
@@ -157,7 +157,6 @@ class CNN_Classifier(Model):
             except tf.errors.OutOfRangeError:
                 break
 
-        print(ypreds, ytrues)
         return all_scores(ypred=ypreds, ytrue=ytrues)
 
     def run_pred_single_example_v3(self, sess, patient):
@@ -224,7 +223,7 @@ class CNN_Classifier(Model):
 
         print('Start training ....')
         for epoch in range(1, config.num_epochs + 1):
-            print('Epoch %d ...' % epoch)
+            print('\nEpoch %d ...' % epoch)
             losses, train_dice = self.run_epoch(sess, lr_schedule)
             train_losses.extend(losses)
 
