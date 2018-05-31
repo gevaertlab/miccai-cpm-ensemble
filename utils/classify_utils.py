@@ -25,22 +25,38 @@ def find_view(description):
     return view
 
 # TODO: look at Echo Time and Inversion Time fields in the metadata to classify between T1 and T2
+# Candidate T1posts:
+# PG?
+# SE?
+# PosDisp: [11] t1_mpr_axial  2mmGAD?
+
+# BLADE?
+# MPR?
+# MTC?
+# MPRAGE?
+# Propeller?
+# Subtelty between T1Flair and T2Flair?
 def find_modality(description):
     description = description.lower()
     recognized_modalities = [x for x in MODALITIES if x in description]
     if len(recognized_modalities) == 0:
         modality = 'N/A'
-        
+
     elif len(recognized_modalities) == 1:
         if 't1' in recognized_modalities:
             if 'pre' in description:
                 modality = 't1pre'
-                
-            elif any(re.search('(?<![a-zA-Z])' + x + '(?![a-zA-Z])', description)\
-                     for x in ['post', 't1c', 'con', 'gd', 'gad', 'gado']):
+
+            elif any(re.search('(?<![a-zA-Z])' + x + '(?![a-zA-Z])', description) \
+                     for x in ['post', 't1c', 'con', 'postc',
+                               'gd', 'gad', 'gado', 'magnevist', 'gadavist',
+                               'mtc', 'mpr']):
                 modality = 't1post'
-            elif any(re.search(x + '(?![a-zA-Z])', description)\
-                     for x in ['\+c', '\+ c', 'c\+']):
+            elif any(re.search(x + '(?![a-zA-Z])', description) \
+                     for x in ['\+c', '\+ c']):
+                modality = 't1post'
+            elif any(re.search('(?<![a-zA-Z])' + x, description) \
+                     for x in ['c\+', 'c \+']):
                 modality = 't1post'
             else:
                 modality = 't1 pre or post?'
