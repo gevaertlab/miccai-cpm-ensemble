@@ -95,6 +95,7 @@ def process_rtog_nii(nii_dir,
     This method creates two files t1c_proc.nii and flair_proc.nii in nii_dir.
     """
     nii_dir = os.path.abspath(nii_dir)
+
     _preproc(os.path.join(nii_dir, input_t1c_filename),
              'T1',
              os.path.join(nii_dir, 't1c_fsl_anat.nii'),
@@ -114,6 +115,7 @@ def process_rtog_nii(nii_dir,
               os.path.join(nii_dir, 'flair_reg_aladin.nii'))
 
     subprocess.call(['gunzip', os.path.join(nii_dir, 't1c_bet.nii.gz')])
+
     os.rename(os.path.join(nii_dir, 't1c_bet.nii'),
               os.path.join(nii_dir, output_t1c_filename))
     os.rename(os.path.join(nii_dir, 'flair_reg_aladin.nii'),
