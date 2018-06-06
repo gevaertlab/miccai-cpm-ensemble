@@ -4,3 +4,4 @@ tensorflow-gpu==1.5
 pandas
 pydicom
 matplotlib
+numpy
