@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 
+DEVNULL = open(os.devnull, 'w')
 
 def _preproc(nii, modality, nii_out, working_dir):
     """
@@ -29,7 +30,7 @@ def _preproc(nii, modality, nii_out, working_dir):
                      '--noreg', '--nononlinreg',
                      '--noseg', '--nosubcortseg']
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
 
     os.rename(os.path.join(tmp_dir,
                            '{}.anat'.format(modality),
@@ -54,7 +55,7 @@ def _skull_strip(nii, nii_out, f=0.5, g=0.):
                     '-f', str(f),
                     '-g', str(g)]
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
 
 
 def _register(nii, ref, nii_out):
@@ -74,7 +75,7 @@ def _register(nii, ref, nii_out):
                      '-res', nii_out,
                      '-rigOnly']
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
     os.remove(aff_file)
 
 
@@ -95,6 +96,7 @@ def process_rtog_nii(nii_dir,
     This method creates two files t1c_proc.nii and flair_proc.nii in nii_dir.
     """
     nii_dir = os.path.abspath(nii_dir)
+
     _preproc(os.path.join(nii_dir, input_t1c_filename),
              'T1',
              os.path.join(nii_dir, 't1c_fsl_anat.nii'),
@@ -114,6 +116,7 @@ def process_rtog_nii(nii_dir,
               os.path.join(nii_dir, 'flair_reg_aladin.nii'))
 
     subprocess.call(['gunzip', os.path.join(nii_dir, 't1c_bet.nii.gz')])
+
     os.rename(os.path.join(nii_dir, 't1c_bet.nii'),
               os.path.join(nii_dir, output_t1c_filename))
     os.rename(os.path.join(nii_dir, 'flair_reg_aladin.nii'),
