@@ -1,3 +1,7 @@
+#! /usr/bin/env python
+
+EXCLUDE_LIST = ['121', '175', '466', '488', '526', '589', '809', '853', '919']
+
 import getpass
 import os
 import re
@@ -33,29 +37,21 @@ def viz_preprocessing_results(scratch_folder, patient_number):
     input()
     plt.close()
 
-def run():
+def main():
     scratch_folder = '/local-scratch/' + getpass.getuser() + '_scratch/rtog'
-    patient_numbers = []
+    # i = 0
     for item in os.listdir(scratch_folder):
         if os.path.isfile(os.path.join(scratch_folder, item)):
             patient_number = re.findall('\d+', item)[0]
-            if patient_number not in patient_numbers:
-                patient_numbers.append(patient_number)
-                run_preprocessing(scratch_folder, patient_number)
-
-def viz():
-    scratch_folder = '/local-scratch/' + getpass.getuser() + '_scratch/rtog'
-    patient_numbers = []
-    i = 0
-    for item in os.listdir(scratch_folder):
-        if os.path.isfile(os.path.join(scratch_folder, item)):
-            patient_number = re.findall('\d+', item)[0]
-            if patient_number not in patient_numbers:
-                patient_numbers.append(patient_number)
-                i += 1
-                if not i % 10:
-                    viz_preprocesing_results(scratch_folder, patient_number)
+            if patient_number in EXCLUDE_LIST:
+                continue
+            # i += 1
+            # if not i % 10:
+            #     viz_preprocesing_results(scratch_folder, patient_number)
+            if os.path.exists(os.path.join(scratch_folder,
+                              patient_number + 't1c_proc.nii')):
+                continue
+            run_preprocessing(scratch_folder, patient_number)
 
 if __name__ == '__main__':
-    run()
-    # viz()
+    main()

@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 
+DEVNULL = open(os.devnull, 'w')
 
 def _preproc(nii, modality, nii_out, working_dir):
     """
@@ -29,7 +30,7 @@ def _preproc(nii, modality, nii_out, working_dir):
                      '--noreg', '--nononlinreg',
                      '--noseg', '--nosubcortseg']
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
 
     os.rename(os.path.join(tmp_dir,
                            '{}.anat'.format(modality),
@@ -54,7 +55,7 @@ def _skull_strip(nii, nii_out, f=0.5, g=0.):
                     '-f', str(f),
                     '-g', str(g)]
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
 
 
 def _register(nii, ref, nii_out):
@@ -74,7 +75,7 @@ def _register(nii, ref, nii_out):
                      '-res', nii_out,
                      '-rigOnly']
     print(" ".join(command_list))
-    subprocess.call(command_list)
+    subprocess.call(command_list, stdout=DEVNULL)
     os.remove(aff_file)
 
 
