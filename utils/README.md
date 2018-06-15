@@ -91,7 +91,7 @@ The input and reference need to be `.nii` or `.nii.gz` files. The resulting xfor
 
 The file `process_rtog_nii.py` provides wrapper Python functions for `fsl_anat`, `bet`,  and `reg_aladin` programs and a high-level preprocessing script for RTOG data that calls all three programs. Information can be found in the docstrings within.
 
-The files `../rtog/preprocess_images.ipynb` and `../rtog/preprocess_images_script.py`` contain higher-level pipelines for processing `.nii` images found in the `/local-scratch/"$USER"_scratch/rtog` directory on the GPU server.
+The files `../rtog/preprocess_images.ipynb` and `../rtog/preprocess_images_script.py` contain higher-level pipelines for processing `.nii` images found in the `/local-scratch/"$USER"_scratch/rtog` directory on the GPU server.
 
 Currently, images have been preprocessed with default `f` and `g` values and without higher-level `bet` options. Some of the images caused errors because of missing modalities or other issues. The corresponding patient numbers are listed in the files mentioned in the previous paragraph.
 
