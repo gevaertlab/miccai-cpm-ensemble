@@ -32,7 +32,8 @@ class FCN_Concat(FCN_Model):
         train_dataset = get_dataset_v3(self.config.train_path, False, self.config, name_dataset)
         test_dataset = get_dataset_v3(self.config.val_path, True, self.config, name_dataset)
         # iterator just needs to know the output types and shapes of the datasets
-        self.iterator = tf.contrib.data.Iterator.from_structure(\
+        # self.iterator = tf.contrib.data.Iterator.from_structure(\
+        self.iterator = tf.data.Iterator.from_structure(\
             output_types=(tf.string, tf.string, tf.int32, tf.int32, tf.int32, tf.float32, tf.int32),
             output_shapes=([None], [None], [None], [None], [None],\
                            [None, self.patch, self.patch, self.patch, 4],\
