@@ -19,6 +19,7 @@ class Config:
         self.use_t1post = param_dict.get('use_t1post', 'True') == 'True'
         self.use_t2 = param_dict.get('use_t2', 'True') == 'True'
         self.use_flair = param_dict.get('use_flair', 'True') == 'True'
+        self.use_segmentation = param_dict.get('use_segmentation', 'False') == 'True'
 
         # learning rate schedule
         self.lr_init = float(param_dict.get('lr_init', 1e-4))

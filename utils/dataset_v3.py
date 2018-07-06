@@ -100,7 +100,7 @@ def load_data_not_brats(patient_path, is_test, modalities):
 
 
 def load_data_tcga(patient_path, is_test, modalities):
-    data = [None] * 4
+    data = [None] * len(modalities)
     patient_path = patient_path.decode('utf-8')
 
     im_type_to_path = {}
@@ -132,6 +132,8 @@ def load_data_tcga(patient_path, is_test, modalities):
             data[3] = image
         elif (im_type == 'ManuallyCorrected') or (im_type == 'GlistrBoost'):
             labels = preprocess_labels(image)
+            if modalities[4]:
+                data[4] = preprocess_labels(image).astype(np.float32)
 
     # remove index where modality is not used
     data = [item for item in data if item is not None]
@@ -379,7 +381,7 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
 
 
 def gen_tcga_mgmt(directory, is_test, config):
-    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
+    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair, config.use_segmentation)
 
     ratio = config.ratio
     assert (len(ratio) == 4), 'you should provide 4 values of ratio for the 4 parts of the tumor'

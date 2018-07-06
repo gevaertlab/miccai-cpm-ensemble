@@ -16,7 +16,7 @@ class CNN_Classifier(Model):
         self.config = config
         self.patch = config.patch_size
         self.nb_classes = config.nb_classes
-        self.nb_modalities = config.use_t1pre + config.use_t1post + config.use_t2 + config.use_flair
+        self.nb_modalities = config.use_t1pre + config.use_t1post + config.use_t2 + config.use_flair + config.use_segmentation
 
         self.load_data()
         self.add_dataset()
@@ -39,7 +39,7 @@ class CNN_Classifier(Model):
             output_types=(tf.float32,
                           tf.int32,
                           tf.float32),
-            output_shapes=([None, 240, 240, 155, 4],
+            output_shapes=([None, 240, 240, 155, self.nb_modalities],
                            [None, 240, 240, 155],
                            [None, 1]))
         self.image, self.label, self.mgmtmethylated = self.iterator.get_next()
