@@ -17,6 +17,8 @@ files = []
 
 print('Unzip files ...')
 for patient_name in os.listdir(data_path):
+    if "html" in patient_name:
+        continue
     print("Handling patient {}.".format(patient_name))
     patient_path = os.path.join(data_path, patient_name)
     out_patient_path = os.path.join(out_path, patient_name)
