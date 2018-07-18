@@ -31,9 +31,7 @@ for patient_name in os.listdir(data_path):
         print("\t Handling file {}.".format(modality))
         modality_path = os.path.join(patient_path, modality)
         unzipped_path = os.path.join(out_patient_path, modality[:-3])
-        with gzip.open(modality_path, 'rb') as fgz:
-            with open(unzipped_path, 'wb') as f:
-                f.write(fgz.read())
+        shutil.copy(modality_path, unzipped_path)
 
 print('Create training and test sets ...')
 # shuffle patients
