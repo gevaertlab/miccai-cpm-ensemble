@@ -151,6 +151,58 @@ def load_data_tcga(patient_path, is_test, modalities):
     except:
         return data
 
+def load_data_miccai(patient_path, is_test, modalities):
+    data = [None] * len(modalities)
+    patient_path = patient_path.decode('utf-8')
+
+    im_type_to_path = {}
+    for im_name in os.listdir(patient_path):
+        im_path = os.path.join(patient_path, im_name)
+        im_type = im_name.split('.')[-2].split('_')[-1]
+        im_type_to_path[im_type] = im_path
+
+    assert all([im_type in im_type_to_path for im_type in ['t1', 't1Gd', 'flair', 't2']])
+    assert ('ManuallyCorrected' in im_type_to_path) or ('GlistrBoost' in im_type_to_path)
+
+    if 'ManuallyCorrected' in im_type_to_path:
+        del im_type_to_path['GlistrBoost']
+
+    for im_type in im_type_to_path:
+        image = im_path_to_arr(im_type_to_path[im_type])
+        image = resize_data_to_brats_size(image)
+        if im_type == 't1' and modalities[0]:
+            image = normalize_image(image)
+            data[0] = image
+        elif im_type == 't1Gd' and modalities[1]:
+            image = normalize_image(image)
+            data[1] = image
+        elif im_type == 't2' and modalities[2]:
+            image = normalize_image(image)
+            data[2] = image
+        elif im_type == 'flair' and modalities[3]:
+            image = normalize_image(image)
+            data[3] = image
+        elif (im_type == 'ManuallyCorrected') or (im_type == 'GlistrBoost'):
+            labels = preprocess_labels(image)
+            if modalities[4]:
+                data[4] = preprocess_labels(image).astype(np.float32)
+
+    # remove index where modality is not used
+    data = [item for item in data if item is not None]
+    data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
+
+    # random flip around sagittal axis
+    if not is_test:
+        flip = np.random.random()
+        if flip < 0.5:
+            data = data[:, :, ::-1, :]
+            labels = labels[:, :, ::-1]
+    try:
+        # labels = labels[:, ::-1, :]
+        return data, labels
+    except:
+        return data
+
 
 def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
     half_patch = patch_size // 2
@@ -403,6 +455,29 @@ def gen_tcga_mgmt(directory, is_test, config):
         image, label = load_data_tcga(patient, is_test, modalities)
         mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[-1], "MGMT promoter status"].values == "Methylated"
         yield image, label, mgmt_state
+
+
+def gen_tcga_miccai(directory, is_test, config):
+    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair, config.use_segmentation)
+
+    patients = os.listdir(directory)
+    patients = [os.path.join(directory, pat) for pat in patients]
+    patients = [pat.encode('utf-8') for pat in patients]  # need to encode in bytes to pass it to tf.py_func
+
+    patients.sort()
+    if not is_test:
+        np.random.seed(0)
+        np.random.shuffle(patients)
+
+    tcga_molecular_file_path = os.path.join(directory, "../TCGA 2016 Glioma Cell Supp Data.csv")
+    # TODO REPLACE WITH ACTUAL PATH
+    df = pd.read_csv(tcga_molecular_file_path, sep=";", header=1)
+
+    for patient in patients:
+        image, label = load_data_tcga(patient, is_test, modalities)
+        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[-1], "MGMT promoter status"].values == "Methylated"
+        yield image, label, mgmt_state
+
 
 
 def get_dataset_batched(directory, is_test, config):
