@@ -7,7 +7,7 @@ import numpy as np
 user_name = getpass.getuser()
 
 data_path = '/labs/gevaertlab/data/MICCAI/radiology'
-out_path = '/local-scratch/{}_scratch/miccai-radiology'.format(user_name)
+out_path = '/local-scratch/{}_scratch/miccai-radiology-tmp'.format(user_name)
 train_path = '/local-scratch/{}_scratch/miccai-radiology/train'.format(user_name)
 val_path = '/local-scratch/{}_scratch/miccai-radiology/val'.format(user_name)
 
