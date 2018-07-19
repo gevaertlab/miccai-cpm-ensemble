@@ -151,6 +151,7 @@ def load_data_tcga(patient_path, is_test, modalities):
     except:
         return data
 
+
 def load_data_miccai(patient_path, is_test, modalities):
     data = [None] * len(modalities)
     patient_path = patient_path.decode('utf-8')
@@ -158,14 +159,8 @@ def load_data_miccai(patient_path, is_test, modalities):
     im_type_to_path = {}
     for im_name in os.listdir(patient_path):
         im_path = os.path.join(patient_path, im_name)
-        im_type = im_name.split('.')[-2].split('_')[-1]
+        im_type = im_name.split('.')[0].lower()
         im_type_to_path[im_type] = im_path
-
-    assert all([im_type in im_type_to_path for im_type in ['t1', 't1Gd', 'flair', 't2']])
-    assert ('ManuallyCorrected' in im_type_to_path) or ('GlistrBoost' in im_type_to_path)
-
-    if 'ManuallyCorrected' in im_type_to_path:
-        del im_type_to_path['GlistrBoost']
 
     for im_type in im_type_to_path:
         image = im_path_to_arr(im_type_to_path[im_type])
@@ -173,7 +168,7 @@ def load_data_miccai(patient_path, is_test, modalities):
         if im_type == 't1' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
-        elif im_type == 't1Gd' and modalities[1]:
+        elif im_type == 't1c' and modalities[1]:
             image = normalize_image(image)
             data[1] = image
         elif im_type == 't2' and modalities[2]:
@@ -182,13 +177,10 @@ def load_data_miccai(patient_path, is_test, modalities):
         elif im_type == 'flair' and modalities[3]:
             image = normalize_image(image)
             data[3] = image
-        elif (im_type == 'ManuallyCorrected') or (im_type == 'GlistrBoost'):
-            labels = preprocess_labels(image)
-            if modalities[4]:
-                data[4] = preprocess_labels(image).astype(np.float32)
 
     # remove index where modality is not used
-    data = [item for item in data if item is not None]
+    # TODO: maybe scale up all present modalities, like for dropout, to "replace" the information of the missing ones?
+    data = [item if item is not None else 0 * data[0] for item in data]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal axis
@@ -196,12 +188,8 @@ def load_data_miccai(patient_path, is_test, modalities):
         flip = np.random.random()
         if flip < 0.5:
             data = data[:, :, ::-1, :]
-            labels = labels[:, :, ::-1]
-    try:
-        # labels = labels[:, ::-1, :]
-        return data, labels
-    except:
-        return data
+
+    return data
 
 
 def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
@@ -453,7 +441,8 @@ def gen_tcga_mgmt(directory, is_test, config):
 
     for patient in patients:
         image, label = load_data_tcga(patient, is_test, modalities)
-        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[-1], "MGMT promoter status"].values == "Methylated"
+        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[
+            -1], "MGMT promoter status"].values == "Methylated"
         yield image, label, mgmt_state
 
 
@@ -469,23 +458,25 @@ def gen_tcga_miccai(directory, is_test, config):
         np.random.seed(0)
         np.random.shuffle(patients)
 
-    tcga_molecular_file_path = os.path.join(directory, "../TCGA 2016 Glioma Cell Supp Data.csv")
-    # TODO REPLACE WITH ACTUAL PATH
-    df = pd.read_csv(tcga_molecular_file_path, sep=";", header=1)
+    patients_stage_path = os.path.join(directory,
+                                       "../datasets_None_4b87ae5a-4ca7-4b95-99f5-09ce31da60e0_README_all_training.txt")
+    with open(patients_stage_path, "r") as f:
+        lines = f.readlines()
+    labels = [{'A': 1, 'O': 0}[q.strip("\n")[-1]] for q in lines[10:]]
 
     for patient in patients:
-        image, label = load_data_tcga(patient, is_test, modalities)
-        mgmt_state = df.loc[df.loc[:, "Case"] == patient.decode("utf-8").split("/")[-1], "MGMT promoter status"].values == "Methylated"
-        yield image, label, mgmt_state
-
+        image = load_data_miccai(patient, is_test, modalities)
+        patient_id = patient.decode("utf-8").split("/")[-1].split("_")[-1]
+        stage = labels[int(patient_id) - 1]
+        yield image, stage
 
 
 def get_dataset_batched(directory, is_test, config):
     def gen():
-        return gen_tcga_mgmt(directory, is_test, config)
+        return gen_tcga_miccai(directory, is_test, config)
 
     dataset = tf.data.Dataset.from_generator(generator=gen,
-                                             output_types=(tf.float32, tf.int32, tf.float32))
+                                             output_types=(tf.float32, tf.float32))
     batch_size = config.batch_size
     batched_dataset = dataset.batch(batch_size)
     batched_dataset = batched_dataset.prefetch(1)

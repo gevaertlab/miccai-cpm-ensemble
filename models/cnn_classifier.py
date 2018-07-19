@@ -37,10 +37,8 @@ class CNN_Classifier(Model):
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.contrib.data.Iterator.from_structure(
             output_types=(tf.float32,
-                          tf.int32,
                           tf.float32),
             output_shapes=([None, 240, 240, 155, self.nb_modalities],
-                           [None, 240, 240, 155],
                            [None, 1]))
         self.image, self.label, self.mgmtmethylated = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
