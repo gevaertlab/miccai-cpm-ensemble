@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import tensorflow as tf
 
-from utils.data_utils import im_path_to_arr
+from utils.data_utils import im_path_to_arr, resize_raw_to_base
 from utils.data_utils import normalize_image
 from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
