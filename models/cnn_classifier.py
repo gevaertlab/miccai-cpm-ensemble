@@ -40,15 +40,11 @@ class CNN_Classifier(Model):
                           tf.float32),
             output_shapes=([None, 240, 240, 155, self.nb_modalities],
                            [None, 1]))
-        self.image, self.label, self.mgmtmethylated = self.iterator.get_next()
+        self.image, self.mgmtmethylated = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
     def add_placeholders(self):
-        # self.image_placeholder = tf.placeholder(tf.float32,
-        #                                         shape=[None, self.patch, self.patch, self.patch, 4])
-        # self.label_placeholder = tf.placeholder(tf.int32,
-        #                                         shape=[None, self.patch, self.patch, self.patch])
         self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
         self.lr_placeholder = tf.placeholder(tf.float32, shape=[])
         self.is_training = tf.placeholder(tf.bool, shape=[])
