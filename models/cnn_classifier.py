@@ -35,7 +35,7 @@ class CNN_Classifier(Model):
         train_dataset = get_dataset_batched(self.config.train_path, False, self.config)
         test_dataset = get_dataset_batched(self.config.val_path, True, self.config)
         # iterator just needs to know the output types and shapes of the datasets
-        self.iterator = tf.contrib.data.Iterator.from_structure(
+        self.iterator = tf.data.Iterator.from_structure(
             output_types=(tf.float32,
                           tf.float32),
             output_shapes=([None, 240, 240, 155, self.nb_modalities],
