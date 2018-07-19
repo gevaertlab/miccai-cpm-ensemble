@@ -93,7 +93,8 @@ def remove_low_high(image):
 
 
 def resize_raw_to_base(data):
-    return resize(data, (24, 320, 320), interp="lanczos")
+    # TODO transpose twice to put the x, y axis first?
+    return resize(data, (24, 320, 320))
 
 def resize_data_to_brats_size(data):
     # hardcoded for brats 2017
