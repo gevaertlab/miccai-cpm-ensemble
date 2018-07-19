@@ -43,10 +43,14 @@ np.random.shuffle(train_files)
 np.random.shuffle(val_files)
 
 # move data
+if os.path.exists(train_path):
+    shutil.rmtree(train_path)
 os.makedirs(train_path)
 for ex_path, ex_name in train_files:
     shutil.copytree(ex_path, os.path.join(train_path, ex_name))
 
+if os.path.exists(val_path):
+    shutil.rmtree(val_path)
 os.makedirs(val_path)
 for ex_path, ex_name in val_files:
     shutil.copytree(ex_path, os.path.join(val_path, ex_name))
