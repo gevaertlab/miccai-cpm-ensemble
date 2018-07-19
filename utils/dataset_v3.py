@@ -153,7 +153,7 @@ def load_data_tcga(patient_path, is_test, modalities):
 
 
 def load_data_miccai(patient_path, is_test, modalities):
-    data = [None] * sum(modalities)
+    data = [None] * len(modalities)
     patient_path = patient_path.decode('utf-8')
 
     im_type_to_path = {}
@@ -180,7 +180,7 @@ def load_data_miccai(patient_path, is_test, modalities):
 
     # remove index where modality is not used
     # TODO: maybe scale up all present modalities, like for dropout, to "replace" the information of the missing ones?
-    data = [item if item is not None else 0 * data[0] for item in data]
+    data = [item for item in data if item is not None]
     data = [resize_data_to_brats_size(item) for item in data]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
