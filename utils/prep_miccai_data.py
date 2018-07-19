@@ -1,7 +1,5 @@
-import os
 import getpass
-
-import gzip
+import os
 import shutil
 
 import numpy as np
@@ -25,12 +23,11 @@ for patient_name in os.listdir(data_path):
     files.append((out_patient_path, patient_name))
     if os.path.exists(out_patient_path):
         shutil.rmtree(out_patient_path)
-    else:
-        os.makedirs(out_patient_path)
+    os.makedirs(out_patient_path)
     for modality in os.listdir(patient_path):
         print("\t Handling file {}.".format(modality))
         modality_path = os.path.join(patient_path, modality)
-        unzipped_path = os.path.join(out_patient_path, modality[:-3])
+        unzipped_path = os.path.join(out_patient_path, modality)
         shutil.copy(modality_path, unzipped_path)
 
 print('Create training and test sets ...')
