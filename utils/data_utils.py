@@ -3,8 +3,7 @@ import os
 import numpy as np
 import pandas as pd
 import SimpleITK as sitk
-from scipy.misc import imresize
-
+from skimage.transform import resize
 
 def im_path_to_arr(im_path):
     return sitk.GetArrayFromImage(sitk.ReadImage(im_path))
@@ -94,7 +93,7 @@ def remove_low_high(image):
 
 
 def resize_raw_to_base(data):
-    return imresize(data, (24, 320, 320), interp="lanczos")
+    return resize(data, (24, 320, 320), interp="lanczos")
 
 def resize_data_to_brats_size(data):
     # hardcoded for brats 2017
