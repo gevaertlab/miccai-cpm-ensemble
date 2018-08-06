@@ -41,7 +41,6 @@ class CNN_Classifier(Model):
             output_shapes=([None, 320, 320, 24, self.nb_modalities],
                            [None, 1]))
         self.image, self.mgmtmethylated = self.iterator.get_next()
-        print(self.image.shape)
         self.train_init_op = self.iterator.make_initializer(train_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
 
@@ -108,7 +107,6 @@ class CNN_Classifier(Model):
                                                                     self.merged, self.global_step,
                                                                     self.train, self.mgmtmethylated],
                                                                    feed_dict=feed)
-                    print(pred, loss, summary, global_step, label)
                 batch += self.config.batch_size
             except tf.errors.OutOfRangeError:
                 break

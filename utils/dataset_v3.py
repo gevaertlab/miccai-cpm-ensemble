@@ -177,6 +177,7 @@ def load_data_miccai(patient_path, is_test, modalities):
 
     # remove index where modality is not used
     data = [item for item in data if item is not None]
+    print(patient_path, len(data))
     # data = [resize_data_to_brats_size(item) for item in data]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
