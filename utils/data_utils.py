@@ -5,6 +5,7 @@ import pandas as pd
 import SimpleITK as sitk
 from skimage.transform import resize
 
+
 def im_path_to_arr(im_path):
     return sitk.GetArrayFromImage(sitk.ReadImage(im_path))
 
@@ -94,7 +95,11 @@ def remove_low_high(image):
 
 def resize_raw_to_base(data):
     # TODO transpose twice to put the x, y axis first?
+    M = np.max(data[~np.isnan(data)])
+    m = np.min(data[~np.isnan(data)])
+    data = (data - m) / (M - m)
     return resize(data, (24, 320, 320))
+
 
 def resize_data_to_brats_size(data):
     # hardcoded for brats 2017
@@ -124,24 +129,25 @@ def resize_data_to_brats_size(data):
 
     return data
 
+
 def resize_data_to_original_size(data, original_shape):
     current_shape = data.shape
     ratio_x = current_shape[0] / original_shape[0]
     ratio_y = current_shape[1] / original_shape[1]
     ratio_z = current_shape[2] / original_shape[2]
-    
+
     if ratio_x > 1 and round(ratio_x) >= 2:
         data = data[::round(ratio_x), :, :]
     if ratio_x <= 0.5:
         down = round(1 / ratio_x)
         data = np.repeat(data, down, axis=0)
-       
+
     if ratio_y > 1 and round(ratio_y) >= 2:
         data = data[:, ::round(ratio_y), :]
     if ratio_y <= 0.5:
         down = round(1 / ratio_y)
         data = np.repeat(data, down, axis=1)
-        
+
     if ratio_z > 1 and round(ratio_z) >= 2:
         data = data[:, :, ::round(ratio_z)]
     if ratio_z <= 0.5:
@@ -157,8 +163,10 @@ def get_hgg_and_lgg_patients(val_path):
         HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/HGG')
         LGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/brats2017/LGG')
     elif 'tcga' in val_path.lower():
-        HGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/tcga2017/Pre-operative_TCGA_GBM_NIfTI_and_Segmentations')
-        LGG_patients = os.listdir('/labs/gevaertlab/data/tumor_segmentation/tcga2017/Pre-operative_TCGA_LGG_NIfTI_and_Segmentations')
+        HGG_patients = os.listdir(
+            '/labs/gevaertlab/data/tumor_segmentation/tcga2017/Pre-operative_TCGA_GBM_NIfTI_and_Segmentations')
+        LGG_patients = os.listdir(
+            '/labs/gevaertlab/data/tumor_segmentation/tcga2017/Pre-operative_TCGA_LGG_NIfTI_and_Segmentations')
     if 'rembrandt' in val_path.lower():
         df = pd.read_csv('/labs/gevaertlab/data/tumor_segmentation/REMBRANDT_Clinical_Annotation_Updated.csv')
         df = df.loc[:, ['SAMPLE_ID', 'DISEASE_TYPE']]
@@ -168,7 +176,7 @@ def get_hgg_and_lgg_patients(val_path):
         df_lgg = df[df.DISEASE_TYPE != 'GBM']
         LGG_patients = df_lgg.SAMPLE_ID.tolist()
         LGG_patients = [pat + '=' for pat in LGG_patients]
-    
+
     HGG_patients = [os.path.join(val_path, pat) for pat in HGG_patients]
     HGG_patients = [pat.encode('utf-8') for pat in HGG_patients]
     LGG_patients = [os.path.join(val_path, pat) for pat in LGG_patients]
