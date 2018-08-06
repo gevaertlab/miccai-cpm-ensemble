@@ -94,8 +94,9 @@ def remove_low_high(image):
 
 
 def resize_raw_to_base(data):
-    M = np.max(data[~np.isnan(data)])
-    m = np.min(data[~np.isnan(data)])
+    data[np.isnan(data)] = 0.
+    M = np.max(data)
+    m = np.min(data)
     data = (data - m) / (M - m)
     data = np.rollaxis(data, 1, 0)
     data = np.rollaxis(data, 2, 1)
