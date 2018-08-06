@@ -94,11 +94,12 @@ def remove_low_high(image):
 
 
 def resize_raw_to_base(data):
-    # TODO transpose twice to put the x, y axis first?
     M = np.max(data[~np.isnan(data)])
     m = np.min(data[~np.isnan(data)])
     data = (data - m) / (M - m)
-    return resize(data, (24, 320, 320))
+    data = np.rollaxis(data, 1, 0)
+    data = np.rollaxis(data, 2, 1)
+    return resize(data, (320, 320, 24))
 
 
 def resize_data_to_brats_size(data):
