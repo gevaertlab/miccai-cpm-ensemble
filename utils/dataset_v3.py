@@ -10,6 +10,7 @@ from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
 from utils.data_utils import resize_data_to_brats_size
 
+KEPT_PATIENTS = set(["cbtc_train_" + str(i) for i in range(33) if i not in [1, 9, 18, 26]])
 
 def load_data_brats(patient_path, is_test, modalities):
     data = [None] * 4
@@ -158,28 +159,23 @@ def load_data_miccai(patient_path, is_test, modalities):
 
     im_type_to_path = {}
     for im_name in os.listdir(patient_path):
+        if "proc" not in im_name:
+            continue
         im_path = os.path.join(patient_path, im_name)
-        im_type = im_name.split('.')[0].lower()
+        im_type = im_name.split('_')[0].lower()
         im_type_to_path[im_type] = im_path
 
     for im_type in im_type_to_path:
         image = im_path_to_arr(im_type_to_path[im_type])
         image = resize_raw_to_base(image)
-        if im_type == 't1' and modalities[0]:
+        if im_type == 't1c' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
-        elif im_type == 't1c' and modalities[1]:
+        elif im_type == 'flair' and modalities[1]:
             image = normalize_image(image)
             data[1] = image
-        elif im_type == 't2' and modalities[2]:
-            image = normalize_image(image)
-            data[2] = image
-        elif im_type == 'flair' and modalities[3]:
-            image = normalize_image(image)
-            data[3] = image
 
     # remove index where modality is not used
-    # TODO: maybe scale up all present modalities, like for dropout, to "replace" the information of the missing ones?
     data = [item for item in data if item is not None]
     data = [resize_data_to_brats_size(item) for item in data]
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
@@ -448,9 +444,10 @@ def gen_tcga_mgmt(directory, is_test, config):
 
 
 def gen_tcga_miccai(directory, is_test, config):
-    modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair, config.use_segmentation)
+    modalities = (config.use_t1post, config.use_flair, config.use_segmentation)
 
     patients = os.listdir(directory)
+    patients = list(set(patients).intersection(KEPT_PATIENTS))
     patients = [os.path.join(directory, pat) for pat in patients]
     patients = [pat.encode('utf-8') for pat in patients]  # need to encode in bytes to pass it to tf.py_func
 

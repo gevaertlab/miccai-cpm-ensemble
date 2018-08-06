@@ -281,8 +281,7 @@ class CNN_Classifier(Model):
                                        kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
-            bn1_1 = tf.layers.batch_normalization(conv1_1, axis=-1, training=self.is_training)
-            relu1_1 = tf.nn.relu(bn1_1)
+            relu1_1 = tf.nn.relu(conv1_1)
 
             conv1_2 = tf.layers.conv3d(inputs=relu1_1,
                                        filters=nb_filters,
@@ -294,17 +293,16 @@ class CNN_Classifier(Model):
                                        kernel_initializer=tf.contrib.layers.xavier_initializer(),
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
-            bn1_2 = tf.layers.batch_normalization(conv1_2, axis=-1, training=self.is_training)
-            relu1_2 = tf.nn.relu(bn1_2)
+            relu1_2 = tf.nn.relu(conv1_2)
 
             # shape = (patch/2, patch/2, patch/2)
             pool1_2 = tf.layers.max_pooling3d(inputs=relu1_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
 
-            # drop1 = tf.nn.dropout(pool1_2, self.dropout_placeholder)
+            drop1 = tf.nn.dropout(pool1_2, self.dropout_placeholder)
 
         with tf.variable_scope('conv2'):
-            conv2_1 = tf.layers.conv3d(inputs=pool1_2,
+            conv2_1 = tf.layers.conv3d(inputs=drop1,
                                        filters=2 * nb_filters,
                                        kernel_size=k_size,
                                        strides=(1, 1, 1),
@@ -315,8 +313,7 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn2_1 = tf.layers.batch_normalization(conv2_1, axis=-1, training=self.is_training)
-            relu2_1 = tf.nn.relu(bn2_1)
+            relu2_1 = tf.nn.relu(conv2_1)
 
             conv2_2 = tf.layers.conv3d(inputs=relu2_1,
                                        filters=2 * nb_filters,
@@ -329,16 +326,15 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn2_2 = tf.layers.batch_normalization(conv2_2, axis=-1, training=self.is_training)
-            relu2_2 = tf.nn.relu(bn2_2)
+            relu2_2 = tf.nn.relu(conv2_2)
 
             # shape = (patch/4, patch/4, patch/4)
             pool2_2 = tf.layers.max_pooling3d(inputs=relu2_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
-            # drop2 = tf.nn.dropout(pool2, self.dropout_placeholder)
+            drop2 = tf.nn.dropout(pool2_2, self.dropout_placeholder)
 
         with tf.variable_scope('conv3'):
-            conv3_1 = tf.layers.conv3d(inputs=pool2_2,
+            conv3_1 = tf.layers.conv3d(inputs=drop2,
                                        filters=4 * nb_filters,
                                        kernel_size=k_size,
                                        strides=(1, 1, 1),
@@ -349,8 +345,7 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn3_1 = tf.layers.batch_normalization(conv3_1, axis=-1, training=self.is_training)
-            relu3_1 = tf.nn.relu(bn3_1)
+            relu3_1 = tf.nn.relu(conv3_1)
             drop3_1 = tf.nn.dropout(relu3_1, self.dropout_placeholder)
 
             conv3_2 = tf.layers.conv3d(inputs=drop3_1,
@@ -364,8 +359,7 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn3_2 = tf.layers.batch_normalization(conv3_2, axis=-1, training=self.is_training)
-            relu3_2 = tf.nn.relu(bn3_2)
+            relu3_2 = tf.nn.relu(conv3_2)
 
             # shape = (patch/8, patch/8, patch/8)
             pool3_2 = tf.layers.max_pooling3d(inputs=relu3_2, pool_size=(2, 2, 2),
@@ -384,8 +378,7 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn4_1 = tf.layers.batch_normalization(conv4_1, axis=-1, training=self.is_training)
-            relu4_1 = tf.nn.relu(bn4_1)
+            relu4_1 = tf.nn.relu(conv4_1)
             drop4_1 = tf.nn.dropout(relu4_1, self.dropout_placeholder)
 
             conv4_2 = tf.layers.conv3d(inputs=drop4_1,
@@ -399,10 +392,9 @@ class CNN_Classifier(Model):
                                        bias_initializer=tf.constant_initializer(0.0),
                                        kernel_regularizer=tf.nn.l2_loss)
 
-            bn4_2 = tf.layers.batch_normalization(conv4_2, axis=-1, training=self.is_training)
-            relu4_2 = tf.nn.relu(bn4_2)
+            relu4_2 = tf.nn.relu(conv4_2)
 
-            # shape = (patch/8, patch/8, patch/8)
+            # shape = (patch/16, patch/16, patch/16)
             pool4_2 = tf.layers.max_pooling3d(inputs=relu4_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
             drop4_2 = tf.nn.dropout(pool4_2, self.dropout_placeholder)
