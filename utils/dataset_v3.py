@@ -177,7 +177,9 @@ def load_data_miccai(patient_path, is_test, modalities):
 
     # remove index where modality is not used
     data = [item for item in data if item is not None]
+    print("M1")
     data = [resize_data_to_brats_size(item) for item in data]
+    print("M2")
     data = np.concatenate([item[..., np.newaxis] for item in data], axis=3)
 
     # random flip around sagittal axis
@@ -464,6 +466,7 @@ def gen_tcga_miccai(directory, is_test, config):
 
     for patient in patients:
         image = load_data_miccai(patient, is_test, modalities)
+        print("M4")
         patient_id = patient.decode("utf-8").split("/")[-1].split("_")[-1]
         stage = labels[int(patient_id) - 1]
         yield image, stage
