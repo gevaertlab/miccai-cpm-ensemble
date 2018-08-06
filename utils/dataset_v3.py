@@ -10,7 +10,7 @@ from utils.data_utils import preprocess_labels
 from utils.data_utils import get_patch_centers_fcn
 from utils.data_utils import resize_data_to_brats_size
 
-KEPT_PATIENTS = set(["cbtc_train_" + str(i) for i in range(33) if i not in [1, 9, 18, 26]])
+KEPT_PATIENTS = set(["cbtc_train_" + str(i) for i in range(33) if i not in [1, 8, 9, 18, 26]])
 
 def load_data_brats(patient_path, is_test, modalities):
     data = [None] * 4
