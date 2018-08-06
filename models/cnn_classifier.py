@@ -103,12 +103,10 @@ class CNN_Classifier(Model):
                                                                     self.train_last_layers],
                                                                    feed_dict=feed)
                 else:
-                    pred, loss, summary, global_step, _, label, score, pred, agg = sess.run([self.pred, self.loss,
-                                                                           self.merged, self.global_step,
-                                                                           self.train, self.mgmtmethylated, self.score,
-                                                                           self.pred, self.aggregate_features],
-                                                                          feed_dict=feed)
-                    print(pred, loss, summary, global_step, label, score, pred, agg)
+                    pred, loss, summary, global_step, _ = sess.run([self.pred, self.loss,
+                                                                    self.merged, self.global_step,
+                                                                    self.train],
+                                                                   feed_dict=feed)
                 batch += self.config.batch_size
             except tf.errors.OutOfRangeError:
                 break
