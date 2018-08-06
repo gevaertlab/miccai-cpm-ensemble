@@ -103,10 +103,12 @@ class CNN_Classifier(Model):
                                                                     self.train_last_layers],
                                                                    feed_dict=feed)
                 else:
-                    pred, loss, summary, global_step, _, label = sess.run([self.pred, self.loss,
-                                                                    self.merged, self.global_step,
-                                                                    self.train, self.mgmtmethylated],
-                                                                   feed_dict=feed)
+                    pred, loss, summary, global_step, _, label, score, pred, agg = sess.run([self.pred, self.loss,
+                                                                           self.merged, self.global_step,
+                                                                           self.train, self.mgmtmethylated, self.score,
+                                                                           self.pred, self.aggregate_features],
+                                                                          feed_dict=feed)
+                    print(pred, loss, summary, global_step, label, score, pred, agg)
                 batch += self.config.batch_size
             except tf.errors.OutOfRangeError:
                 break
@@ -399,10 +401,10 @@ class CNN_Classifier(Model):
                                               strides=(2, 2, 2), padding='VALID')
             drop4_2 = tf.nn.dropout(pool4_2, self.dropout_placeholder)
 
-            aggregate_features = tf.reduce_mean(drop4_2, axis=(1, 2, 3))
+            self.aggregate_features = tf.reduce_mean(drop4_2, axis=(1, 2, 3))
 
         with tf.variable_scope('predict'):
-            self.score = tf.layers.dense(inputs=aggregate_features,
+            self.score = tf.layers.dense(inputs=self.aggregate_features,
                                          units=1,
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
 
