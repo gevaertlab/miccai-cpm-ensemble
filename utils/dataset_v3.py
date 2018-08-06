@@ -168,7 +168,6 @@ def load_data_miccai(patient_path, is_test, modalities):
     for im_type in im_type_to_path:
         image = im_path_to_arr(im_type_to_path[im_type])
         image = resize_raw_to_base(image)
-        print(image.shape)
         if im_type == 't1c' and modalities[0]:
             image = normalize_image(image)
             data[0] = image
@@ -187,6 +186,7 @@ def load_data_miccai(patient_path, is_test, modalities):
         if flip < 0.5:
             data = data[:, :, ::-1, :]
 
+    print(data.shape)
     return data
 
 
