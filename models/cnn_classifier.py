@@ -33,7 +33,11 @@ class CNN_Classifier(Model):
 
     def add_dataset(self):
         train_dataset = get_dataset_batched(self.config.train_path, False, self.config)
-        test_dataset = get_dataset_batched(self.config.val_path, True, self.config)
+
+        train_nodrop_dataset = get_dataset_batched(self.config.train_path, True, self.config)
+        val_dataset = get_dataset_batched(self.config.val_path, True, self.config)
+        test_dataset = get_dataset_batched(self.config.test_path, True, self.config)
+
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.data.Iterator.from_structure(
             output_types=(tf.float32,
@@ -42,7 +46,10 @@ class CNN_Classifier(Model):
                            [None, 1]))
         self.image, self.mgmtmethylated = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
+        self.train_nodrop_init_op = self.iterator.make_initializer(train_nodrop_dataset)
+        self.val_init_op = self.iterator.make_initializer(val_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
+
 
     def add_placeholders(self):
         self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
@@ -125,10 +132,15 @@ class CNN_Classifier(Model):
         return losses, np.mean(bdices)
 
     def run_test(self, sess):
+        #sess.run(self.val_init_op)
         sess.run(self.test_init_op)
+        #sess.run(self.train_nodrop_init_op)
+        #sess.run(self.train_init_op)
+
 
         ypreds = []
         ytrues = []
+        scores = []
         batch = 0
 
         nbatches = len(self.val_ex_paths)
@@ -139,9 +151,10 @@ class CNN_Classifier(Model):
                 feed = {self.dropout_placeholder: 1.0,
                         self.is_training: False}
 
-                pred, methylated, loss = sess.run([self.pred, self.mgmtmethylated, self.loss],
+                pred, methylated, loss, score = sess.run([self.pred, self.mgmtmethylated, self.loss, self.score],
                                                   feed_dict=feed)
 
+                scores.append(score)
                 ypreds.extend(np.ravel(pred))
                 ytrues.extend(np.ravel(methylated))
 
@@ -151,7 +164,8 @@ class CNN_Classifier(Model):
             except tf.errors.OutOfRangeError:
                 break
 
-        return all_scores(ypred=ypreds, ytrue=ytrues)
+        
+        return all_scores(ypred=ypreds, ytrue=ytrues), ytrues, scores
 
     def run_pred_single_example_v3(self, sess, patient):
         raise NotImplementedError

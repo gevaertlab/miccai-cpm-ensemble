@@ -11,6 +11,8 @@ from utils.data_utils import get_patch_centers_fcn
 from utils.data_utils import resize_data_to_brats_size
 
 KEPT_PATIENTS = set(["cbtc_train_" + str(i) for i in range(33) if i not in [1, 8, 9, 18, 26]])
+KEPT_PATIENTS_TEST = set(["cbtc_test_" + str(i) for i in range(33) if i not in [31]])
+
 
 def load_data_brats(patient_path, is_test, modalities):
     data = [None] * 4
@@ -447,7 +449,7 @@ def gen_tcga_miccai(directory, is_test, config):
     modalities = (config.use_t1post, config.use_flair, config.use_segmentation)
 
     patients = os.listdir(directory)
-    patients = list(set(patients).intersection(KEPT_PATIENTS))
+    patients = list(set(patients).intersection(KEPT_PATIENTS.union(KEPT_PATIENTS_TEST)))
     patients = [os.path.join(directory, pat) for pat in patients]
     patients = [pat.encode('utf-8') for pat in patients]  # need to encode in bytes to pass it to tf.py_func
 
@@ -460,12 +462,16 @@ def gen_tcga_miccai(directory, is_test, config):
                                        "../datasets_None_4b87ae5a-4ca7-4b95-99f5-09ce31da60e0_README_all_training.txt")
     with open(patients_stage_path, "r") as f:
         lines = f.readlines()
-    labels = [{'A': 1, 'O': 0}[q.strip("\n")[-1]] for q in lines[10:]]
+    labels = {int(q.split(" ")[0].split("_")[-1]):{'A': 1, 'O': 0}[q.strip("\n")[-1]] for q in lines[10:]}
 
     for patient in patients:
         image = load_data_miccai(patient, is_test, modalities)
-        patient_id = patient.decode("utf-8").split("/")[-1].split("_")[-1]
-        stage = labels[int(patient_id) - 1]
+        patient_id = int(patient.decode("utf-8").split("/")[-1].split("_")[-1])
+        if patient_id in labels:
+            stage = labels[patient_id]
+        else:
+            stage = -1
+        print(patient_id)
         yield image, stage
 
 

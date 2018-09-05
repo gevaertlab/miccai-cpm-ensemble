@@ -10,6 +10,8 @@ class Config:
         self.ckpt_path = param_dict.get('ckpt_path')
         self.train_path = param_dict.get('train_path')
         self.val_path = param_dict.get('val_path')
+        self.test_path = param_dict.get('test_path')
+
 
         # model architecture
         self.kernel_size = int(param_dict.get('kernel_size', 5))
