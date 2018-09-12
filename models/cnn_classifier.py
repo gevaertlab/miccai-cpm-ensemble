@@ -41,10 +41,12 @@ class CNN_Classifier(Model):
         # iterator just needs to know the output types and shapes of the datasets
         self.iterator = tf.data.Iterator.from_structure(
             output_types=(tf.float32,
-                          tf.float32),
+                          tf.float32,
+                          tf.int32),
             output_shapes=([None, 320, 320, 24, self.nb_modalities],
+                           [None, 1],
                            [None, 1]))
-        self.image, self.mgmtmethylated = self.iterator.get_next()
+        self.image, self.mgmtmethylated, self.patientid = self.iterator.get_next()
         self.train_init_op = self.iterator.make_initializer(train_dataset)
         self.train_nodrop_init_op = self.iterator.make_initializer(train_nodrop_dataset)
         self.val_init_op = self.iterator.make_initializer(val_dataset)
@@ -131,9 +133,58 @@ class CNN_Classifier(Model):
 
         return losses, np.mean(bdices)
 
-    def run_test(self, sess):
+    
+    def run_features(self, sess, target="test", dropout=False):
+        self.aggregate_features
+        if target=="test":
+            sess.run(self.test_init_op)
+        elif target=="train":
+            sess.run(self.train_nodrop_init_op)
+        elif target=="train_dropout":
+            sess.run(self.train_init_op)
         #sess.run(self.val_init_op)
-        sess.run(self.test_init_op)
+        #sess.run(self.test_init_op)
+        #sess.run(self.train_nodrop_init_op)
+        #sess.run(self.train_init_op)
+
+        ytrues = []
+        feats = []
+        ids = []
+        batch = 0
+
+        nbatches = len(self.val_ex_paths)
+        prog = Progbar(target=nbatches)
+        print('\nValidation ...')
+        while True:
+            try:
+                feed = {self.dropout_placeholder: .5 if dropout else 1.,
+                        self.is_training: False}
+
+                methylated, feat, patientid = sess.run([self.mgmtmethylated, self.aggregate_features, self.patientid],
+                                                  feed_dict=feed)
+
+                feats.append(feat)
+                ytrues.append(methylated)
+                ids.append(patientid)
+
+                batch += self.config.batch_size
+                prog.update(batch)
+
+            except tf.errors.OutOfRangeError:
+                break
+
+        return ytrues, feats, ids
+    
+    
+    def run_test(self, sess, target="test", dropout=False):
+        if target=="test":
+            sess.run(self.test_init_op)
+        elif target=="train":
+            sess.run(self.train_nodrop_init_op)
+        elif target=="train_dropout":
+            sess.run(self.train_init_op)
+        #sess.run(self.val_init_op)
+        #sess.run(self.test_init_op)
         #sess.run(self.train_nodrop_init_op)
         #sess.run(self.train_init_op)
 
@@ -148,7 +199,7 @@ class CNN_Classifier(Model):
         print('\nValidation ...')
         while True:
             try:
-                feed = {self.dropout_placeholder: 1.0,
+                feed = {self.dropout_placeholder: .5 if dropout else 1.,
                         self.is_training: False}
 
                 pred, methylated, loss, score = sess.run([self.pred, self.mgmtmethylated, self.loss, self.score],
@@ -165,6 +216,10 @@ class CNN_Classifier(Model):
                 break
 
         
+        print("-- run_test -- ")
+        print("-- ytrues = {} -- ".format(ytrues))
+        print("-- ypreds = {} -- ".format(ypreds))
+        print("-- scores = {} -- ".format(scores))
         return all_scores(ypred=ypreds, ytrue=ytrues), ytrues, scores
 
     def run_pred_single_example_v3(self, sess, patient):
@@ -421,7 +476,7 @@ class CNN_Classifier(Model):
                                          kernel_initializer=tf.contrib.layers.xavier_initializer())
 
     def add_pred_op(self):
-        self.pred = self.score >= 0
+        self.pred = tf.sigmoid(self.score) >= .5
 
     def add_loss_op(self):
         ce_loss = tf.nn.sigmoid_cross_entropy_with_logits(logits=self.score, labels=self.mgmtmethylated)
