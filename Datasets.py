@@ -1,76 +1,69 @@
-import pandas as pd 
-from sklearn.preprocessing import LabelBinarizer
-import os
 import numpy as np
-from config import Config
+import pandas as pd
+import os
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import StratifiedShuffleSplit  
 from PIL import Image
+
 
 
 class Dataset:
     
     def __init__(self, config):
             self.config= config
+            self._train_val_dir = "/labs/gevaertlab/data/MICCAI/patches_448"
+            self._test_dir = "/labs/gevaertlab/data/MICCAI/patches_448_test"
+            self.le = LabelEncoder()
+            self._partition = self.get_partition()
+
 
     def get_binarized_data(self):
 
-      #  output_data = pd.read_table('MICCAI_labels.txt', index_col = 0, delim_whitespace = True, header = 0)
-      #  binarized_data = output_data.apply(lambda x: LabelBinarizer().fit_transform(x)[:, 0], axis=0)
-        return binarized_data
+        df = pd.read_table('MICCAI_labels.txt', index_col = 0, delim_whitespace = True, header = 0)
+        df = df.apply(self.le.fit_transform)
+        return df
 
-    def get_labels(self):
-        samples = os.listdir("/labs/gevaertlab/data/MICCAI/patches_448")
-        labels = {}
-        data = self.get_binarized_data()
-        for i in data.columns:
-            labels[i] = {}
-            for s in samples:
-                labels[i][s] = data.loc[s,i]
-        return labels
+    def get_partition(self):
+        
+        df = self.get_binarized_data()
+        ids = df.index 
+        labels = df.values.flatten()
+      
+        sss = StratifiedShuffleSplit(n_splits=1, test_size= self.config.val_size)
+        sss.get_n_splits(ids, labels)
+        for train_index, test_index in sss.split(ids, labels):
+            ids_train, ids_val = ids[train_index], ids[test_index]
+            y_train, y_val = labels[train_index], labels[test_index]    
+        
+        test_data = pd.read_table('MICCAI_Test.txt', index_col = 0, delim_whitespace = True, header = 0)
 
-    def get_ids(self, samples):
+        ids_test = test_data.index
+        y_test = test_data.apply(self.le.fit_transform).values.flatten()
 
-        ids = []
+        partition_ids = {'train': list(ids_train), 'val': list(ids_val), 'test': list(ids_test)}        
+        partition_labels = {'train': list(y_train), 'val': list(y_val), 'test': list(y_test)}
+    
+        return partition_ids, partition_labels  
+
+    def convert_to_arrays(self, samples, labels,  phase = ['train','val','test'], size = 1):
+        
+        if phase == 'test':
+            directory = self._test_dir
+
+        else: 
+             directory = self._train_val_dir
+                 
+        X, ids = [], []
         for sample in samples:
-            patches = os.listdir("/labs/gevaertlab/data/MICCAI/patches_448/%s" % sample)
-            patches = np.random.choice(patches, size= self.config.sampling_size_train, replace=True)
+            patches = os.listdir(directory + "/%s" %sample)
+            patches = np.random.choice(patches, size= size, replace=True)
             for patch in patches:
-                ID = "/labs/gevaertlab/data/MICCAI/patches_448/%s/%s"%(sample, patch)
+                ID = directory + "/%s/%s"% (sample, patch)
                 ids.append(ID)
-        return ids
-
-
-    def get_partition():
-
-        samples = os.listdir("/labs/gevaertlab/data/MICCAI/patches_448")
-        np.random.shuffle(samples)
-        idx_val = int((1- self.config.val_size)*len(samples))
-        idx_test = int((1 - self.config.test_size) * len(samples))
-        train_samples, val_samples, test_samples = np.split(samples, [idx_val, idx_test])
-        train_samples, val_samples, test_samples = list(train_samples), list(val_samples), list(test_samples)
-        train_ids = get_ids(train_samples)
-        partition = {'train': train_samples, 'val': val_samples, 'test': test_samples}
-        return partition
-
-    def convert_to_arrays(samples, labels):
-
-            X, ids = [], []
-            for sample in samples:
-                patches = os.listdir("/labs/gevaertlab/data/MICCAI/patches_448/%s"%sample)
-                patches = np.random.choice(patches, size= 80, replace=True)
-                for patch in patches:
-                    ID = "/labs/gevaertlab/data/MICCAI/patches_448/%s/%s"% (sample, patch)
-                    ids.append(ID)
-                    img = Image.open(ID)
-                    img = img.resize((224, 224))
-                    image = np.array(img)[:,:,:3]
-                    X.append(image)  
-            X = np.asarray(X)
-
-            for label in labels.keys():
-                y_label = []
-                for ID in ids:
-                    sample = ID.split('/')[-2]
-                    y_label.append(labels[label][sample])
-                y = np.asarray(y_label)
-
-            return X, y
+                img = Image.open(ID)
+                img = img.resize((224, 224))
+                image = np.array(img)[:,:,:3]
+                X.append(image)  
+        X = np.asarray(X)
+        y = np.repeat(labels, size)
+        return X, y

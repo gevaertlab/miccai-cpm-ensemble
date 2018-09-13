@@ -4,7 +4,8 @@ import os
 import keras
 from utils.generator import Generator
 from utils.custom_fit_generator import custom_fit_generator
-from TCGA_Datasets import TCGA_Dataset
+#from _Datasets import TCGA_Dataset
+from Datasets import Dataset
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, average_precision_score, precision_recall_curve
 from keras import regularizers
 from keras.applications.resnet50 import ResNet50
@@ -36,12 +37,16 @@ class Model(object):
     def data_init(self):
         
         print("\nData init")
-        self.dataset = TCGA_Dataset(self.config)
+        #self.dataset = TCGA_Dataset(self.config)
+        self.dataset = Dataset(self.config)
+
         generator = Generator(self.config, self.dataset)
         self.train_generator = generator.generate()
         
         self.X_val, self.y_val = self.dataset.convert_to_arrays(self.dataset._partition[0]['val'], self.dataset._partition[1]['val'], phase = 'val',  size = self.config.sampling_size_val)
+        
         self.X_test, self.y_test = self.dataset.convert_to_arrays(self.dataset._partition[0]['test'], self.dataset._partition[1]['test'], phase = 'test', size = self.config.sampling_size_test)
+        
         self.y_test = self.patch_to_image(self.y_test, proba=False)   
 
     def plot_ROCs(self, y_scores):
@@ -84,11 +89,10 @@ class Model(object):
         self.base_model =  DenseNet169(include_top=False, weights='imagenet', input_shape=(224, 224,3), pooling= None)
         x = self.base_model.output
         x = GlobalAveragePooling2D()(x)
-        x = Dense(2048,  activation='relu', kernel_regularizer= l2(0.10))(x)
+        x = Dense(2048,  activation='relu', kernel_regularizer= l2(0.1))(x)
+        x = Dropout(0.30)(x, training = True)
+        x = Dense(100, activation='relu', kernel_regularizer= l2(0.1))(x)
         x = Dropout(0.30)(x)
-        x = Dense(100, activation='relu', kernel_regularizer= l2(0.10))(x)
-        x = Dropout(0.30)(x)
-        #output = Dropout(0.50)(x, training=True)
         output = Dense(1,  activation='sigmoid')(x)
         self.model = keras.models.Model(inputs=self.base_model.input, outputs=output)
         
@@ -108,33 +112,55 @@ class Model(object):
         self.model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics = ['accuracy'])
         train_steps = len(self.dataset._partition[0]['train'])/self.config.batch_size
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0, patience=5, verbose=0, mode='auto')
-        self.history = custom_fit_generator(model=self.model, generator=self.train_generator, steps_per_epoch=train_steps, epochs=epochs, verbose=1, validation_data=(self.X_val, self.y_val), shuffle=True, max_queue_size=30, workers=30, use_multiprocessing=True)
-#callbacks=[early_stopping])
+        self.history = custom_fit_generator(model=self.model, generator=self.train_generator, steps_per_epoch=train_steps, epochs=epochs, verbose=1, validation_data=(self.X_val, self.y_val), shuffle=True, max_queue_size=30, workers=30, use_multiprocessing=True, callbacks=[early_stopping])
     
     def predict(self):
         
+        df = self.dataset.get_binarized_data()
+        ids = df.index 
+        labels = df.values
+                
         print("\nPredicting")
-        y_scores = self.model.predict(self.X_test, batch_size= self.config.batch_size) 
-       # y_preds = np.array([(y_score>0.5).astype(int) for y_score in y_scores]).flatten()
-   
-        y_scores = self.patch_to_image(y_scores, proba=True)
-        print('y_scores', y_scores)
-        #y_preds = self.patch_to_image(y_preds, proba=False)
-        y_preds = np.array([(y_score>0.5).astype(int) for y_score in y_scores]).flatten()
-        #y_preds = self.patch_to_image(y_preds, proba=False)
-        pd.DataFrame(data = y_preds, index =self.dataset._partition[0]['test'] ).to_csv('Results.csv')
-        print(self.dataset._partition[0]['test'], y_preds)
-        return y_scores, y_preds
+        intermediate_layer_model= keras.models.Model(inputs=self.base_model.input, outputs= self.model.layers[-3].output)
+        
+        self.X_feat, self.y_feat = self.dataset.convert_to_arrays(list(ids), labels, phase = 'train',  size = self.config.sample_size_feat)
+        
+        ids = np.asarray(ids)
+        ids = np.repeat(ids, self.config.sample_size_feat)
+        
+        
+        for i in range(10):
+            intermediate_output = intermediate_layer_model.predict(self.X_feat)
+            features = pd.DataFrame(data = intermediate_output, index = ids)
+            features["ids"] = ids
+            features = features.groupby(["ids"]).mean()
+            features.to_csv("pathology_features_%s.csv"%i) 
+        
+ #       intermediate_output = intermediate_layer_model.predict(self.X_test, batch_size= self.config.batch_size)
+      #  print(len(intermediate_output))
+      #  print(len(intermediate_output[1]))
+ #       print('intermediate_output',intermediate_output.shape)
+
+        
+      #  y_scores = self.model.predict(self.X_test, batch_size= self.config.batch_size) 
+
+     #   y_scores = self.patch_to_image(y_scores, proba=True)
+      #  print('y_scores', y_scores)
+      #  y_preds = np.array([(y_score>0.5).astype(int) for y_score in y_scores]).flatten()
+      #  pd.DataFrame(data = y_preds, index =self.dataset._partition[0]['test'] ).to_csv('Results.csv')
+       # print(self.dataset._partition[0]['test'], y_preds)
+       # return y_scores, y_preds
     
     def train_predict(self):
         
         self.train(self.config.lr, self.config.epochs, self.config.from_idx)
        # self.plot_loss()
-        y_scores, y_preds = self.predict()
-        np.save("output/y_scores", y_scores)
-        np.save("output/y_preds", y_preds)
+       # y_scores, y_preds = self.predict()
+        self.predict()
+      #  np.save("output/y_scores", y_scores)
+      #  np.save("output/y_preds", y_preds)
         
-        return y_scores, y_preds
+       # return y_scores, y_preds
     
     def patch_to_image(self, y_patches, proba=True):
         
@@ -185,17 +211,26 @@ class Model(object):
     def get_metrics(self, y_scores, y_preds):       
         list_of_metrics = ["accuracy", "precision", "recall", "f1score", "AUC", "AP"]
         self.metrics = pd.DataFrame(data=np.zeros((1, len(list_of_metrics))),columns=list_of_metrics)
-        y_true = self.y_test
+
+  #      y_true = self.y_test
         y_pred = y_preds
         y_score = y_scores
-        accuracy = accuracy_score(y_true, y_pred, normalize=True)
-        print(accuracy)
-        precision = precision_score(y_true, y_pred, average='macro')
-        recall = recall_score(y_true, y_pred, average='macro')
-        f1score = f1_score(y_true, y_pred, average='macro')
-        auc = roc_auc_score(y_true, y_score)
-        avg_precision = average_precision_score(y_true, y_score)
-        self.metrics.iloc[:,:] = [accuracy, precision, recall, f1score, auc, avg_precision]
-        self.metrics.to_csv("output/metrics.csv")
+
+   #     print('y_true',y_true)
+        print('y_score',y_score)
+        print('y_pred', y_pred)
+        
+#        accuracy = accuracy_score(y_true, y_pred, normalize=True)
+#        print(accuracy)
+ #       precision = precision_score(y_true, y_pred, average='macro')
+ #       recall = recall_score(y_true, y_pred, average='macro')
+ #       f1score = f1_score(y_true, y_pred, average='macro')
+ #       auc = roc_auc_score(y_true, y_score)
+  #      avg_precision = average_precision_score(y_true, y_score)
+  #      self.metrics.iloc[:,:] = [accuracy, precision, recall, f1score, auc, avg_precision]
+  #      self.metrics.to_csv("output/metrics.csv")
+        
+        
+        
         
         

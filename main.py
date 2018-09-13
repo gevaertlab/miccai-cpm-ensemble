@@ -16,7 +16,7 @@ if os.path.isdir("output/"):
     shutil.rmtree("output/")
 os.makedirs("output/")
 
-config = Config(epochs = 30, gpu = "1", sampling_size_train = 5, sampling_size_val = 5, batch_size = 12 ,lr = 1e-4, val_size = 0.25)
+config = Config(epochs = 30, gpu = "1", sampling_size_train = 40, sampling_size_val = 40, batch_size = 1 ,lr = 1e-4, val_size = 0.25)
 
 session_config = tf.ConfigProto()
 session_config.gpu_options.visible_device_list = config.gpu
@@ -24,7 +24,8 @@ session_config.gpu_options.allow_growth = True
 set_session(tf.Session(config=session_config))
 
 model = Model(config)
-y_scores, y_preds = model.train_predict()
-model.get_metrics(y_scores, y_preds)
+model.train_predict()
+#y_scores, y_preds = model.train_predict()
+#model.get_metrics(y_scores, y_preds)
 #model.plot_ROCs(y_scores)
 #model.plot_PRs(y_scores)
