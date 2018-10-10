@@ -14,8 +14,8 @@ from docopt import docopt
 
 import tensorflow as tf
 
-from models.cnn_classifier import CNN_Classifier
-from utils.config import Config
+from radiology.models.cnn_classifier import CNN_Classifier
+from radiology.utils.config import Config
 
 if __name__ == '__main__':
     arguments = docopt(__doc__)
