@@ -121,7 +121,7 @@ class Model(object):
         labels = df.values
                 
         print("\nPredicting")
-        intermediate_layer_model= keras.models.Model(inputs=self.base_model.input, outputs= self.model.layers[-3].output)
+        intermediate_layer_model= keras.models.Model(inputs=self.base_model.input, outputs= self.model.layers[-1].output)
         
         self.X_feat, self.y_feat = self.dataset.convert_to_arrays(list(ids), labels, phase = 'train',  size = self.config.sample_size_feat)
         
@@ -134,7 +134,7 @@ class Model(object):
             features = pd.DataFrame(data = intermediate_output, index = ids)
             features["ids"] = ids
             features = features.groupby(["ids"]).mean()
-            features.to_csv("pathology_features_%s.csv"%i) 
+            features.to_csv("pathology_scores_%s.csv"%i) 
         
  #       intermediate_output = intermediate_layer_model.predict(self.X_test, batch_size= self.config.batch_size)
       #  print(len(intermediate_output))
