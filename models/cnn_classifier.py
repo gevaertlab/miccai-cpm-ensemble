@@ -192,6 +192,7 @@ class CNN_Classifier(Model):
         ypreds = []
         ytrues = []
         scores = []
+        patientids = []
         batch = 0
 
         nbatches = len(self.val_ex_paths)
@@ -202,12 +203,13 @@ class CNN_Classifier(Model):
                 feed = {self.dropout_placeholder: .5 if dropout else 1.,
                         self.is_training: False}
 
-                pred, methylated, loss, score = sess.run([self.pred, self.mgmtmethylated, self.loss, self.score],
+                pred, methylated, loss, score, patientid = sess.run([self.pred, self.mgmtmethylated, self.loss, self.score, self.patientid],
                                                   feed_dict=feed)
 
                 scores.append(score)
                 ypreds.extend(np.ravel(pred))
                 ytrues.extend(np.ravel(methylated))
+                patientids.extend(patientid)
 
                 batch += self.config.batch_size
                 prog.update(batch)
@@ -220,7 +222,7 @@ class CNN_Classifier(Model):
         print("-- ytrues = {} -- ".format(ytrues))
         print("-- ypreds = {} -- ".format(ypreds))
         print("-- scores = {} -- ".format(scores))
-        return all_scores(ypred=ypreds, ytrue=ytrues), ytrues, scores
+        return all_scores(ypred=ypreds, ytrue=ytrues), ytrues, scores, patientids
 
     def run_pred_single_example_v3(self, sess, patient):
         raise NotImplementedError
