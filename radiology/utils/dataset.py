@@ -191,7 +191,7 @@ def load_data_miccai(patient_path, is_test, modalities):
     return data
 
 
-def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
+def train_data_iter(patient_path, patch_size, batch_size, ratio, modalities, name_dataset):
     half_patch = patch_size // 2
     i_batch = []
     j_batch = []
@@ -291,7 +291,7 @@ def train_data_iter_v3(patient_path, patch_size, batch_size, ratio, modalities, 
     return path_batch, shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalities, name_dataset):
+def test_data_iter(all_patients, patch_size, center_size, batch_size, modalities, name_dataset):
     batch_count = 0
 
     half_patch = patch_size // 2
@@ -368,7 +368,7 @@ def test_data_iter_v3(all_patients, patch_size, center_size, batch_size, modalit
         yield path_batch, shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset_v3(directory, is_test, config, name_dataset):
+def get_dataset(directory, is_test, config, name_dataset):
     patch_size = config.patch_size
     batch_size = config.batch_size
     modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
@@ -391,7 +391,7 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
         patients = tf.constant(patients)
 
         dataset = tf.data.Dataset.from_tensor_slices(patients)
-        dataset = dataset.map(lambda p: tuple(tf.py_func(train_data_iter_v3,
+        dataset = dataset.map(lambda p: tuple(tf.py_func(train_data_iter,
                                                          [p, patch_size, batch_size, ratio,
                                                           modalities, name_dataset],
                                                          [tf.string, tf.string,
@@ -405,7 +405,7 @@ def get_dataset_v3(directory, is_test, config, name_dataset):
         center_size = config.center_patch
 
         def gen():
-            return test_data_iter_v3(patients, patch_size, center_size, batch_size, modalities, name_dataset)
+            return test_data_iter(patients, patch_size, center_size, batch_size, modalities, name_dataset)
 
         dataset = tf.data.Dataset.from_generator(generator=gen,
                                                  output_types=(
@@ -488,7 +488,7 @@ def get_dataset_batched(directory, is_test, config):
     return batched_dataset
 
 
-def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_size, modalities, name_dataset):
+def data_iter_single_example(patient_path, patch_size, center_size, batch_size, modalities, name_dataset):
     if name_dataset == 'Brats':
         data, _ = load_data_brats(patient_path, True, modalities)
     elif name_dataset == 'TCGA':
@@ -561,14 +561,14 @@ def data_iter_single_example_v3(patient_path, patch_size, center_size, batch_siz
         yield path_batch, shape_batch, i_batch, j_batch, k_batch, x_batch, y_batch
 
 
-def get_dataset_single_patient_v3(patient, config, name_dataset):
+def get_dataset_single_patient(patient, config, name_dataset):
     patch_size = config.patch_size
     batch_size = config.batch_size
     center_size = config.center_patch
     modalities = (config.use_t1pre, config.use_t1post, config.use_t2, config.use_flair)
 
     def gen():
-        return data_iter_single_example_v3(patient, patch_size, center_size, batch_size, modalities, name_dataset)
+        return data_iter_single_example(patient, patch_size, center_size, batch_size, modalities, name_dataset)
 
     dataset = tf.data.Dataset.from_generator(generator=gen,
                                              output_types=(tf.string, tf.string, tf.int32, tf.int32, \

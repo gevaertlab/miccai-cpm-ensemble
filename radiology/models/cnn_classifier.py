@@ -3,12 +3,12 @@ import os
 import numpy as np
 import tensorflow as tf
 
-from models.model import Model
-from utils.data_utils import get_ex_paths
-from utils.dataset_v3 import get_dataset_single_patient_v3, get_dataset_batched
-from utils.general import Progbar
-from utils.lr_schedule import LRSchedule
-from utils.metrics import all_scores
+from radiology.models.model import Model
+from radiology.utils.data_utils import get_ex_paths
+from radiology.utils.dataset import get_dataset_single_patient, get_dataset_batched
+from radiology.utils.general import Progbar
+from radiology.utils.lr_schedule import LRSchedule
+from radiology.utils.metrics import all_scores
 
 
 class CNN_Classifier(Model):
@@ -51,7 +51,6 @@ class CNN_Classifier(Model):
         self.train_nodrop_init_op = self.iterator.make_initializer(train_nodrop_dataset)
         self.val_init_op = self.iterator.make_initializer(val_dataset)
         self.test_init_op = self.iterator.make_initializer(test_dataset)
-
 
     def add_placeholders(self):
         self.dropout_placeholder = tf.placeholder(tf.float32, shape=[])
@@ -133,19 +132,18 @@ class CNN_Classifier(Model):
 
         return losses, np.mean(bdices)
 
-    
     def run_features(self, sess, target="test", dropout=False):
         self.aggregate_features
-        if target=="test":
+        if target == "test":
             sess.run(self.test_init_op)
-        elif target=="train":
+        elif target == "train":
             sess.run(self.train_nodrop_init_op)
-        elif target=="train_dropout":
+        elif target == "train_dropout":
             sess.run(self.train_init_op)
-        #sess.run(self.val_init_op)
-        #sess.run(self.test_init_op)
-        #sess.run(self.train_nodrop_init_op)
-        #sess.run(self.train_init_op)
+        # sess.run(self.val_init_op)
+        # sess.run(self.test_init_op)
+        # sess.run(self.train_nodrop_init_op)
+        # sess.run(self.train_init_op)
 
         ytrues = []
         feats = []
@@ -161,7 +159,7 @@ class CNN_Classifier(Model):
                         self.is_training: False}
 
                 methylated, feat, patientid = sess.run([self.mgmtmethylated, self.aggregate_features, self.patientid],
-                                                  feed_dict=feed)
+                                                       feed_dict=feed)
 
                 feats.append(feat)
                 ytrues.append(methylated)
@@ -174,20 +172,18 @@ class CNN_Classifier(Model):
                 break
 
         return ytrues, feats, ids
-    
-    
-    def run_test(self, sess, target="test", dropout=False):
-        if target=="test":
-            sess.run(self.test_init_op)
-        elif target=="train":
-            sess.run(self.train_nodrop_init_op)
-        elif target=="train_dropout":
-            sess.run(self.train_init_op)
-        #sess.run(self.val_init_op)
-        #sess.run(self.test_init_op)
-        #sess.run(self.train_nodrop_init_op)
-        #sess.run(self.train_init_op)
 
+    def run_test(self, sess, target="test", dropout=False):
+        if target == "test":
+            sess.run(self.test_init_op)
+        elif target == "train":
+            sess.run(self.train_nodrop_init_op)
+        elif target == "train_dropout":
+            sess.run(self.train_init_op)
+        # sess.run(self.val_init_op)
+        # sess.run(self.test_init_op)
+        # sess.run(self.train_nodrop_init_op)
+        # sess.run(self.train_init_op)
 
         ypreds = []
         ytrues = []
@@ -203,8 +199,9 @@ class CNN_Classifier(Model):
                 feed = {self.dropout_placeholder: .5 if dropout else 1.,
                         self.is_training: False}
 
-                pred, methylated, loss, score, patientid = sess.run([self.pred, self.mgmtmethylated, self.loss, self.score, self.patientid],
-                                                  feed_dict=feed)
+                pred, methylated, loss, score, patientid = sess.run(
+                    [self.pred, self.mgmtmethylated, self.loss, self.score, self.patientid],
+                    feed_dict=feed)
 
                 scores.append(score)
                 ypreds.extend(np.ravel(pred))
@@ -217,50 +214,11 @@ class CNN_Classifier(Model):
             except tf.errors.OutOfRangeError:
                 break
 
-        
         print("-- run_test -- ")
         print("-- ytrues = {} -- ".format(ytrues))
         print("-- ypreds = {} -- ".format(ypreds))
         print("-- scores = {} -- ".format(scores))
         return all_scores(ypred=ypreds, ytrue=ytrues), ytrues, scores, patientids
-
-    def run_pred_single_example_v3(self, sess, patient):
-        raise NotImplementedError
-
-        if b'brats' in patient:
-            name_dataset = 'Brats'
-        elif b'TCGA' in patient:
-            name_dataset = 'TCGA'
-        else:
-            name_dataset = 'not Brats'
-
-        dataset = get_dataset_single_patient_v3(patient, self.config, name_dataset)
-        init_op = self.iterator.make_initializer(dataset)
-        sess.run(init_op)
-
-        center = self.config.center_patch
-        half_center = center // 2
-        lower = self.patch // 2 - half_center
-        fpred = None
-
-        while True:
-            try:
-                feed = {self.dropout_placeholder: 1.0,
-                        self.is_training: False}
-                pat_shape, i, j, k, pred = sess.run([self.pat_shape, self.i, self.j, self.k, self.pred], feed_dict=feed)
-            except tf.errors.OutOfRangeError:
-                break
-
-            if fpred is None:
-                fpred = np.zeros(eval(pat_shape[0]))
-
-            for idx, _ in enumerate(i):
-                fpred[i[idx] - half_center:i[idx] + half_center,
-                j[idx] - half_center:j[idx] + half_center,
-                k[idx] - half_center:k[idx] + half_center] = pred[idx, lower:lower + center, \
-                                                             lower:lower + center, lower:lower + center]
-
-        return fpred
 
     def full_train(self, sess):
         config = self.config
