@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from radiology.models.model import Model
 from radiology.utils.data_utils import get_ex_paths
-from radiology.utils.dataset import get_dataset_single_patient, get_dataset_batched
+from radiology.utils.dataset import get_dataset_batched
 from radiology.utils.general import Progbar
 from radiology.utils.lr_schedule import LRSchedule
 from radiology.utils.metrics import all_scores
@@ -133,7 +133,6 @@ class CNN_Classifier(Model):
         return losses, np.mean(bdices)
 
     def run_features(self, sess, target="test", dropout=False):
-        self.aggregate_features
         if target == "test":
             sess.run(self.test_init_op)
         elif target == "train":
@@ -251,7 +250,7 @@ class CNN_Classifier(Model):
             train_losses.extend(losses)
 
             if epoch % 2 == 0:
-                precision, recall, f1 = self.run_test(sess)
+                precision, recall, f1, _ = self.run_test(sess)
                 print('End of test, precision is %f, recall is %f and f1-score is %f' \
                       % (precision, recall, f1))
                 # logging
