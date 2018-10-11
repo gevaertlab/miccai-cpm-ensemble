@@ -14,9 +14,8 @@ from radiology.utils.metrics import all_scores
 class CNN_Classifier(Model):
     def __init__(self, config):
         self.config = config
-        self.patch = config.patch_size
         self.nb_classes = config.nb_classes
-        self.nb_modalities = config.use_t1post + config.use_flair + config.use_segmentation
+        self.nb_modalities = config.use_t1post + config.use_flair + config.use_t1pre + config.use_t2
 
         self.load_data()
         self.add_dataset()
@@ -83,7 +82,7 @@ class CNN_Classifier(Model):
             try:
                 feed = {self.dropout_placeholder: self.config.dropout,
                         self.lr_placeholder: lr_schedule.lr,
-                        self.is_training: self.config.use_batch_norm}
+                        self.is_training: True}
 
                 pred, loss, summary, global_step, _ = sess.run([self.pred, self.loss,
                                                                 self.merged, self.global_step,
@@ -263,7 +262,6 @@ class CNN_Classifier(Model):
                 .minimize(self.loss, global_step=self.global_step)
 
     def add_model(self):
-        # self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, self.nb_modalities])
         nb_filters = self.config.nb_filters
         k_size = self.config.kernel_size
 
@@ -292,7 +290,7 @@ class CNN_Classifier(Model):
                                        kernel_regularizer=tf.nn.l2_loss)
             relu1_2 = tf.nn.relu(conv1_2)
 
-            # shape = (patch/2, patch/2, patch/2)
+            # shape = (size/2, size/2, size/2)
             pool1_2 = tf.layers.max_pooling3d(inputs=relu1_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
 
@@ -325,7 +323,7 @@ class CNN_Classifier(Model):
 
             relu2_2 = tf.nn.relu(conv2_2)
 
-            # shape = (patch/4, patch/4, patch/4)
+            # shape = (size/4, size/4, size/4)
             pool2_2 = tf.layers.max_pooling3d(inputs=relu2_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
             drop2 = tf.nn.dropout(pool2_2, self.dropout_placeholder)
@@ -358,7 +356,7 @@ class CNN_Classifier(Model):
 
             relu3_2 = tf.nn.relu(conv3_2)
 
-            # shape = (patch/8, patch/8, patch/8)
+            # shape = (size/8, size/8, size/8)
             pool3_2 = tf.layers.max_pooling3d(inputs=relu3_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
             drop3_2 = tf.nn.dropout(pool3_2, self.dropout_placeholder)
@@ -391,7 +389,7 @@ class CNN_Classifier(Model):
 
             relu4_2 = tf.nn.relu(conv4_2)
 
-            # shape = (patch/16, patch/16, patch/16)
+            # shape = (size/16, size/16, size/16)
             pool4_2 = tf.layers.max_pooling3d(inputs=relu4_2, pool_size=(2, 2, 2),
                                               strides=(2, 2, 2), padding='VALID')
             drop4_2 = tf.nn.dropout(pool4_2, self.dropout_placeholder)
