@@ -78,7 +78,7 @@ class Progbar(object):
             barstr = '%%%dd/%%%dd [' % (numdigits, numdigits)
             bar = barstr % (current, self.target)
             prog = float(current) / self.target
-            prog_width = int(self.width*prog)
+            prog_width = int(self.width * prog)
             if prog_width > 0:
                 bar += ('=' * (prog_width - 1))
                 if current < self.target:
@@ -111,7 +111,7 @@ class Progbar(object):
 
             self.total_width += len(info)
             if prev_total_width > self.total_width:
-                info += ((prev_total_width-self.total_width) * " ")
+                info += ((prev_total_width - self.total_width) * " ")
 
             sys.stdout.write(info)
             sys.stdout.flush()

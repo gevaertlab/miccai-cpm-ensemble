@@ -69,27 +69,7 @@ class CNN_Classifier(Model):
         self.merged = tf.summary.merge_all()
         self.file_writer = tf.summary.FileWriter(summary_path, sess.graph)
 
-    def get_variables_to_restore(self):
-        # to initialize some variables with pretained weights
-        # 'level' refers to a level in the V-net architecture
-        var_names_to_restore = ['conv1/conv3d/kernel:0',
-                                'conv1/conv3d/bias:0',
-                                'conv2/conv3d/kernel:0',
-                                'conv2/conv3d/bias:0',
-                                'conv3/conv3d/kernel:0',
-                                'conv3/conv3d/bias:0',
-                                'predict/dense/kernel:0',
-                                'predict/dense/bias:0']
-
-        var_to_restore = tf.contrib.framework.get_variables_to_restore(include=var_names_to_restore)
-        var_to_train = tf.contrib.framework.get_variables_to_restore(exclude=var_names_to_restore)
-        # print('*' * 50 + 'variables to retrain' + '*' * 50)
-        # print([var.name for var in var_to_train])
-        # print('*' * 50 + 'variables to restore' + '*' * 50)
-        # print([var.name for var in var_to_restore])
-        return var_to_train, var_to_restore
-
-    def run_epoch(self, sess, lr_schedule, finetune=False):
+    def run_epoch(self, sess, lr_schedule):
         losses = []
         bdices = []
         batch = 0
@@ -105,16 +85,10 @@ class CNN_Classifier(Model):
                         self.lr_placeholder: lr_schedule.lr,
                         self.is_training: self.config.use_batch_norm}
 
-                if finetune:
-                    pred, loss, summary, global_step, _ = sess.run([self.pred, self.loss,
-                                                                    self.merged, self.global_step,
-                                                                    self.train_last_layers],
-                                                                   feed_dict=feed)
-                else:
-                    pred, loss, summary, global_step, _ = sess.run([self.pred, self.loss,
-                                                                    self.merged, self.global_step,
-                                                                    self.train],
-                                                                   feed_dict=feed)
+                pred, loss, summary, global_step, _ = sess.run([self.pred, self.loss,
+                                                                self.merged, self.global_step,
+                                                                self.train],
+                                                               feed_dict=feed)
                 batch += self.config.batch_size
             except tf.errors.OutOfRangeError:
                 break
@@ -241,6 +215,7 @@ class CNN_Classifier(Model):
         f1s = []
 
         train_losses = []
+        f1 = None
         best_f1 = 0
 
         print('Start training ....')
@@ -250,7 +225,7 @@ class CNN_Classifier(Model):
             train_losses.extend(losses)
 
             if epoch % 2 == 0:
-                precision, recall, f1, _ = self.run_test(sess)
+                precision, recall, f1 = self.run_test(sess)[0]
                 print('End of test, precision is %f, recall is %f and f1-score is %f' \
                       % (precision, recall, f1))
                 # logging
@@ -262,10 +237,10 @@ class CNN_Classifier(Model):
                 if f1 >= best_f1:
                     best_f1 = f1
 
-                    print('Saving checkpoint to %s ......' % (config.ckpt_path))
+                    print('Saving checkpoint to %s ......' % config.ckpt_path)
                     saver.save(sess, config.ckpt_path)
 
-                    print('Saving results to %s ......' % (config.res_path))
+                    print('Saving results to %s ......' % config.res_path)
                     np.savez(config.res_path,
                              train_losses=train_losses,
                              precisions=precisions,
@@ -286,12 +261,6 @@ class CNN_Classifier(Model):
         with tf.control_dependencies(update_ops):
             self.train = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder) \
                 .minimize(self.loss, global_step=self.global_step)
-
-            if self.config.finetuning_method == 'last_layers':
-                var_to_train, _ = self.get_variables_to_restore()
-                self.train_last_layers = tf.train.AdamOptimizer(learning_rate=self.lr_placeholder) \
-                    .minimize(self.loss, var_list=var_to_train,
-                              global_step=self.global_step)
 
     def add_model(self):
         # self.image = tf.reshape(self.image, [-1, self.patch, self.patch, self.patch, self.nb_modalities])

@@ -1,6 +1,7 @@
 docopt
 SimpleITK
 tensorflow-gpu==1.5
+tensorflow
 pandas
 pydicom
 matplotlib
